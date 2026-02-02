@@ -34,18 +34,18 @@ dependencies {
     testImplementation(libs.junit)
     testImplementation(libs.opentest4j)
 
-    // IntelliJ Platform Gradle Plugin Dependencies Extension - read more: https://plugins.jetbrains.com/docs/intellij/tools-intellij-platform-gradle-plugin-dependencies-extension.html
+    // IntelliJ Platform Gradle Plugin – cel: PhpStorm (runIde uruchomi PhpStorm, nie IDEA)
+    // https://plugins.jetbrains.com/docs/intellij/phpstorm.html
     intellijPlatform {
-        intellijIdea(providers.gradleProperty("platformVersion"))
+        phpstorm(providers.gradleProperty("platformVersion"))
 
-        // Plugin Dependencies. Uses `platformBundledPlugins` property from the gradle.properties file for bundled IntelliJ Platform plugins.
-        bundledPlugins(providers.gradleProperty("platformBundledPlugins").map { it.split(',') })
+        // PHP plugin jest wbudowany w PhpStorm
+        bundledPlugin("com.jetbrains.php")
 
-        // Plugin Dependencies. Uses `platformPlugins` property from the gradle.properties file for plugin from JetBrains Marketplace.
-        plugins(providers.gradleProperty("platformPlugins").map { it.split(',') })
-
-        // Module Dependencies. Uses `platformBundledModules` property from the gradle.properties file for bundled IntelliJ Platform modules.
-        bundledModules(providers.gradleProperty("platformBundledModules").map { it.split(',') })
+        // Opcjonalne inne wtyczki/moduły z gradle.properties
+        bundledPlugins(providers.gradleProperty("platformBundledPlugins").map { it.split(',').filter { s -> s.isNotBlank() } })
+        plugins(providers.gradleProperty("platformPlugins").map { it.split(',').filter { s -> s.isNotBlank() } })
+        bundledModules(providers.gradleProperty("platformBundledModules").map { it.split(',').filter { s -> s.isNotBlank() } })
 
         testFramework(TestFrameworkType.Platform)
     }
