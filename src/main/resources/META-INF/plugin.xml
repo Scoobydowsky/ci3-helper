@@ -19,6 +19,10 @@
                 implementation="dev.woytkowiak.ci.helper.ci.navigation.CiRouteReferenceContributor"/>
         <psi.referenceContributor
                 implementation="dev.woytkowiak.ci.helper.ci.navigation.CiLibraryReferenceContributor"/>
+        <psi.referenceContributor
+                implementation="dev.woytkowiak.ci.helper.ci.navigation.CiModelReferenceContributor"/>
+        <psi.referenceContributor
+                implementation="dev.woytkowiak.ci.helper.ci.navigation.CiHelperReferenceContributor"/>
 
         <intentionAction
                 language="PHP"

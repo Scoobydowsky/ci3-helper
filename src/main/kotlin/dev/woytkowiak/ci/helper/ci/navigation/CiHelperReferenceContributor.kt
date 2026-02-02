@@ -5,20 +5,21 @@ import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.patterns.PlatformPatterns
 import com.intellij.psi.*
 import com.intellij.util.ProcessingContext
+import dev.woytkowiak.ci.helper.ci.completion.resolveHelperFile
 
 /**
- * "Go to Declaration" z load->library('name') na plik application/libraries/Name.php.
+ * "Go to Declaration" z load->helper('form') na plik application/helpers/form_helper.php.
  */
-class CiLibraryReferenceContributor : PsiReferenceContributor() {
+class CiHelperReferenceContributor : PsiReferenceContributor() {
 
     override fun registerReferenceProviders(registrar: PsiReferenceRegistrar) {
         registrar.registerReferenceProvider(
             PlatformPatterns.psiElement(PsiElement::class.java),
-            LibraryReferenceProvider()
+            HelperReferenceProvider()
         )
     }
 
-    private class LibraryReferenceProvider : PsiReferenceProvider() {
+    private class HelperReferenceProvider : PsiReferenceProvider() {
 
         override fun getReferencesByElement(
             element: PsiElement,
@@ -27,25 +28,22 @@ class CiLibraryReferenceContributor : PsiReferenceContributor() {
             val file = element.containingFile ?: return PsiReference.EMPTY_ARRAY
             if (!file.name.endsWith(".php")) return PsiReference.EMPTY_ARRAY
 
-            val text = element.text?.trim('\'', '"')?.trim() ?: return PsiReference.EMPTY_ARRAY
+            val text = element.text?.trim()?.trim('\'', '"') ?: return PsiReference.EMPTY_ARRAY
             if (text.isEmpty() || text.contains("/") || text.contains(" ")) return PsiReference.EMPTY_ARRAY
 
-            if (!isInsideLoadLibrary(element, text)) return PsiReference.EMPTY_ARRAY
+            if (!isInsideLoadHelper(element, text)) return PsiReference.EMPTY_ARRAY
 
             val project = element.project
-            val baseDir = project.baseDir ?: return PsiReference.EMPTY_ARRAY
-            val libsDir = baseDir.findChild("application")?.findChild("libraries")
-                ?: return PsiReference.EMPTY_ARRAY
-            val target = findLibraryFile(libsDir, text) ?: return PsiReference.EMPTY_ARRAY
+            val target = resolveHelperFile(project, text) ?: return PsiReference.EMPTY_ARRAY
 
             val start = if (element.text.startsWith("'") || element.text.startsWith("\"")) 1 else 0
             val end = element.textLength - if (element.text.endsWith("'") || element.text.endsWith("\"")) 1 else 0
             val range = TextRange(start, end.coerceAtLeast(start))
 
-            return arrayOf(LibraryReference(element, target, range))
+            return arrayOf(HelperReference(element, target, range))
         }
 
-        private fun isInsideLoadLibrary(element: PsiElement, libraryName: String): Boolean {
+        private fun isInsideLoadHelper(element: PsiElement, helperName: String): Boolean {
             val doc = com.intellij.openapi.fileEditor.FileDocumentManager.getInstance()
                 .getDocument(element.containingFile?.virtualFile ?: return false) ?: return false
             val offset = element.textOffset
@@ -53,31 +51,12 @@ class CiLibraryReferenceContributor : PsiReferenceContributor() {
             val lineStart = doc.getLineStartOffset(lineNum)
             val lineEnd = doc.getLineEndOffset(lineNum)
             val line = doc.getText(com.intellij.openapi.util.TextRange(lineStart, lineEnd))
-            if (!line.contains("load->library(")) return false
-            return line.contains("'$libraryName'") || line.contains("\"$libraryName\"")
-        }
-
-        private fun findLibraryFile(libsDir: VirtualFile, name: String): VirtualFile? {
-            val withUcfirst = name.split("_").joinToString("_") { it.replaceFirstChar { c -> c.uppercaseChar() } }
-            fun findRecursive(dir: VirtualFile, fileName: String): VirtualFile? {
-                val direct = dir.findChild(fileName)
-                if (direct != null) return direct
-                for (child in dir.children) {
-                    if (child.isDirectory) {
-                        findRecursive(child, fileName)?.let { return it }
-                    }
-                }
-                return null
-            }
-            val fileName = "$withUcfirst.php"
-            return libsDir.findFileByRelativePath("$name.php")
-                ?: libsDir.findFileByRelativePath(fileName)
-                ?: findRecursive(libsDir, fileName)
-                ?: findRecursive(libsDir, "${name.lowercase()}.php")
+            if (!line.contains("load->helper(")) return false
+            return line.contains("'$helperName'") || line.contains("\"$helperName\"")
         }
     }
 
-    private class LibraryReference(
+    private class HelperReference(
         element: PsiElement,
         private val target: VirtualFile,
         range: TextRange

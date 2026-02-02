@@ -303,6 +303,36 @@ fun collectModels(dir: VirtualFile, result: MutableList<String>) {
     }
 }
 
+/** Z pliku: load->model('X') lub load->model('X', 'alias') → nazwa właściwości na $this -> nazwa klasy modelu (plik). */
+fun findLoadedModelClasses(fileText: String): Map<String, String> {
+    val result = mutableMapOf<String, String>()
+    // Grupa 1: nazwa modelu (klasa/plik), grupa 2: opcjonalny alias (drugi parametr)
+    val regex = Regex("load->model\\s*\\(\\s*['\"]([^'\"]+)['\"]\\s*(?:,\\s*['\"]([^'\"]+)['\"])?\\s*\\)")
+    regex.findAll(fileText).forEach { m ->
+        val modelClass = m.groupValues[1].trim()
+        val alias = m.groupValues[2].trim()
+        val propertyName = if (alias.isNotEmpty()) alias else modelClass
+        result[propertyName] = modelClass
+    }
+    return result
+}
+
+/** Plik modelu w application/models/ (np. Order_model → application/models/Order_model.php). Szuka też w podkatalogach. */
+fun resolveModelFile(project: Project, modelClassName: String): VirtualFile? {
+    val baseDir = project.baseDir ?: return null
+    val modelsDir = baseDir.findChild("application")?.findChild("models") ?: return null
+    val fileName = "$modelClassName.php"
+    modelsDir.findFileByRelativePath(fileName)?.let { return it }
+    fun findRecursive(dir: VirtualFile): VirtualFile? {
+        dir.findChild(fileName)?.let { return it }
+        for (child in dir.children) {
+            if (child.isDirectory) findRecursive(child)?.let { return it }
+        }
+        return null
+    }
+    return findRecursive(modelsDir)
+}
+
 /* ---------------- DATABASE CONFIG ---------------- */
 
 fun findDatabaseConnections(project: Project): List<String> {
@@ -407,6 +437,22 @@ private fun collectHelpers(dir: VirtualFile, result: MutableList<String>) {
             result.add(name)
         }
     }
+}
+
+/** Plik helpera w application/helpers/ (np. form → application/helpers/form_helper.php). Szuka też w podkatalogach. */
+fun resolveHelperFile(project: Project, helperName: String): VirtualFile? {
+    val baseDir = project.baseDir ?: return null
+    val helpersDir = baseDir.findChild("application")?.findChild("helpers") ?: return null
+    val fileName = "${helperName}_helper.php"
+    helpersDir.findChild(fileName)?.let { return it }
+    fun findRecursive(dir: VirtualFile): VirtualFile? {
+        dir.findChild(fileName)?.let { return it }
+        for (child in dir.children) {
+            if (child.isDirectory) findRecursive(child)?.let { return it }
+        }
+        return null
+    }
+    return findRecursive(helpersDir)
 }
 
 /* ---------------- CONFIG FILES (load->config) ---------------- */

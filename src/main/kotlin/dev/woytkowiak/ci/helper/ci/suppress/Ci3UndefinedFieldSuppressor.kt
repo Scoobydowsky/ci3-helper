@@ -8,6 +8,7 @@ import com.jetbrains.php.lang.psi.elements.FieldReference
 import com.jetbrains.php.lang.psi.elements.Variable
 import dev.woytkowiak.ci.helper.ci.CiViewUtils
 import dev.woytkowiak.ci.helper.ci.completion.findLibraries
+import dev.woytkowiak.ci.helper.ci.completion.findLoadedModelClasses
 
 /**
  * Wyłącza inspekcje w projektach CI3:
@@ -40,6 +41,8 @@ class Ci3UndefinedFieldSuppressor : InspectionSuppressor {
 
         if (fieldRef != null && fieldRef.classReference is Variable && (fieldRef.classReference as Variable).name == "this") {
             if (name in getLibraryPropertyNames(element.project)) return true
+            val fileText = element.containingFile?.text ?: ""
+            if (name in findLoadedModelClasses(fileText).keys) return true
         }
         return false
     }
