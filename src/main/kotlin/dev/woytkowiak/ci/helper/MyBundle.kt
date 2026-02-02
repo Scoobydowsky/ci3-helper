@@ -1,4 +1,4 @@
-package com.github.scoobydowsky.ci3phpstormhelper
+package dev.woytkowiak.ci.helper
 
 import com.intellij.DynamicBundle
 import org.jetbrains.annotations.NonNls

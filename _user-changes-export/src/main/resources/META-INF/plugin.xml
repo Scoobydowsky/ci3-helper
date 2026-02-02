@@ -22,17 +22,11 @@
 
         <intentionAction
                 language="PHP"
-                implementationClass="dev.woytkowiak.ci.helper.ci.intentions.AddCi3SuperObjectPropertyIntention"
-                implementationClassName="dev.woytkowiak.ci.helper.ci.intentions.AddCi3SuperObjectPropertyIntention"
-                categories="CodeIgniter 3"/>
+                implementationClass="dev.woytkowiak.ci.helper.ci.intentions.AddCi3SuperObjectPropertyIntention"/>
 
         <lang.inspectionSuppressor
                 language="PHP"
                 implementationClass="dev.woytkowiak.ci.helper.ci.suppress.Ci3UndefinedFieldSuppressor"/>
-
-        <lang.findUsagesProvider
-                language="PHP"
-                implementationClass="dev.woytkowiak.ci.helper.ci.navigation.CiViewFindUsagesProvider"/>
 
     </extensions>
 

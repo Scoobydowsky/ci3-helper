@@ -7,12 +7,9 @@ Plugin do PhpStorm/IntelliJ IDEA wspomagający pracę z projektami CodeIgniter 3
 
 - **Autouzupełnianie** — modele, widoki, biblioteki, trasy
 - **Nawigacja** — przejście do definicji (Ctrl+B) w `$this->load->view()`, `$this->load->model()`, `$this->load->library()`, trasach
-- **Widoki** — completion i go-to tylko w `load->view(...)`; Find Usages z pliku widoku pokazuje, gdzie widok jest ładowany
 - **Intencje** — szybka poprawka „Property not found” dla `CI_Controller`/`Dummy`
 - **Stuby** — rozpoznawanie typów CI bez błędów inspekcji
 <!-- Plugin description end -->
-
-Szczegółowe pokrycie funkcjonalności CI3: [COVERAGE.md](COVERAGE.md).
 
 ## Wymagania
 
@@ -26,16 +23,6 @@ Szczegółowe pokrycie funkcjonalności CI3: [COVERAGE.md](COVERAGE.md).
 ```
 
 Artefakt: `build/distributions/Code Igniter 3 Helper-*.zip`
-
-## Uruchomienie pluginu (PhpStorm)
-
-Build jest skonfigurowany pod **PhpStorm** (nie IntelliJ IDEA). Uruchomienie instancji PhpStorm z załadowanym pluginem:
-
-```bash
-./gradlew runIde
-```
-
-Albo w IDE: konfiguracja „Run Plugin” (`.run/Run Plugin.run.xml`) → uruchamia zadanie `runIde` → startuje **PhpStorm**.
 
 ## Instalacja z dysku
 
