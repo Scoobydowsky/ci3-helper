@@ -44,4 +44,33 @@
         <includedPathsContributor implementation="dev.woytkowiak.ci.helper.ci.stubs.Ci3StubIncludePathContributor"/>
         <typeProvider4 implementation="dev.woytkowiak.ci.helper.ci.types.Ci3ThisTypeProvider"/>
     </extensions>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <internalFileTemplate name="CI3 Controller.php"/>
+        <internalFileTemplate name="CI3 Model.php"/>
+        <internalFileTemplate name="CI3 View.php"/>
+        <internalFileTemplate name="CI3 API Controller.php"/>
+    </extensions>
+
+    <actions>
+        <group id="NewCodeIgniter3Group" text="%group.NewCodeIgniter3Group.text" popup="true">
+            <add-to-group group-id="NewGroup" anchor="first"/>
+            <action id="Create.Ci3.Controller"
+                    class="dev.woytkowiak.ci.helper.ci.actions.CreateCi3ControllerAction"
+                    text="%action.create.ci3.controller.text"
+                    description="%action.create.ci3.controller.text"/>
+            <action id="Create.Ci3.Model"
+                    class="dev.woytkowiak.ci.helper.ci.actions.CreateCi3ModelAction"
+                    text="%action.create.ci3.model.text"
+                    description="%action.create.ci3.model.text"/>
+            <action id="Create.Ci3.View"
+                    class="dev.woytkowiak.ci.helper.ci.actions.CreateCi3ViewAction"
+                    text="%action.create.ci3.view.text"
+                    description="%action.create.ci3.view.text"/>
+            <action id="Create.Ci3.ApiController"
+                    class="dev.woytkowiak.ci.helper.ci.actions.CreateCi3ApiControllerAction"
+                    text="%action.create.ci3.api.text"
+                    description="%action.create.ci3.api.text"/>
+        </group>
+    </actions>
 </idea-plugin>
