@@ -1,60 +1,62 @@
 # CodeIgniter 3 Helper
 
-Plugin do PhpStorm/IntelliJ IDEA wspomagający pracę z projektami CodeIgniter 3.
+[![Sponsor](https://img.shields.io/badge/-Sponsor%20me-ea4aaa?logo=githubsponsors&logoColor=ea4aaa)](https://github.com/sponsors/Scoobydowsky)
+
+PhpStorm plugin for working with CodeIgniter 3 projects.
 
 <!-- Plugin description -->
-**CodeIgniter 3 Helper** dodaje obsługę frameworka CodeIgniter 3 w IDE:
+**CodeIgniter 3 Helper** adds CodeIgniter 3 framework support in the IDE:
 
-- **Autouzupełnianie** — modele, widoki, biblioteki, trasy
-- **Nawigacja** — przejście do definicji (Ctrl+B) w `$this->load->view()`, `$this->load->model()`, `$this->load->library()`, trasach
-- **Widoki** — completion i go-to tylko w `load->view(...)`; Find Usages z pliku widoku pokazuje, gdzie widok jest ładowany
-- **Intencje** — szybka poprawka „Property not found” dla `CI_Controller`/`Dummy`
-- **Stuby** — rozpoznawanie typów CI bez błędów inspekcji
+- **Code completion** — models, views, libraries, routes
+- **Navigation** — Go to Definition (Ctrl+B) in `$this->load->view()`, `$this->load->model()`, `$this->load->library()`, routes
+- **Views** — completion and go-to only in `load->view(...)`; Find Usages from a view file shows where the view is loaded
+- **Intentions** — quick fix for "Property not found" on `CI_Controller`/`Dummy`
+- **Stubs** — CI type recognition without inspection errors
 
-Jeśli plugin się przydaje, rozważ [wsparcie autora](#wesprzyj) — link w README.
+If you find the plugin useful, consider [supporting the author](#support).
 <!-- Plugin description end -->
 
-Szczegółowe pokrycie funkcjonalności CI3: [COVERAGE.md](COVERAGE.md).
+Detailed CI3 feature coverage: [COVERAGE.md](COVERAGE.md).
 
-## Wymagania
+## Requirements
 
-- PhpStorm lub IntelliJ IDEA z wtyczką PHP
-- Java 21 (do budowania)
+- PhpStorm
+- Java 21 (for building)
 
-## Budowanie
+## Building
 
 ```bash
 ./gradlew buildPlugin
 ```
 
-Artefakt: `build/distributions/Code Igniter 3 Helper-*.zip`
+Artifact: `build/distributions/Code Igniter 3 Helper-*.zip`
 
-## Uruchomienie pluginu (PhpStorm)
+## Running the plugin
 
-Build jest skonfigurowany pod **PhpStorm** (nie IntelliJ IDEA). Uruchomienie instancji PhpStorm z załadowanym pluginem:
+To run PhpStorm with the plugin loaded:
 
 ```bash
 ./gradlew runIde
 ```
 
-Albo w IDE: konfiguracja „Run Plugin” (`.run/Run Plugin.run.xml`) → uruchamia zadanie `runIde` → startuje **PhpStorm**.
+Or in the IDE: use the "Run Plugin" run configuration (`.run/Run Plugin.run.xml`) — it runs the `runIde` task and starts PhpStorm.
 
-## Instalacja z dysku
+## Install from disk
 
-_Settings → Plugins → ⚙️ → Install Plugin from Disk…_ i wybierz plik zip.
+_Settings → Plugins → ⚙️ → Install Plugin from Disk…_ and select the zip file.
 
-## Wesprzyj
+## Support
 
-Jeśli plugin Ci się podoba i chcesz wesprzeć jego rozwój, możesz postawić mi wirtualną kawę lub zostawić wsparcie:
+If you like the plugin and want to support its development:
 
-- **[Tu wklej link, np. Ko-fi / Buy Me a Coffee / GitHub Sponsors]**
+[![GitHub Sponsors](https://img.shields.io/badge/GitHub%20Sponsors-Support%20the%20author-ea4aaa?logo=githubsponsors)](https://github.com/sponsors/Scoobydowsky)
 
-Dziękuję za każde wsparcie.
+You can also use [GitHub Sponsors](https://github.com/sponsors/Scoobydowsky) or any other platform you prefer. Thank you for any support.
 
-## Licencja
+## License
 
-Apache 2.0 — patrz [LICENSE](LICENSE).
+Apache 2.0 — see [LICENSE](LICENSE).
 
-## Szablon projektu
+## Project template
 
-Scaffold repozytorium powstał na podstawie [IntelliJ Platform Plugin Template](https://github.com/JetBrains/intellij-platform-plugin-template) (JetBrains s.r.o.), udostępnionego na licencji Apache License 2.0. Atrybucja oryginalnej licencji szablonu: [NOTICE](NOTICE) i [LICENSE](LICENSE).
+This repository was scaffolded from the [IntelliJ Platform Plugin Template](https://github.com/JetBrains/intellij-platform-plugin-template) (JetBrains s.r.o.), licensed under the Apache License 2.0. Original template license attribution: [NOTICE](NOTICE) and [LICENSE](LICENSE).
