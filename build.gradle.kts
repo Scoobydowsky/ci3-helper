@@ -53,6 +53,9 @@ dependencies {
 
 // Configure IntelliJ Platform Gradle Plugin - read more: https://plugins.jetbrains.com/docs/intellij/tools-intellij-platform-gradle-plugin-extension.html
 intellijPlatform {
+    // Nie uruchamiaj PhpStorm przy buildPlugin (unika konfliktu gdy IDE jest otwarte; plugin nie ma Searchable Options)
+    buildSearchableOptions.set(false)
+
     pluginConfiguration {
         name = providers.gradleProperty("pluginName")
         version = providers.gradleProperty("pluginVersion")
