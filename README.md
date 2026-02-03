@@ -5,15 +5,16 @@
 PhpStorm plugin for working with CodeIgniter 3 projects.
 
 <!-- Plugin description -->
-**CodeIgniter 3 Helper** adds CodeIgniter 3 framework support in the IDE:
+Adds CodeIgniter 3 support to PhpStorm: completion, navigation, and scaffolding so you can work faster with fewer false alarms.
 
-- **Code completion** — models, views, libraries, routes
-- **Navigation** — Go to Definition (Ctrl+B) in `$this->load->view()`, `$this->load->model()`, `$this->load->library()`, routes
-- **Views** — completion and go-to only in `load->view(...)`; Find Usages from a view file shows where the view is loaded
-- **Intentions** — quick fix for "Property not found" on `CI_Controller`/`Dummy`
-- **Stubs** — CI type recognition without inspection errors
+- Completion — models, views, libraries, routes in load->view(), load->model(), load->library(), and routes
+- Go to Definition (Ctrl+B) — jump to file or symbol from loaders and route definitions
+- Views — completion and go-to in load->view(); Find Usages shows where a view is loaded
+- Quick fix — one-click fix “Property not found” on CI_Controller and stubs
+- Stubs — CI types recognized so the IDE does not flag valid code
+- New → CodeIgniter 3 — create Controllers, Models, Views, and API Controllers from the context menu
 
-If you find the plugin useful, consider [supporting the author](#support).
+[Plugin Repository](https://github.com/Scoobydowsky/ci3-phpstorm-helper) — If the plugin helps you, consider [Donate](https://github.com/sponsors/Scoobydowsky).
 <!-- Plugin description end -->
 
 Detailed CI3 feature coverage: [COVERAGE.md](COVERAGE.md).
@@ -56,6 +57,8 @@ You can also use [GitHub Sponsors](https://github.com/sponsors/Scoobydowsky) or 
 ## License
 
 Apache 2.0 — see [LICENSE](LICENSE).
+
+CodeIgniter and the CodeIgniter logo are trademarks of the EllisLab, Inc. Development Corporation. This plugin is not affiliated with or endorsed by CodeIgniter. See [NOTICE](NOTICE) for attributions.
 
 ## Project template
 
