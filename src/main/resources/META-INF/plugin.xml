@@ -10,13 +10,6 @@
 
     <extensions defaultExtensionNs="com.intellij">
 
-        <applicationConfigurable
-                parentId="tools"
-                instance="dev.woytkowiak.ci.helper.ci.settings.Ci3SettingsConfigurable"
-                id="dev.woytkowiak.ci.helper.ci.settings.Ci3SettingsConfigurable"
-                key="settings.ci3.displayName"
-                bundle="messages.MyBundle"/>
-
         <statusBarWidgetFactory
                 id="CodeIgniter3Helper"
                 implementation="dev.woytkowiak.ci.helper.ci.statusbar.Ci3StatusBarWidgetFactory"/>
@@ -37,8 +30,7 @@
 
         <intentionAction
                 language="PHP"
-                implementationClass="dev.woytkowiak.ci.helper.ci.intentions.AddCi3SuperObjectPropertyIntention"
-                implementationClassName="dev.woytkowiak.ci.helper.ci.intentions.AddCi3SuperObjectPropertyIntention"
+                implementation="dev.woytkowiak.ci.helper.ci.intentions.AddCi3SuperObjectPropertyIntention"
                 categories="CodeIgniter 3"/>
 
         <lang.inspectionSuppressor

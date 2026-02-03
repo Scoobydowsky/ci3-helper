@@ -1,5 +1,6 @@
 package dev.woytkowiak.ci.helper.ci.types
 
+import com.intellij.openapi.project.DumbService
 import com.intellij.psi.PsiElement
 import com.intellij.psi.util.PsiTreeUtil
 import com.jetbrains.php.lang.psi.elements.PhpClass
@@ -17,6 +18,7 @@ class Ci3ThisTypeProvider : PhpTypeProvider4 {
     override fun getKey(): Char = '\u00A0' // unique character for this provider
 
     override fun getType(element: PsiElement): PhpType? {
+        if (DumbService.getInstance(element.project).isDumb) return null
         if (!isThisVariable(element)) return null
         val phpClass = PsiTreeUtil.getParentOfType(element, PhpClass::class.java) ?: return null
         if (!extendsCiOrMyController(phpClass)) return null
