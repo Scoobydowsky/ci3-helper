@@ -1,10 +1,10 @@
 <?php
 /**
- * Stub MY_Controller dla PhpStorm – bazowy kontroler CI3 (extends CI_Controller).
+ * Stub MY_Controller for PhpStorm – base CI3 controller (extends CI_Controller).
  *
- * Jeśli widzisz „Property 'input' not found in CI_Controller|Dummy”:
- * Otwórz application/core/MY_Controller.php, ustaw kursor w klasie, Alt+Enter →
- * „Add CI3 Super Object @property (fix Property not found)”.
+ * If you see "Property 'input' not found in CI_Controller|Dummy":
+ * Open application/core/MY_Controller.php, place cursor in the class, Alt+Enter →
+ * "Add CI3 Super Object @property (fix Property not found)".
  *
  * @property CI_Loader $load
  * @property CI_Input $input

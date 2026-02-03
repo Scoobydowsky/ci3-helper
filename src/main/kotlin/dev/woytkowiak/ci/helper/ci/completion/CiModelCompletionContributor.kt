@@ -70,7 +70,7 @@ class CiModelCompletionContributor : CompletionContributor() {
                 currentLine.contains("db->") ||
                         loadedDatabases.any { currentLine.contains("$it->") }
 
-            // Jeśli nic nie pasuje, wychodzimy
+            // If nothing matches, exit
             if (!isThisCall && !isModelCall && !isViewCall &&
                 !isDbCall && !isDatabaseLoad && !isLibraryCall && !isHelperCall &&
                 !isConfigLoad && !isLanguageLoad && !isDriverLoad &&
@@ -108,7 +108,7 @@ class CiModelCompletionContributor : CompletionContributor() {
                 }
             }
 
-            /* ---------- $this->nazwa_libki-> (metody biblioteki) ---------- */
+            /* ---------- $this->library_name-> (library methods) ---------- */
             if (isLibraryMethodCall && libraryPropName != null && libraryPropName.isNotEmpty()) {
                 val methods = findLibraryMethods(project, libraryPropName)
                 for (method in methods) {
@@ -223,7 +223,7 @@ class CiModelCompletionContributor : CompletionContributor() {
                 }
             }
 
-            /* ---------- $this->input-> (metody obsługi requestów) ---------- */
+            /* ---------- $this->input-> (request handling methods) ---------- */
             if (isInputMethodCall) {
                 val inputMethods = listOf(
                     "post",
@@ -244,7 +244,7 @@ class CiModelCompletionContributor : CompletionContributor() {
                 }
             }
 
-            /* ---------- input->post / input->get / input->cookie (klucze) ---------- */
+            /* ---------- input->post / input->get / input->cookie (keys) ---------- */
             if (isInputKeyCall) {
                 val keys = findInputKeys(project)
                 for (key in keys) {
@@ -252,7 +252,7 @@ class CiModelCompletionContributor : CompletionContributor() {
                 }
             }
 
-            /* ---------- input->server (klucze $_SERVER) ---------- */
+            /* ---------- input->server ($_SERVER keys) ---------- */
             if (isInputServerCall) {
                 val serverKeys = getServerKeys(project)
                 for (key in serverKeys) {
@@ -260,14 +260,14 @@ class CiModelCompletionContributor : CompletionContributor() {
                 }
             }
 
-            /* ---------- input->get_request_header (nagłówki HTTP) ---------- */
+            /* ---------- input->get_request_header (HTTP headers) ---------- */
             if (isInputHeaderCall) {
                 for (header in getRequestHeaderNames()) {
                     result.addElement(LookupElementBuilder.create(header))
                 }
             }
 
-            /* ---------- routing: controller/method w routes.php ---------- */
+            /* ---------- routing: controller/method in routes.php ---------- */
             if (isRouteValue) {
                 val controllerMethods = findControllerMethodsForRoutes(project)
                 for (cm in controllerMethods) {
@@ -279,7 +279,7 @@ class CiModelCompletionContributor : CompletionContributor() {
     }
 }
 
-/* ---------------- MODELE ---------------- */
+/* ---------------- MODELS ---------------- */
 
 fun findModels(project: Project): List<String> {
     val result = mutableListOf<String>()
@@ -303,10 +303,10 @@ fun collectModels(dir: VirtualFile, result: MutableList<String>) {
     }
 }
 
-/** Z pliku: load->model('X') lub load->model('X', 'alias') → nazwa właściwości na $this -> nazwa klasy modelu (plik). */
+/** From file: load->model('X') or load->model('X', 'alias') → property name on $this -> model class name (file). */
 fun findLoadedModelClasses(fileText: String): Map<String, String> {
     val result = mutableMapOf<String, String>()
-    // Grupa 1: nazwa modelu (klasa/plik), grupa 2: opcjonalny alias (drugi parametr)
+    // Group 1: model name (class/file), group 2: optional alias (second parameter)
     val regex = Regex("load->model\\s*\\(\\s*['\"]([^'\"]+)['\"]\\s*(?:,\\s*['\"]([^'\"]+)['\"])?\\s*\\)")
     regex.findAll(fileText).forEach { m ->
         val modelClass = m.groupValues[1].trim()
@@ -317,7 +317,7 @@ fun findLoadedModelClasses(fileText: String): Map<String, String> {
     return result
 }
 
-/** Plik modelu w application/models/ (np. Order_model → application/models/Order_model.php). Szuka też w podkatalogach. */
+/** Model file in application/models/ (e.g. Order_model → application/models/Order_model.php). Also searches subdirectories. */
 fun resolveModelFile(project: Project, modelClassName: String): VirtualFile? {
     val baseDir = project.baseDir ?: return null
     val modelsDir = baseDir.findChild("application")?.findChild("models") ?: return null
@@ -381,10 +381,10 @@ private fun collectLibraries(dir: VirtualFile, result: MutableList<String>) {
     }
 }
 
-/** Z pliku: load->library('X') lub load->library('X', ..., 'alias') → nazwy właściwości na $this (alias lub lowercase X). */
+/** From file: load->library('X') or load->library('X', ..., 'alias') → property names on $this (alias or lowercase X). */
 fun findLoadedLibraries(fileText: String): List<String> {
     val result = mutableSetOf<String>()
-    // Grupa 1: nazwa biblioteki, grupa 2: opcjonalny alias (trzeci parametr)
+    // Group 1: library name, group 2: optional alias (third parameter)
     val regex = Regex("load->library\\s*\\(\\s*['\"]([^'\"]+)['\"]\\s*(?:,\\s*[^)]*)?(?:,\\s*['\"]([^'\"]+)['\"])?\\s*\\)")
     regex.findAll(fileText).forEach { m ->
         val alias = m.groupValues[2].trim()
@@ -394,7 +394,7 @@ fun findLoadedLibraries(fileText: String): List<String> {
     return result.distinct().sorted()
 }
 
-/** Metody publiczne (i protected) z pliku biblioteki w application/libraries/ (po nazwie właściwości, np. my_lib). */
+/** Public (and protected) methods from the library file in application/libraries/ (by property name, e.g. my_lib). */
 fun findLibraryMethods(project: Project, libraryPropertyName: String): List<String> {
     val libFile = findLibraryFileByPropertyName(project, libraryPropertyName) ?: return emptyList()
     val text = String(libFile.contentsToByteArray())
@@ -417,7 +417,7 @@ private fun findLibraryFileByPropertyName(project: Project, propertyName: String
         ?: findRecursive(libsDir, "${propertyName.lowercase()}.php")
 }
 
-/* ---------------- HELPERY ---------------- */
+/* ---------------- HELPERS ---------------- */
 
 fun findHelpers(project: Project): List<String> {
     val result = mutableListOf<String>()
@@ -439,7 +439,7 @@ private fun collectHelpers(dir: VirtualFile, result: MutableList<String>) {
     }
 }
 
-/** Plik helpera w application/helpers/ (np. form → application/helpers/form_helper.php). Szuka też w podkatalogach. */
+/** Helper file in application/helpers/ (e.g. form → application/helpers/form_helper.php). Also searches subdirectories. */
 fun resolveHelperFile(project: Project, helperName: String): VirtualFile? {
     val baseDir = project.baseDir ?: return null
     val helpersDir = baseDir.findChild("application")?.findChild("helpers") ?: return null
@@ -522,7 +522,7 @@ fun findConfigKeys(project: Project): List<String> {
     return result.sorted()
 }
 
-/* ---------------- INPUT KEYS (post/get z formularzy i projektu) ---------------- */
+/* ---------------- INPUT KEYS (post/get from forms and project) ---------------- */
 
 fun findInputKeys(project: Project): List<String> {
     val result = mutableSetOf<String>()
@@ -563,7 +563,7 @@ fun findInputKeys(project: Project): List<String> {
     return result.sorted()
 }
 
-/* ---------------- INPUT->SERVER (klucze $_SERVER) ---------------- */
+/* ---------------- INPUT->SERVER ($_SERVER keys) ---------------- */
 
 fun getServerKeys(project: Project): List<String> {
     val result = mutableSetOf<String>()
@@ -616,7 +616,7 @@ fun getRequestHeaderNames(): List<String> = listOf(
     "Connection"
 )
 
-/* ---------------- ROUTING (controller/method w routes.php) ---------------- */
+/* ---------------- ROUTING (controller/method in routes.php) ---------------- */
 
 fun findControllerMethodsForRoutes(project: Project): List<String> {
     val result = mutableListOf<String>()

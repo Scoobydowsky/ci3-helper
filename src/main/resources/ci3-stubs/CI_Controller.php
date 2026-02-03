@@ -1,8 +1,8 @@
 <?php
 /**
- * Stub CI_Controller dla PhpStorm – Super Object CodeIgniter 3.
- * Dodaj ścieżkę do tego pliku (lub folderu ci3-stubs) w PHP → Include Path,
- * albo plugin CodeIgniter 3 Helper zrobi to automatycznie.
+ * Stub CI_Controller for PhpStorm – CodeIgniter 3 Super Object.
+ * Add this file (or the ci3-stubs folder) to PHP → Include Path,
+ * or the CodeIgniter 3 Helper plugin will do it automatically.
  *
  * @property CI_Loader $load
  * @property CI_Input $input

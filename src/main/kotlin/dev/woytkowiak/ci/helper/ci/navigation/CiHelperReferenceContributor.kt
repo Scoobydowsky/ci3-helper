@@ -8,7 +8,7 @@ import com.intellij.util.ProcessingContext
 import dev.woytkowiak.ci.helper.ci.completion.resolveHelperFile
 
 /**
- * "Go to Declaration" z load->helper('form') na plik application/helpers/form_helper.php.
+ * "Go to Declaration" from load->helper('form') to file application/helpers/form_helper.php.
  */
 class CiHelperReferenceContributor : PsiReferenceContributor() {
 

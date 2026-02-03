@@ -11,11 +11,11 @@ import javax.swing.ImageIcon
 import javax.imageio.ImageIO
 
 /**
- * Ikony pluginu CodeIgniter 3 Helper.
- * Pliki: `src/main/resources/icons/`
- * - ci3.png (dowolny rozmiar — zawsze rysowane jako 16×16)
- * - Ci3 — kolorowa, na pasku statusu
- * - Ci3Menu — w kolorze kontekstu (dopasowana do menu, jak PHP File / File)
+ * Icons for the CodeIgniter 3 Helper plugin.
+ * Files: `src/main/resources/icons/`
+ * - ci3.png (any size — always drawn as 16×16)
+ * - Ci3 — colored, for the status bar
+ * - Ci3Menu — context-colored (matches menu, like PHP File / File)
  */
 object Ci3Icons {
     private const val SIZE = 16
@@ -23,11 +23,11 @@ object Ci3Icons {
     @JvmField
     val Ci3: Icon = loadFixedSizeIcon("/icons/ci3.png")
 
-    /** Ikona w kolorze kontekstu (menu/toolbar) — kształt z ci3.png, kolor z IDE. */
+    /** Context-colored icon (menu/toolbar) — shape from ci3.png, color from IDE. */
     @JvmField
     val Ci3Menu: Icon = loadMenuStyleIcon("/icons/ci3.png")
 
-    /** Ikona o stałym rozmiarze 16×16 — nie rozciąga się przy rysowaniu. */
+    /** Fixed 16×16 icon — does not stretch when drawn. */
     private fun loadFixedSizeIcon(path: String): Icon {
         val url = Ci3Icons::class.java.getResource(path) ?: return ImageIcon()
         val image = ImageIO.read(url) ?: return ImageIcon()
@@ -41,7 +41,7 @@ object Ci3Icons {
         }
     }
 
-    /** Ikona rysowana w kolorze Graphics (dopasowana do menu / paska narzędzi). */
+    /** Icon drawn with Graphics color (matches menu / toolbar). */
     private fun loadMenuStyleIcon(path: String): Icon {
         val url = Ci3Icons::class.java.getResource(path) ?: return ImageIcon()
         val source = ImageIO.read(url) ?: return ImageIcon()

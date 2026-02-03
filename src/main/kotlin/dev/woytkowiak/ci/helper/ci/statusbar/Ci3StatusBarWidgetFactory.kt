@@ -5,7 +5,7 @@ import com.intellij.openapi.wm.StatusBarWidget
 import com.intellij.openapi.wm.StatusBarWidgetFactory
 
 /**
- * Rejestruje widget CI3 na pasku statusu (ikona + tooltip z wersją, klik = wsparcie autora).
+ * Registers the CI3 widget on the status bar (icon + version tooltip, click = support author).
  */
 class Ci3StatusBarWidgetFactory : StatusBarWidgetFactory {
 

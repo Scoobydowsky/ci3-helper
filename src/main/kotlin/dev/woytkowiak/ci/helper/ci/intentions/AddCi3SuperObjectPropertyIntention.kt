@@ -9,8 +9,8 @@ import com.intellij.psi.PsiFile
 import dev.woytkowiak.ci.helper.MyBundle
 
 /**
- * Intention: dodaj @property Super Object CI3 do klasy rozszerzającej CI_Controller lub MY_Controller.
- * Dzięki temu PhpStorm rozpoznaje $this->input, $this->load itd.
+ * Intention: add @property Super Object CI3 to a class extending CI_Controller or MY_Controller.
+ * This allows PhpStorm to recognize $this->input, $this->load etc.
  */
 class AddCi3SuperObjectPropertyIntention : PsiElementBaseIntentionAction() {
 

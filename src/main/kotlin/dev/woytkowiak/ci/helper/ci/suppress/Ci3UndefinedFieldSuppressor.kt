@@ -11,9 +11,9 @@ import dev.woytkowiak.ci.helper.ci.completion.findLibraries
 import dev.woytkowiak.ci.helper.ci.completion.findLoadedModelClasses
 
 /**
- * Wyłącza inspekcje w projektach CI3:
- * – **PhpUndefinedFieldInspection**: Super Object ($this->load, $this->db…), załadowane biblioteki.
- * – **PhpUndefinedVariableInspection**: w plikach widoków (application/views/) – zmienne z $data.
+ * Suppresses inspections in CI3 projects:
+ * – **PhpUndefinedFieldInspection**: Super Object ($this->load, $this->db…), loaded libraries.
+ * – **PhpUndefinedVariableInspection**: in view files (application/views/) — variables from $data.
  */
 class Ci3UndefinedFieldSuppressor : InspectionSuppressor {
 

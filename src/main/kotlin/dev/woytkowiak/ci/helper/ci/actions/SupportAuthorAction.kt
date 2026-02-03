@@ -8,8 +8,8 @@ import dev.woytkowiak.ci.helper.ci.Ci3Support
 import dev.woytkowiak.ci.helper.MyBundle
 
 /**
- * Otwiera w przeglądarce stronę z informacją o wsparciu autora pluginu.
- * Link możesz zmienić na np. Ko-fi, Buy Me a Coffee, GitHub Sponsors.
+ * Opens in the browser the page with information on supporting the plugin author.
+ * You can change the link to e.g. Ko-fi, Buy Me a Coffee, GitHub Sponsors.
  */
 class SupportAuthorAction : AnAction(
     MyBundle.messagePointer("action.support.author.text"),

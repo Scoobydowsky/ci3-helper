@@ -4,13 +4,13 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 
 /**
- * Wspólna logika dla widoków CI3: completion, nawigacja, find usages.
- * Widoki: application/views/ (ścieżki jak users/list → users/list.php).
+ * Shared logic for CI3 views: completion, navigation, find usages.
+ * Views: application/views/ (paths like users/list → users/list.php).
  */
 object CiViewUtils {
 
     /**
-     * Katalog views w projekcie (application/views) lub null.
+     * Views directory in the project (application/views) or null.
      */
     fun getViewsDir(project: Project): VirtualFile? {
         val baseDir = project.baseDir ?: return null
@@ -18,7 +18,7 @@ object CiViewUtils {
     }
 
     /**
-     * Wszystkie nazwy widoków do completion (np. "header", "users/list").
+     * All view names for completion (e.g. "header", "users/list").
      */
     fun findViews(project: Project): List<String> {
         val viewsDir = getViewsDir(project) ?: return emptyList()
@@ -28,8 +28,8 @@ object CiViewUtils {
     }
 
     /**
-     * Plik widoku dla danej ścieżki (np. "users/list" → application/views/users/list.php).
-     * Obsługuje też pojedyncze nazwy (np. "header" → application/views/header.php).
+     * View file for the given path (e.g. "users/list" → application/views/users/list.php).
+     * Also handles single names (e.g. "header" → application/views/header.php).
      */
     fun resolveViewFile(project: Project, viewPath: String): VirtualFile? {
         val viewsDir = getViewsDir(project) ?: return null

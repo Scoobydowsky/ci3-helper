@@ -14,10 +14,10 @@ import dev.woytkowiak.ci.helper.ci.Ci3Icons
 import dev.woytkowiak.ci.helper.MyBundle
 
 /**
- * Bazowa akcja tworzenia pojedynczego pliku CI3 z szablonu.
- * Kreator: Name, File name (auto), Directory (domyślnie application/controllers itd.), Extends (lista).
+ * Base action for creating a single CI3 file from a template.
+ * Wizard: Name, File name (auto), Directory (default application/controllers etc.), Extends (list).
  *
- * @param defaultFolderName "controllers", "models" lub "views" – domyślny katalog CI3
+ * @param defaultFolderName "controllers", "models" or "views" – default CI3 directory
  */
 abstract class CreateCi3FileAction(
     private val templateName: String,

@@ -13,8 +13,8 @@ import dev.woytkowiak.ci.helper.ci.completion.resolveModelFile
 
 /**
  * "Go to Declaration":
- * – z $this->Order_model na plik application/models/Order_model.php,
- * – z literału w load->model('Order_model') na ten sam plik.
+ * – from $this->Order_model to file application/models/Order_model.php,
+ * – from literal in load->model('Order_model') to the same file.
  */
 class CiModelReferenceContributor : PsiReferenceContributor() {
 
@@ -36,7 +36,7 @@ class CiModelReferenceContributor : PsiReferenceContributor() {
 
             val project = element.project
 
-            // 1) $this->Order_model → plik modelu
+            // 1) $this->Order_model → model file
             val fieldRef = PsiTreeUtil.getParentOfType(element, FieldReference::class.java)
             if (fieldRef != null && fieldRef.classReference is Variable && (fieldRef.classReference as Variable).name == "this") {
                 val propertyName = fieldRef.name ?: element.text ?: return PsiReference.EMPTY_ARRAY
@@ -46,7 +46,7 @@ class CiModelReferenceContributor : PsiReferenceContributor() {
                 return arrayOf(ModelReference(element, target, TextRange(0, element.textLength)))
             }
 
-            // 2) literał w load->model('Order_model') → plik modelu
+            // 2) literal in load->model('Order_model') → model file
             val text = element.text?.trim()?.trim('\'', '"') ?: return PsiReference.EMPTY_ARRAY
             if (text.isNotEmpty() && !text.contains("/") && !text.contains(" ") && isInsideLoadModel(element, text)) {
                 val target = resolveModelFile(project, text) ?: return PsiReference.EMPTY_ARRAY

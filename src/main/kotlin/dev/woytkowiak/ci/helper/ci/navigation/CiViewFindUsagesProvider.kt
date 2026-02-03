@@ -6,8 +6,8 @@ import com.intellij.psi.PsiFile
 import dev.woytkowiak.ci.helper.ci.CiViewUtils
 
 /**
- * Find Usages dla plików widoków CI3 (application/views/...).
- * Umożliwia wyszukanie wszystkich miejsc, gdzie widok jest ładowany (load->view('...')).
+ * Find Usages for CI3 view files (application/views/...).
+ * Finds all places where the view is loaded (load->view('...')).
  */
 class CiViewFindUsagesProvider : FindUsagesProvider {
 

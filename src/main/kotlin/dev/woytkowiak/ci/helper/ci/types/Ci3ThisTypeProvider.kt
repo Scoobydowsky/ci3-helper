@@ -8,13 +8,13 @@ import com.jetbrains.php.lang.psi.resolve.types.PhpType
 import com.jetbrains.php.lang.psi.resolve.types.PhpTypeProvider4
 
 /**
- * Gdy $this jest w klasie rozszerzającej CI_Controller lub MY_Controller,
- * zwracamy typ CI_Controller – PhpStorm weźmie wtedy @property ze stubu (include path).
- * Działa bez ręcznego dodawania @property do MY_Controller.
+ * When $this is in a class extending CI_Controller or MY_Controller,
+ * we return type CI_Controller — PhpStorm will then use @property from the stub (include path).
+ * Works without manually adding @property to MY_Controller.
  */
 class Ci3ThisTypeProvider : PhpTypeProvider4 {
 
-    override fun getKey(): Char = '\u00A0' // unikalny znak dla tego providera
+    override fun getKey(): Char = '\u00A0' // unique character for this provider
 
     override fun getType(element: PsiElement): PhpType? {
         if (!isThisVariable(element)) return null

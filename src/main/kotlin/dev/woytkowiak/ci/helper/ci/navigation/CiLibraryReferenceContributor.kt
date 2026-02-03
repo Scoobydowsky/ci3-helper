@@ -7,7 +7,7 @@ import com.intellij.psi.*
 import com.intellij.util.ProcessingContext
 
 /**
- * "Go to Declaration" z load->library('name') na plik application/libraries/Name.php.
+ * "Go to Declaration" from load->library('name') to file application/libraries/Name.php.
  */
 class CiLibraryReferenceContributor : PsiReferenceContributor() {
 

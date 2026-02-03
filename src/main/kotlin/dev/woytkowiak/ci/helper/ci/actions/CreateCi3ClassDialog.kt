@@ -23,8 +23,8 @@ import javax.swing.event.DocumentEvent
 import javax.swing.event.DocumentListener
 
 /**
- * Kreator CI3: Name, File name (auto z Name), Directory, Extends (lista do wyboru).
- * Bez namespace i template (CI3 ich nie używa w tym kontekście).
+ * CI3 wizard: Name, File name (auto from Name), Directory, Extends (dropdown).
+ * No namespace or template (CI3 does not use them in this context).
  */
 class CreateCi3ClassDialog(
     project: Project,

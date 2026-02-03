@@ -20,9 +20,9 @@ import javax.swing.JPanel
 private const val ICON_SIZE = 16
 
 /**
- * Widget na pasku statusu: ikona + tooltip z wersją i "Click to support author".
- * Klik otwiera link do wsparcia w przeglądarce.
- * Rozmiar komponentu ograniczony do 16×16, żeby ikona nie rozciągała się na pasku.
+ * Status bar widget: icon + tooltip with version and "Click to support author".
+ * Click opens the support link in the browser.
+ * Component size limited to 16×16 so the icon does not stretch on the bar.
  */
 class Ci3StatusBarWidget(private val project: Project) : JPanel(), CustomStatusBarWidget, StatusBarWidget {
 

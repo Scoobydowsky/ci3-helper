@@ -10,7 +10,7 @@ import javax.swing.JComponent
 import javax.swing.JPanel
 
 /**
- * Strona w Settings → Tools → CodeIgniter 3 Helper z przyciskiem „Wesprzyj”.
+ * Settings page: Tools → CodeIgniter 3 Helper with a "Support" button.
  */
 class Ci3SettingsConfigurable : Configurable {
 

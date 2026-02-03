@@ -7,8 +7,8 @@ import com.jetbrains.php.config.library.PhpIncludedPathsContributor
 import java.io.File
 
 /**
- * Dodaje ścieżkę do stubów CI3 (CI_Controller z @property) do PHP Include Path,
- * żeby PhpStorm rozpoznawał $this->input, $this->load itd. w kontrolerach.
+ * Adds the path to CI3 stubs (CI_Controller with @property) to the PHP Include Path,
+ * so that PhpStorm recognizes $this->input, $this->load etc. in controllers.
  */
 class Ci3StubIncludePathContributor : PhpIncludedPathsContributor {
 
@@ -17,7 +17,7 @@ class Ci3StubIncludePathContributor : PhpIncludedPathsContributor {
         val baseDir = LocalFileSystem.getInstance().findFileByPath(basePath) ?: return emptyList()
         val appDir = baseDir.findChild("application") ?: return emptyList()
         val configDir = appDir.findChild("config") ?: return emptyList()
-        if (configDir.findChild("config.php") == null) return emptyList() // prawdopodobnie CI3
+        if (configDir.findChild("config.php") == null) return emptyList() // likely not a CI3 project
         val stubsDir = File(basePath, ".ci3-helper/stubs")
         if (!stubsDir.isDirectory) stubsDir.mkdirs()
 

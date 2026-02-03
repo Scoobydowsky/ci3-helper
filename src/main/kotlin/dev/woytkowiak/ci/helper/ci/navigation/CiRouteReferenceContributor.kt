@@ -7,8 +7,8 @@ import com.intellij.psi.*
 import com.intellij.util.ProcessingContext
 
 /**
- * W pliku routes.php umożliwia "Go to Declaration" z wartości route (controller/method)
- * na plik kontrolera w application/controllers/.
+ * In routes.php enables "Go to Declaration" from route value (controller/method)
+ * to the controller file in application/controllers/.
  */
 class CiRouteReferenceContributor : PsiReferenceContributor() {
 

@@ -8,8 +8,8 @@ import com.intellij.util.ProcessingContext
 import dev.woytkowiak.ci.helper.ci.CiViewUtils
 
 /**
- * "Go to Declaration" z load->view('ścieżka') na plik application/views/ścieżka.php.
- * Obsługuje ścieżki z "/" (users/list) i pojedyncze nazwy (header).
+ * "Go to Declaration" from load->view('path') to file application/views/path.php.
+ * Handles paths with "/" (users/list) and single names (header).
  */
 class CiViewReferenceContributor : PsiReferenceContributor() {
 
