@@ -10,8 +10,8 @@ import com.intellij.openapi.actionSystem.CommonDataKeys
 import com.intellij.openapi.actionSystem.LangDataKeys
 import com.intellij.openapi.fileEditor.FileEditorManager
 import com.intellij.psi.PsiFile
+import dev.woytkowiak.ci.helper.ci.Ci3Icons
 import dev.woytkowiak.ci.helper.MyBundle
-import javax.swing.Icon
 
 /**
  * Bazowa akcja tworzenia pojedynczego pliku CI3 z szablonu.
@@ -31,7 +31,7 @@ abstract class CreateCi3FileAction(
 ) : AnAction(
     MyBundle.messagePointer(textKey),
     MyBundle.messagePointer(textKey),
-    null as Icon?
+    Ci3Icons.Ci3Menu
 ) {
 
     override fun actionPerformed(e: AnActionEvent) {

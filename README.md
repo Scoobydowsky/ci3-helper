@@ -10,6 +10,8 @@ Plugin do PhpStorm/IntelliJ IDEA wspomagający pracę z projektami CodeIgniter 3
 - **Widoki** — completion i go-to tylko w `load->view(...)`; Find Usages z pliku widoku pokazuje, gdzie widok jest ładowany
 - **Intencje** — szybka poprawka „Property not found” dla `CI_Controller`/`Dummy`
 - **Stuby** — rozpoznawanie typów CI bez błędów inspekcji
+
+Jeśli plugin się przydaje, rozważ [wsparcie autora](#wesprzyj) — link w README.
 <!-- Plugin description end -->
 
 Szczegółowe pokrycie funkcjonalności CI3: [COVERAGE.md](COVERAGE.md).
@@ -40,6 +42,14 @@ Albo w IDE: konfiguracja „Run Plugin” (`.run/Run Plugin.run.xml`) → urucha
 ## Instalacja z dysku
 
 _Settings → Plugins → ⚙️ → Install Plugin from Disk…_ i wybierz plik zip.
+
+## Wesprzyj
+
+Jeśli plugin Ci się podoba i chcesz wesprzeć jego rozwój, możesz postawić mi wirtualną kawę lub zostawić wsparcie:
+
+- **[Tu wklej link, np. Ko-fi / Buy Me a Coffee / GitHub Sponsors]**
+
+Dziękuję za każde wsparcie.
 
 ## Licencja
 

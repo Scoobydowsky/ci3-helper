@@ -10,6 +10,17 @@
 
     <extensions defaultExtensionNs="com.intellij">
 
+        <applicationConfigurable
+                parentId="tools"
+                instance="dev.woytkowiak.ci.helper.ci.settings.Ci3SettingsConfigurable"
+                id="dev.woytkowiak.ci.helper.ci.settings.Ci3SettingsConfigurable"
+                key="settings.ci3.displayName"
+                bundle="messages.MyBundle"/>
+
+        <statusBarWidgetFactory
+                id="CodeIgniter3Helper"
+                implementation="dev.woytkowiak.ci.helper.ci.statusbar.Ci3StatusBarWidgetFactory"/>
+
         <completion.contributor
                 language="PHP"
                 implementationClass="dev.woytkowiak.ci.helper.ci.completion.CiModelCompletionContributor"/>
@@ -53,7 +64,7 @@
     </extensions>
 
     <actions>
-        <group id="NewCodeIgniter3Group" text="%group.NewCodeIgniter3Group.text" popup="true">
+        <group id="NewCodeIgniter3Group" text="%group.NewCodeIgniter3Group.text" popup="true" icon="dev.woytkowiak.ci.helper.ci.Ci3Icons.Ci3">
             <add-to-group group-id="NewGroup" anchor="first"/>
             <action id="Create.Ci3.Controller"
                     class="dev.woytkowiak.ci.helper.ci.actions.CreateCi3ControllerAction"
@@ -72,5 +83,11 @@
                     text="%action.create.ci3.api.text"
                     description="%action.create.ci3.api.text"/>
         </group>
+        <action id="Support.Ci3.Author"
+                class="dev.woytkowiak.ci.helper.ci.actions.SupportAuthorAction"
+                text="%action.support.author.text"
+                description="%action.support.author.description">
+            <add-to-group group-id="HelpMenu" anchor="last"/>
+        </action>
     </actions>
 </idea-plugin>
