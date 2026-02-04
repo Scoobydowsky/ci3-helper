@@ -17,8 +17,6 @@ Adds CodeIgniter 3 support to PhpStorm: completion, navigation, and scaffolding 
 [Plugin Repository](https://github.com/Scoobydowsky/ci3-phpstorm-helper) — If the plugin helps you, consider [Donate](https://github.com/sponsors/Scoobydowsky).
 <!-- Plugin description end -->
 
-Detailed CI3 feature coverage: [COVERAGE.md](COVERAGE.md).
-
 ## Requirements
 
 - PhpStorm
