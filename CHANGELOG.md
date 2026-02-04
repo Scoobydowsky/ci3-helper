@@ -2,11 +2,10 @@
 
 # ci3-phpstorm-helper Changelog
 
-## [Unreleased]
+## [0.0.2]
 ### Fixed
 - Replace internal API `PhpType.from(String[])` with public `PhpType.builder().add(...).build()` in `Ci3ThisTypeProvider` for plugin marketplace verification
 
-## [0.0.2] - 2026-02-03
 ### Changed
 - Plugin is now compatible with PhpStorm only (removed IntelliJ IDEA support via `incompatible-with` Java module)
 - Plugin verification runs only for PhpStorm
