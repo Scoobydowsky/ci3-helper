@@ -22,7 +22,7 @@ class Ci3ThisTypeProvider : PhpTypeProvider4 {
         if (!isThisVariable(element)) return null
         val phpClass = PsiTreeUtil.getParentOfType(element, PhpClass::class.java) ?: return null
         if (!extendsCiOrMyController(phpClass)) return null
-        return PhpType.from("\\CI_Controller")
+        return PhpType.builder().add("\\CI_Controller").build()
     }
 
     override fun complete(expression: String, project: com.intellij.openapi.project.Project): PhpType =

@@ -3,6 +3,8 @@
 # ci3-phpstorm-helper Changelog
 
 ## [Unreleased]
+### Fixed
+- Replace internal API `PhpType.from(String[])` with public `PhpType.builder().add(...).build()` in `Ci3ThisTypeProvider` for plugin marketplace verification
 
 ## [0.0.2] - 2026-02-03
 ### Changed
