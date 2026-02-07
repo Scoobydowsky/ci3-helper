@@ -7,6 +7,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
 import dev.woytkowiak.ci.helper.MyBundle
+import dev.woytkowiak.ci.helper.ci.Ci3PluginState
 
 /**
  * Intention: add @property Super Object CI3 to a class extending CI_Controller or MY_Controller.
@@ -19,6 +20,7 @@ class AddCi3SuperObjectPropertyIntention : PsiElementBaseIntentionAction() {
     override fun getFamilyName(): String = familyName
 
     override fun isAvailable(project: Project, editor: Editor?, element: PsiElement): Boolean {
+        if (!Ci3PluginState.getInstance().isEnabled) return false
         val file = element.containingFile ?: return false
         if (!file.name.endsWith(".php")) return false
         val text = file.text
@@ -28,6 +30,7 @@ class AddCi3SuperObjectPropertyIntention : PsiElementBaseIntentionAction() {
     }
 
     override fun invoke(project: Project, editor: Editor?, element: PsiElement) {
+        if (!Ci3PluginState.getInstance().isEnabled) return
         val file = element.containingFile as? PsiFile ?: return
         val doc = editor?.document ?: return
         val text = file.text

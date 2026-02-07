@@ -6,6 +6,7 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.util.PsiTreeUtil
 import com.jetbrains.php.lang.psi.elements.FieldReference
 import com.jetbrains.php.lang.psi.elements.Variable
+import dev.woytkowiak.ci.helper.ci.Ci3PluginState
 import dev.woytkowiak.ci.helper.ci.CiViewUtils
 import dev.woytkowiak.ci.helper.ci.completion.findLibraries
 import dev.woytkowiak.ci.helper.ci.completion.findLoadedModelClasses
@@ -23,6 +24,7 @@ class Ci3UndefinedFieldSuppressor : InspectionSuppressor {
     )
 
     override fun isSuppressedFor(element: PsiElement, toolId: String): Boolean {
+        if (!Ci3PluginState.getInstance().isEnabled) return false
         if (!element.containingFile?.name.orEmpty().endsWith(".php")) return false
 
         if (toolId == "PhpUndefinedVariableInspection") {

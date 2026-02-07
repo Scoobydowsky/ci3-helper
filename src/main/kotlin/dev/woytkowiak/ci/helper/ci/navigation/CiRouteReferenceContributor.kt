@@ -5,6 +5,7 @@ import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.patterns.PlatformPatterns
 import com.intellij.psi.*
 import com.intellij.util.ProcessingContext
+import dev.woytkowiak.ci.helper.ci.Ci3PluginState
 
 /**
  * In routes.php enables "Go to Declaration" from route value (controller/method)
@@ -25,6 +26,7 @@ class CiRouteReferenceContributor : PsiReferenceContributor() {
             element: PsiElement,
             context: ProcessingContext
         ): Array<PsiReference> {
+            if (!Ci3PluginState.getInstance().isEnabled) return PsiReference.EMPTY_ARRAY
             val file = element.containingFile ?: return PsiReference.EMPTY_ARRAY
             if (file.name != "routes.php") return PsiReference.EMPTY_ARRAY
 

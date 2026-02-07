@@ -3,6 +3,7 @@ package dev.woytkowiak.ci.helper.ci.navigation
 import com.intellij.lang.findUsages.FindUsagesProvider
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
+import dev.woytkowiak.ci.helper.ci.Ci3PluginState
 import dev.woytkowiak.ci.helper.ci.CiViewUtils
 
 /**
@@ -12,6 +13,7 @@ import dev.woytkowiak.ci.helper.ci.CiViewUtils
 class CiViewFindUsagesProvider : FindUsagesProvider {
 
     override fun canFindUsagesFor(element: PsiElement): Boolean {
+        if (!Ci3PluginState.getInstance().isEnabled) return false
         if (element !is PsiFile) return false
         val vFile = element.virtualFile ?: return false
         val viewsDir = CiViewUtils.getViewsDir(element.project) ?: return false

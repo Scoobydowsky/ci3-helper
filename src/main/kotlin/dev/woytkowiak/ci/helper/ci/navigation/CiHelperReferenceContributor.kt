@@ -5,6 +5,7 @@ import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.patterns.PlatformPatterns
 import com.intellij.psi.*
 import com.intellij.util.ProcessingContext
+import dev.woytkowiak.ci.helper.ci.Ci3PluginState
 import dev.woytkowiak.ci.helper.ci.completion.resolveHelperFile
 
 /**
@@ -25,6 +26,7 @@ class CiHelperReferenceContributor : PsiReferenceContributor() {
             element: PsiElement,
             context: ProcessingContext
         ): Array<PsiReference> {
+            if (!Ci3PluginState.getInstance().isEnabled) return PsiReference.EMPTY_ARRAY
             val file = element.containingFile ?: return PsiReference.EMPTY_ARRAY
             if (!file.name.endsWith(".php")) return PsiReference.EMPTY_ARRAY
 

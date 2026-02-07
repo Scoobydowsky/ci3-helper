@@ -107,6 +107,8 @@ intellijPlatform {
         channels = providers.gradleProperty("pluginVersion").map { listOf(it.substringAfter('-', "").substringBefore('.').ifEmpty { "default" }) }
     }
 
+    // Weryfikacja pluginu tylko w PhpStorm (nie w IntelliJ IDEA ani innych IDE).
+    // Przy wysyłce do JetBrains Marketplace plugin jest sprawdzany wyłącznie pod PhpStorm.
     pluginVerification {
         ides {
             select {
@@ -148,6 +150,9 @@ tasks {
 intellijPlatformTesting {
     runIde {
         register("runIdeForUiTests") {
+            type.set(IntelliJPlatformType.PhpStorm)
+            version.set(providers.gradleProperty("platformVersion"))
+
             task {
                 jvmArgumentProviders += CommandLineArgumentProvider {
                     listOf(

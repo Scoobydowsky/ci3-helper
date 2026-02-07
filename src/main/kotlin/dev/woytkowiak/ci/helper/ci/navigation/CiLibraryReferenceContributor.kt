@@ -5,6 +5,7 @@ import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.patterns.PlatformPatterns
 import com.intellij.psi.*
 import com.intellij.util.ProcessingContext
+import dev.woytkowiak.ci.helper.ci.Ci3PluginState
 
 /**
  * "Go to Declaration" from load->library('name') to file application/libraries/Name.php.
@@ -24,6 +25,7 @@ class CiLibraryReferenceContributor : PsiReferenceContributor() {
             element: PsiElement,
             context: ProcessingContext
         ): Array<PsiReference> {
+            if (!Ci3PluginState.getInstance().isEnabled) return PsiReference.EMPTY_ARRAY
             val file = element.containingFile ?: return PsiReference.EMPTY_ARRAY
             if (!file.name.endsWith(".php")) return PsiReference.EMPTY_ARRAY
 

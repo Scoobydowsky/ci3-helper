@@ -3,6 +3,7 @@
     <name>CodeIgniter 3 Helper</name>
     <vendor>Tomek "Scoobydowsky" Woytkowiak</vendor>
 
+    <!-- Plugin tylko dla PhpStorm: wymaga PHP, wyklucza IDE z modułem Java (IDEA). -->
     <depends>com.intellij.modules.platform</depends>
     <depends>com.jetbrains.php</depends>
     <incompatible-with>com.intellij.java</incompatible-with>
@@ -10,6 +11,9 @@
     <resource-bundle>messages.MyBundle</resource-bundle>
 
     <extensions defaultExtensionNs="com.intellij">
+
+        <applicationService
+                serviceImplementation="dev.woytkowiak.ci.helper.ci.Ci3PluginState"/>
 
         <statusBarWidgetFactory
                 id="CodeIgniter3Helper"

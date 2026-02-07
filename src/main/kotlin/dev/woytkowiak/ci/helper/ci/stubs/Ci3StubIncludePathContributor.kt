@@ -3,6 +3,7 @@ package dev.woytkowiak.ci.helper.ci.stubs
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.LocalFileSystem
 import com.intellij.openapi.vfs.VirtualFile
+import dev.woytkowiak.ci.helper.ci.Ci3PluginState
 import com.jetbrains.php.config.library.PhpIncludedPathsContributor
 import java.io.File
 
@@ -13,6 +14,7 @@ import java.io.File
 class Ci3StubIncludePathContributor : PhpIncludedPathsContributor {
 
     override fun getRoots(project: Project): Collection<VirtualFile> {
+        if (!Ci3PluginState.getInstance().isEnabled) return emptyList()
         val basePath = project.basePath ?: return emptyList()
         val baseDir = LocalFileSystem.getInstance().findFileByPath(basePath) ?: return emptyList()
         val appDir = baseDir.findChild("application") ?: return emptyList()
