@@ -1,6 +1,8 @@
 import org.jetbrains.changelog.Changelog
 import org.jetbrains.changelog.markdownToHTML
+import org.jetbrains.intellij.platform.gradle.IntelliJPlatformType
 import org.jetbrains.intellij.platform.gradle.TestFrameworkType
+import org.jetbrains.intellij.platform.gradle.models.ProductRelease
 
 plugins {
     id("java") // Java support
@@ -105,9 +107,15 @@ intellijPlatform {
         channels = providers.gradleProperty("pluginVersion").map { listOf(it.substringAfter('-', "").substringBefore('.').ifEmpty { "default" }) }
     }
 
+    // Weryfikacja pluginu tylko w PhpStorm (nie w IntelliJ IDEA ani innych IDE).
+    // Przy wysyłce do JetBrains Marketplace plugin jest sprawdzany wyłącznie pod PhpStorm.
     pluginVerification {
         ides {
-            recommended()
+            select {
+                types.set(listOf(IntelliJPlatformType.PhpStorm))
+                channels.set(listOf(ProductRelease.Channel.RELEASE))
+                sinceBuild.set(providers.gradleProperty("pluginSinceBuild"))
+            }
         }
     }
 }
@@ -142,6 +150,9 @@ tasks {
 intellijPlatformTesting {
     runIde {
         register("runIdeForUiTests") {
+            type.set(IntelliJPlatformType.PhpStorm)
+            version.set(providers.gradleProperty("platformVersion"))
+
             task {
                 jvmArgumentProviders += CommandLineArgumentProvider {
                     listOf(

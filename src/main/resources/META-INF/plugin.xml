@@ -3,12 +3,17 @@
     <name>CodeIgniter 3 Helper</name>
     <vendor>Tomek "Scoobydowsky" Woytkowiak</vendor>
 
+    <!-- Plugin tylko dla PhpStorm: wymaga PHP, wyklucza IDE z modułem Java (IDEA). -->
     <depends>com.intellij.modules.platform</depends>
     <depends>com.jetbrains.php</depends>
+    <incompatible-with>com.intellij.java</incompatible-with>
 
     <resource-bundle>messages.MyBundle</resource-bundle>
 
     <extensions defaultExtensionNs="com.intellij">
+
+        <applicationService
+                serviceImplementation="dev.woytkowiak.ci.helper.ci.Ci3PluginState"/>
 
         <statusBarWidgetFactory
                 id="CodeIgniter3Helper"
@@ -46,6 +51,8 @@
     <extensions defaultExtensionNs="com.jetbrains.php">
         <includedPathsContributor implementation="dev.woytkowiak.ci.helper.ci.stubs.Ci3StubIncludePathContributor"/>
         <typeProvider4 implementation="dev.woytkowiak.ci.helper.ci.types.Ci3ThisTypeProvider"/>
+        <typeProvider4 implementation="dev.woytkowiak.ci.helper.ci.types.Ci3ModelTypeProvider"/>
+        <typeProvider4 implementation="dev.woytkowiak.ci.helper.ci.types.Ci3LibraryTypeProvider"/>
     </extensions>
 
     <extensions defaultExtensionNs="com.intellij">
@@ -80,6 +87,7 @@
                 text="%action.support.author.text"
                 description="%action.support.author.description">
             <add-to-group group-id="HelpMenu" anchor="last"/>
+            <add-to-group group-id="StatusbarPopupGroup" anchor="last"/>
         </action>
     </actions>
 </idea-plugin>

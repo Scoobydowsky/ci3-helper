@@ -8,6 +8,7 @@ import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.util.ProcessingContext
 import com.jetbrains.php.lang.psi.elements.FieldReference
 import com.jetbrains.php.lang.psi.elements.Variable
+import dev.woytkowiak.ci.helper.ci.Ci3PluginState
 import dev.woytkowiak.ci.helper.ci.completion.findLoadedModelClasses
 import dev.woytkowiak.ci.helper.ci.completion.resolveModelFile
 
@@ -31,6 +32,7 @@ class CiModelReferenceContributor : PsiReferenceContributor() {
             element: PsiElement,
             context: ProcessingContext
         ): Array<PsiReference> {
+            if (!Ci3PluginState.getInstance().isEnabled) return PsiReference.EMPTY_ARRAY
             val file = element.containingFile ?: return PsiReference.EMPTY_ARRAY
             if (!file.name.endsWith(".php")) return PsiReference.EMPTY_ARRAY
 

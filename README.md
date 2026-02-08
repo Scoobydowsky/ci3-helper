@@ -17,8 +17,6 @@ Adds CodeIgniter 3 support to PhpStorm: completion, navigation, and scaffolding 
 [Plugin Repository](https://github.com/Scoobydowsky/ci3-phpstorm-helper) — If the plugin helps you, consider [Donate](https://github.com/sponsors/Scoobydowsky).
 <!-- Plugin description end -->
 
-Detailed CI3 feature coverage: [COVERAGE.md](COVERAGE.md).
-
 ## Requirements
 
 - PhpStorm
@@ -40,7 +38,7 @@ To run PhpStorm with the plugin loaded:
 ./gradlew runIde
 ```
 
-Or in the IDE: use the "Run Plugin" run configuration (`.run/Run Plugin.run.xml`) — it runs the `runIde` task and starts PhpStorm.
+Or in the IDE: use the "Run Plugin" run configuration (`.run/Run Plugin.run.xml`) — it runs the `runIde` Gradle task and should start **PhpStorm** (the project depends on `phpstorm()`, not IntelliJ IDEA). If IntelliJ IDEA starts instead, run `./gradlew runIde` from the terminal or refresh the Gradle project so the correct platform is used.
 
 ## Install from disk
 

@@ -6,6 +6,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.patterns.PlatformPatterns
 import com.intellij.util.ProcessingContext
+import dev.woytkowiak.ci.helper.ci.Ci3PluginState
 import dev.woytkowiak.ci.helper.ci.CiViewUtils
 
 class CiModelCompletionContributor : CompletionContributor() {
@@ -26,6 +27,7 @@ class CiModelCompletionContributor : CompletionContributor() {
             context: ProcessingContext,
             result: CompletionResultSet
         ) {
+            if (!Ci3PluginState.getInstance().isEnabled) return
             val position = parameters.position
             val fileText = position.containingFile.text
             val offset = parameters.offset
@@ -38,16 +40,27 @@ class CiModelCompletionContributor : CompletionContributor() {
 
             val loadedDatabases = findLoadedDatabases(fileText)
             val loadedLibraries = findLoadedLibraries(fileText)
+            val loadedModels = findLoadedModelClasses(fileText).keys
 
             val isThisCall =
                 currentLine.contains("\$this->") &&
                         !currentLine.substringAfter("\$this->").contains("->")
             val afterFirstArrow = currentLine.substringAfter("\$this->", "")
-            val libraryPropName = afterFirstArrow.substringBefore("->").trim().takeIf { it.isNotEmpty() }
+            val firstPropName = afterFirstArrow.substringBefore("->").trim().takeIf { it.isNotEmpty() }
+            val libraryPropName = firstPropName?.takeIf { it in loadedLibraries }
+            val modelPropName = firstPropName?.takeIf { it in loadedModels }
             val isLibraryMethodCall = currentLine.contains("\$this->") &&
                 afterFirstArrow.contains("->") &&
                 !afterFirstArrow.substringAfter("->").trimStart().startsWith("(") &&
-                libraryPropName != null && libraryPropName in loadedLibraries
+                libraryPropName != null && libraryPropName.isNotEmpty()
+            val isBenchmarkMethodCall = currentLine.contains("\$this->") &&
+                afterFirstArrow.contains("->") &&
+                !afterFirstArrow.substringAfter("->").trimStart().startsWith("(") &&
+                firstPropName == "benchmark"
+            val isModelMethodCall = currentLine.contains("\$this->") &&
+                afterFirstArrow.contains("->") &&
+                !afterFirstArrow.substringAfter("->").trimStart().startsWith("(") &&
+                modelPropName != null && modelPropName.isNotEmpty()
             val isModelCall = currentLine.contains("load->model(")
             val isViewCall = currentLine.contains("load->view(")
             val isDatabaseLoad = currentLine.contains("load->database(")
@@ -75,7 +88,7 @@ class CiModelCompletionContributor : CompletionContributor() {
                 !isDbCall && !isDatabaseLoad && !isLibraryCall && !isHelperCall &&
                 !isConfigLoad && !isLanguageLoad && !isDriverLoad &&
                 !isConfigItemCall && !isInputKeyCall && !isInputMethodCall && !isInputServerCall &&
-                !isInputHeaderCall && !isRouteValue && !isLibraryMethodCall
+                !isInputHeaderCall && !isRouteValue && !isLibraryMethodCall && !isModelMethodCall && !isBenchmarkMethodCall
             ) {
                 return
             }
@@ -92,7 +105,8 @@ class CiModelCompletionContributor : CompletionContributor() {
                     "router",
                     "output",
                     "security",
-                    "form_validation"
+                    "form_validation",
+                    "benchmark"
                 )
 
                 for (prop in baseProps) {
@@ -106,11 +120,32 @@ class CiModelCompletionContributor : CompletionContributor() {
                 for (lib in loadedLibraries) {
                     result.addElement(LookupElementBuilder.create(lib))
                 }
+
+                for (model in loadedModels) {
+                    result.addElement(LookupElementBuilder.create(model))
+                }
+            }
+
+            /* ---------- $this->model_name-> (model methods) ---------- */
+            if (isModelMethodCall && modelPropName != null && modelPropName.isNotEmpty()) {
+                val methods = findModelMethods(project, modelPropName, fileText)
+                for (method in methods) {
+                    result.addElement(LookupElementBuilder.create(method))
+                }
+            }
+
+            /* ---------- $this->benchmark-> (Benchmark class – always loaded) ---------- */
+            if (isBenchmarkMethodCall) {
+                val methods = getNativeLibraryMembers("benchmark") ?: emptyList()
+                for (method in methods) {
+                    result.addElement(LookupElementBuilder.create(method))
+                }
             }
 
             /* ---------- $this->library_name-> (library methods) ---------- */
             if (isLibraryMethodCall && libraryPropName != null && libraryPropName.isNotEmpty()) {
-                val methods = findLibraryMethods(project, libraryPropName)
+                val nativeMethods = getNativeLibraryMembers(libraryPropName)
+                val methods = nativeMethods ?: findLibraryMethods(project, libraryPropName)
                 for (method in methods) {
                     result.addElement(LookupElementBuilder.create(method))
                 }
@@ -135,7 +170,7 @@ class CiModelCompletionContributor : CompletionContributor() {
             /* ---------- load->library ---------- */
             if (isLibraryCall) {
                 val standardLibraries = listOf(
-                    "session", "form_validation", "email", "pagination",
+                    "session", "form_validation", "email", "pagination", "zip",
                     "upload", "image_lib", "cart", "encryption", "table", "ftp", "xmlrpc"
                 )
                 for (lib in standardLibraries) {
@@ -317,6 +352,16 @@ fun findLoadedModelClasses(fileText: String): Map<String, String> {
     return result
 }
 
+/** Public (and protected) methods from the model file (by $this property name, e.g. Order_model or alias). */
+fun findModelMethods(project: Project, modelPropertyName: String, fileText: String): List<String> {
+    val loadedModels = findLoadedModelClasses(fileText)
+    val modelClassName = loadedModels[modelPropertyName] ?: return emptyList()
+    val modelFile = resolveModelFile(project, modelClassName) ?: return emptyList()
+    val text = String(modelFile.contentsToByteArray())
+    val regex = Regex("(?:public|protected)\\s+function\\s+(\\w+)\\s*\\(")
+    return regex.findAll(text).map { it.groupValues[1] }.distinct().sorted().toList()
+}
+
 /** Model file in application/models/ (e.g. Order_model → application/models/Order_model.php). Also searches subdirectories. */
 fun resolveModelFile(project: Project, modelClassName: String): VirtualFile? {
     val baseDir = project.baseDir ?: return null
@@ -392,6 +437,20 @@ fun findLoadedLibraries(fileText: String): List<String> {
         result.add(propName)
     }
     return result.distinct().sorted()
+}/**
+ * Members (methods + properties) of native CI3 libraries loaded with load->library('name').
+ * Returns null for custom libraries (use findLibraryMethods for application/libraries/).
+ */
+fun getNativeLibraryMembers(libraryPropertyName: String): List<String>? {
+    return when (libraryPropertyName) {
+        "zip" -> listOf(
+            "compression_level",
+            "add_data", "add_dir", "read_file", "read_dir",
+            "archive", "download", "get_zip", "clear_data"
+        )
+        "benchmark" -> listOf("mark", "elapsed_time", "memory_usage")
+        else -> null
+    }
 }
 
 /** Public (and protected) methods from the library file in application/libraries/ (by property name, e.g. my_lib). */
@@ -416,6 +475,10 @@ private fun findLibraryFileByPropertyName(project: Project, propertyName: String
     return findRecursive(libsDir, "$withUcfirst.php")
         ?: findRecursive(libsDir, "${propertyName.lowercase()}.php")
 }
+
+/** Class name of a custom library in application/libraries/ (file name without .php). Returns null if not found. */
+fun getLibraryClassName(project: Project, propertyName: String): String? =
+    findLibraryFileByPropertyName(project, propertyName)?.nameWithoutExtension
 
 /* ---------------- HELPERS ---------------- */
 
