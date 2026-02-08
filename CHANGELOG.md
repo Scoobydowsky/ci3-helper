@@ -11,6 +11,7 @@
 ### Changed
 ### Added 
 - Now plugin shows what any method got parameters
+- Added support to benchmark native library
 
 
 ## [0.0.2]
