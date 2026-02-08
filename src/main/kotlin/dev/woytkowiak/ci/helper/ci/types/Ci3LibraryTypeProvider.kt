@@ -22,9 +22,10 @@ class Ci3LibraryTypeProvider : PhpTypeProvider4 {
 
     override fun getKey(): Char = '\u00A2' // unique character
 
-    /** Native library property name -> stub class (no leading backslash). */
+    /** Native / core property name -> stub class (no leading backslash). Benchmark is always loaded. */
     private val nativeLibraryTypes = mapOf(
-        "zip" to "CI_Zip"
+        "zip" to "CI_Zip",
+        "benchmark" to "CI_Benchmark"
     )
 
     override fun getType(element: PsiElement): PhpType? {
@@ -36,7 +37,8 @@ class Ci3LibraryTypeProvider : PhpTypeProvider4 {
         if (!isThisFieldReference(fieldRef)) return null
         val propName = fieldRef.name ?: return null
         val fileText = fieldRef.containingFile?.text ?: return null
-        if (propName !in findLoadedLibraries(fileText)) return null
+        val loadedLibraries = findLoadedLibraries(fileText)
+        if (propName !in loadedLibraries && propName !in nativeLibraryTypes) return null
         val project = fieldRef.project
         val className = nativeLibraryTypes[propName]
             ?: getLibraryClassName(project, propName)

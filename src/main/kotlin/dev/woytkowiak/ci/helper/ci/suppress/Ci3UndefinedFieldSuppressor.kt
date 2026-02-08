@@ -20,7 +20,8 @@ class Ci3UndefinedFieldSuppressor : InspectionSuppressor {
 
     private val ci3SuperObjectProperties = setOf(
         "load", "input", "db", "config", "session",
-        "uri", "router", "output", "security", "form_validation"
+        "uri", "router", "output", "security", "form_validation",
+        "benchmark"
     )
 
     /** Native CI3 libraries loaded with load->library('name') — property names on $this. */

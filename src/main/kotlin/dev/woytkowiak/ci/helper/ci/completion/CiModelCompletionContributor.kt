@@ -53,6 +53,10 @@ class CiModelCompletionContributor : CompletionContributor() {
                 afterFirstArrow.contains("->") &&
                 !afterFirstArrow.substringAfter("->").trimStart().startsWith("(") &&
                 libraryPropName != null && libraryPropName.isNotEmpty()
+            val isBenchmarkMethodCall = currentLine.contains("\$this->") &&
+                afterFirstArrow.contains("->") &&
+                !afterFirstArrow.substringAfter("->").trimStart().startsWith("(") &&
+                firstPropName == "benchmark"
             val isModelMethodCall = currentLine.contains("\$this->") &&
                 afterFirstArrow.contains("->") &&
                 !afterFirstArrow.substringAfter("->").trimStart().startsWith("(") &&
@@ -84,7 +88,7 @@ class CiModelCompletionContributor : CompletionContributor() {
                 !isDbCall && !isDatabaseLoad && !isLibraryCall && !isHelperCall &&
                 !isConfigLoad && !isLanguageLoad && !isDriverLoad &&
                 !isConfigItemCall && !isInputKeyCall && !isInputMethodCall && !isInputServerCall &&
-                !isInputHeaderCall && !isRouteValue && !isLibraryMethodCall && !isModelMethodCall
+                !isInputHeaderCall && !isRouteValue && !isLibraryMethodCall && !isModelMethodCall && !isBenchmarkMethodCall
             ) {
                 return
             }
@@ -101,7 +105,8 @@ class CiModelCompletionContributor : CompletionContributor() {
                     "router",
                     "output",
                     "security",
-                    "form_validation"
+                    "form_validation",
+                    "benchmark"
                 )
 
                 for (prop in baseProps) {
@@ -124,6 +129,14 @@ class CiModelCompletionContributor : CompletionContributor() {
             /* ---------- $this->model_name-> (model methods) ---------- */
             if (isModelMethodCall && modelPropName != null && modelPropName.isNotEmpty()) {
                 val methods = findModelMethods(project, modelPropName, fileText)
+                for (method in methods) {
+                    result.addElement(LookupElementBuilder.create(method))
+                }
+            }
+
+            /* ---------- $this->benchmark-> (Benchmark class – always loaded) ---------- */
+            if (isBenchmarkMethodCall) {
+                val methods = getNativeLibraryMembers("benchmark") ?: emptyList()
                 for (method in methods) {
                     result.addElement(LookupElementBuilder.create(method))
                 }
@@ -435,6 +448,7 @@ fun getNativeLibraryMembers(libraryPropertyName: String): List<String>? {
             "add_data", "add_dir", "read_file", "read_dir",
             "archive", "download", "get_zip", "clear_data"
         )
+        "benchmark" -> listOf("mark", "elapsed_time", "memory_usage")
         else -> null
     }
 }

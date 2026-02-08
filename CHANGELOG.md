@@ -6,7 +6,12 @@
 ## [0.0.3]
 ### Fixed
 - Now plugin helps with model metods like ```$this->employee_model``` you will get lis with all methods available in Employee_model
+- Loaded models + model methods completion
+- Type providers for zip, models, and custom libs (parameter name hints)
 ### Changed
+### Added 
+- Now plugin shows what any method got parameters
+
 
 ## [0.0.2]
 ### Fixed
