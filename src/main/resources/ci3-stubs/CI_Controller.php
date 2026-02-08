@@ -14,6 +14,7 @@
  * @property CI_Output $output
  * @property CI_Security $security
  * @property CI_Form_validation $form_validation
+ * @property CI_Zip $zip
  */
 class CI_Controller {
 }

@@ -23,12 +23,16 @@ class Ci3StubIncludePathContributor : PhpIncludedPathsContributor {
         val stubsDir = File(basePath, ".ci3-helper/stubs")
         if (!stubsDir.isDirectory) stubsDir.mkdirs()
 
-        listOf("CI_Controller.php", "MY_Controller.php", "global_functions.php").forEach { name ->
+        val stubNames = listOf(
+            "CI_Controller.php", "MY_Controller.php", "global_functions.php",
+            "CI_Loader.php", "CI_Input.php", "CI_Config.php", "CI_DB_query_builder.php",
+            "CI_Session.php", "CI_Form_validation.php", "CI_URI.php", "CI_Router.php",
+            "CI_Output.php", "CI_Security.php", "CI_Zip.php"
+        )
+        stubNames.forEach { name ->
             val stubFile = File(stubsDir, name)
-            if (!stubFile.exists()) {
-                javaClass.getResourceAsStream("/ci3-stubs/$name")?.use { input ->
-                    stubFile.outputStream().use { input.copyTo(it) }
-                }
+            javaClass.getResourceAsStream("/ci3-stubs/$name")?.use { input ->
+                stubFile.outputStream().use { input.copyTo(it) }
             }
         }
 

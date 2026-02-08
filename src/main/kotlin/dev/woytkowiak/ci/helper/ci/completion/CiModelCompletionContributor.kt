@@ -462,6 +462,10 @@ private fun findLibraryFileByPropertyName(project: Project, propertyName: String
         ?: findRecursive(libsDir, "${propertyName.lowercase()}.php")
 }
 
+/** Class name of a custom library in application/libraries/ (file name without .php). Returns null if not found. */
+fun getLibraryClassName(project: Project, propertyName: String): String? =
+    findLibraryFileByPropertyName(project, propertyName)?.nameWithoutExtension
+
 /* ---------------- HELPERS ---------------- */
 
 fun findHelpers(project: Project): List<String> {

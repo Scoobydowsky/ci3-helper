@@ -51,6 +51,8 @@
     <extensions defaultExtensionNs="com.jetbrains.php">
         <includedPathsContributor implementation="dev.woytkowiak.ci.helper.ci.stubs.Ci3StubIncludePathContributor"/>
         <typeProvider4 implementation="dev.woytkowiak.ci.helper.ci.types.Ci3ThisTypeProvider"/>
+        <typeProvider4 implementation="dev.woytkowiak.ci.helper.ci.types.Ci3ModelTypeProvider"/>
+        <typeProvider4 implementation="dev.woytkowiak.ci.helper.ci.types.Ci3LibraryTypeProvider"/>
     </extensions>
 
     <extensions defaultExtensionNs="com.intellij">
