@@ -23,6 +23,12 @@ class Ci3UndefinedFieldSuppressor : InspectionSuppressor {
         "uri", "router", "output", "security", "form_validation"
     )
 
+    /** Native CI3 libraries loaded with load->library('name') — property names on $this. */
+    private val nativeLibraryProperties = setOf(
+        "zip", "email", "pagination", "upload", "image_lib",
+        "cart", "encryption", "table", "ftp", "xmlrpc"
+    )
+
     override fun isSuppressedFor(element: PsiElement, toolId: String): Boolean {
         if (!Ci3PluginState.getInstance().isEnabled) return false
         if (!element.containingFile?.name.orEmpty().endsWith(".php")) return false
@@ -42,6 +48,7 @@ class Ci3UndefinedFieldSuppressor : InspectionSuppressor {
         }
 
         if (fieldRef != null && fieldRef.classReference is Variable && (fieldRef.classReference as Variable).name == "this") {
+            if (name in nativeLibraryProperties) return true
             if (name in getLibraryPropertyNames(element.project)) return true
             val fileText = element.containingFile?.text ?: ""
             if (name in findLoadedModelClasses(fileText).keys) return true

@@ -85,6 +85,7 @@
                 text="%action.support.author.text"
                 description="%action.support.author.description">
             <add-to-group group-id="HelpMenu" anchor="last"/>
+            <add-to-group group-id="StatusbarPopupGroup" anchor="last"/>
         </action>
     </actions>
 </idea-plugin>

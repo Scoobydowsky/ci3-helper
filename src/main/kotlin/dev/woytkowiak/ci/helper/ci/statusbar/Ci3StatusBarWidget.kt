@@ -1,6 +1,5 @@
 package dev.woytkowiak.ci.helper.ci.statusbar
 
-import com.intellij.ide.BrowserUtil
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.IconLoader
 import com.intellij.openapi.util.NlsContexts
@@ -18,13 +17,12 @@ import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import javax.swing.JLabel
 import javax.swing.JPanel
-import javax.swing.JPopupMenu
 
 private const val ICON_SIZE = 16
 
 /**
  * Status bar widget: icon + tooltip. Left click toggles plugin on/off (icon grays out when disabled).
- * Right click opens context menu with "Support author".
+ * Right click shows the IDE's status bar menu (widget list). Support author: Help → Support author.
  */
 class Ci3StatusBarWidget(private val project: Project) : JPanel(), CustomStatusBarWidget, StatusBarWidget {
 
@@ -38,12 +36,9 @@ class Ci3StatusBarWidget(private val project: Project) : JPanel(), CustomStatusB
         maximumSize = Dimension(ICON_SIZE, ICON_SIZE)
         addMouseListener(object : MouseAdapter() {
             override fun mouseClicked(e: MouseEvent) {
-                when (e.button) {
-                    MouseEvent.BUTTON1 -> {
-                        state.isEnabled = !state.isEnabled
-                        updateIconAndTooltip()
-                    }
-                    MouseEvent.BUTTON3 -> showContextMenu(e)
+                if (e.button == MouseEvent.BUTTON1) {
+                    state.isEnabled = !state.isEnabled
+                    updateIconAndTooltip()
                 }
             }
         })
@@ -70,14 +65,6 @@ class Ci3StatusBarWidget(private val project: Project) : JPanel(), CustomStatusB
         } else {
             MyBundle.message("statusbar.ci3.tooltip.disabled", Ci3Support.VERSION)
         }
-    }
-
-    private fun showContextMenu(e: MouseEvent) {
-        val menu = JPopupMenu()
-        val supportItem = javax.swing.JMenuItem(MyBundle.message("action.support.author.text"))
-        supportItem.addActionListener { BrowserUtil.browse(Ci3Support.URL) }
-        menu.add(supportItem)
-        menu.show(e.component, e.x, e.y)
     }
 
     override fun ID(): String = "CodeIgniter3Helper"

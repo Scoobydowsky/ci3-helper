@@ -131,7 +131,8 @@ class CiModelCompletionContributor : CompletionContributor() {
 
             /* ---------- $this->library_name-> (library methods) ---------- */
             if (isLibraryMethodCall && libraryPropName != null && libraryPropName.isNotEmpty()) {
-                val methods = findLibraryMethods(project, libraryPropName)
+                val nativeMethods = getNativeLibraryMembers(libraryPropName)
+                val methods = nativeMethods ?: findLibraryMethods(project, libraryPropName)
                 for (method in methods) {
                     result.addElement(LookupElementBuilder.create(method))
                 }
@@ -156,7 +157,7 @@ class CiModelCompletionContributor : CompletionContributor() {
             /* ---------- load->library ---------- */
             if (isLibraryCall) {
                 val standardLibraries = listOf(
-                    "session", "form_validation", "email", "pagination",
+                    "session", "form_validation", "email", "pagination", "zip",
                     "upload", "image_lib", "cart", "encryption", "table", "ftp", "xmlrpc"
                 )
                 for (lib in standardLibraries) {
@@ -423,7 +424,22 @@ fun findLoadedLibraries(fileText: String): List<String> {
         result.add(propName)
     }
     return result.distinct().sorted()
-}/** Public (and protected) methods from the library file in application/libraries/ (by property name, e.g. my_lib). */
+}/**
+ * Members (methods + properties) of native CI3 libraries loaded with load->library('name').
+ * Returns null for custom libraries (use findLibraryMethods for application/libraries/).
+ */
+fun getNativeLibraryMembers(libraryPropertyName: String): List<String>? {
+    return when (libraryPropertyName) {
+        "zip" -> listOf(
+            "compression_level",
+            "add_data", "add_dir", "read_file", "read_dir",
+            "archive", "download", "get_zip", "clear_data"
+        )
+        else -> null
+    }
+}
+
+/** Public (and protected) methods from the library file in application/libraries/ (by property name, e.g. my_lib). */
 fun findLibraryMethods(project: Project, libraryPropertyName: String): List<String> {
     val libFile = findLibraryFileByPropertyName(project, libraryPropertyName) ?: return emptyList()
     val text = String(libFile.contentsToByteArray())
