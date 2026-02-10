@@ -6,6 +6,6 @@ package dev.woytkowiak.ci.helper.ci
  * VERSION: keep in sync with pluginVersion in gradle.properties.
  */
 object Ci3Support {
-    const val URL = "https://github.com/Scoobydowsky/ci3-phpstorm-helper#wesprzyj"
-    const val VERSION = "0.0.3"
+    const val URL = "https://github.com/Scoobydowsky/ci3-phpstorm-helper#support"
+    const val VERSION = "0.0.4"
 }

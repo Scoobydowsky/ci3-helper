@@ -40,6 +40,7 @@ class CiModelCompletionContributor : CompletionContributor() {
 
             val loadedDatabases = findLoadedDatabases(fileText)
             val loadedLibraries = findLoadedLibraries(fileText)
+            val loadedDrivers = findLoadedDrivers(fileText)
             val loadedModels = findLoadedModelClasses(fileText).keys
 
             val isThisCall =
@@ -48,6 +49,7 @@ class CiModelCompletionContributor : CompletionContributor() {
             val afterFirstArrow = currentLine.substringAfter("\$this->", "")
             val firstPropName = afterFirstArrow.substringBefore("->").trim().takeIf { it.isNotEmpty() }
             val libraryPropName = firstPropName?.takeIf { it in loadedLibraries }
+            val driverPropName = firstPropName?.takeIf { it in loadedDrivers }
             val modelPropName = firstPropName?.takeIf { it in loadedModels }
             val isLibraryMethodCall = currentLine.contains("\$this->") &&
                 afterFirstArrow.contains("->") &&
@@ -57,6 +59,10 @@ class CiModelCompletionContributor : CompletionContributor() {
                 afterFirstArrow.contains("->") &&
                 !afterFirstArrow.substringAfter("->").trimStart().startsWith("(") &&
                 firstPropName == "benchmark"
+            val isDriverMethodCall = currentLine.contains("\$this->") &&
+                afterFirstArrow.contains("->") &&
+                !afterFirstArrow.substringAfter("->").trimStart().startsWith("(") &&
+                driverPropName != null && driverPropName.isNotEmpty()
             val isModelMethodCall = currentLine.contains("\$this->") &&
                 afterFirstArrow.contains("->") &&
                 !afterFirstArrow.substringAfter("->").trimStart().startsWith("(") &&
@@ -88,7 +94,7 @@ class CiModelCompletionContributor : CompletionContributor() {
                 !isDbCall && !isDatabaseLoad && !isLibraryCall && !isHelperCall &&
                 !isConfigLoad && !isLanguageLoad && !isDriverLoad &&
                 !isConfigItemCall && !isInputKeyCall && !isInputMethodCall && !isInputServerCall &&
-                !isInputHeaderCall && !isRouteValue && !isLibraryMethodCall && !isModelMethodCall && !isBenchmarkMethodCall
+                !isInputHeaderCall && !isRouteValue && !isLibraryMethodCall && !isDriverMethodCall && !isModelMethodCall && !isBenchmarkMethodCall
             ) {
                 return
             }
@@ -106,6 +112,10 @@ class CiModelCompletionContributor : CompletionContributor() {
                     "output",
                     "security",
                     "form_validation",
+                    "agent",
+                    "parser",
+                    "trackback",
+                    "cache",
                     "benchmark"
                 )
 
@@ -119,6 +129,10 @@ class CiModelCompletionContributor : CompletionContributor() {
 
                 for (lib in loadedLibraries) {
                     result.addElement(LookupElementBuilder.create(lib))
+                }
+
+                for (driver in loadedDrivers) {
+                    result.addElement(LookupElementBuilder.create(driver))
                 }
 
                 for (model in loadedModels) {
@@ -151,6 +165,15 @@ class CiModelCompletionContributor : CompletionContributor() {
                 }
             }
 
+            /* ---------- $this->driver_name-> (driver methods) ---------- */
+            if (isDriverMethodCall && driverPropName != null && driverPropName.isNotEmpty()) {
+                val nativeMethods = getNativeLibraryMembers(driverPropName)
+                val methods = nativeMethods ?: findDriverMethods(project, driverPropName)
+                for (method in methods) {
+                    result.addElement(LookupElementBuilder.create(method))
+                }
+            }
+
             /* ---------- load->model ---------- */
             if (isModelCall) {
                 val models = findModels(project)
@@ -170,8 +193,9 @@ class CiModelCompletionContributor : CompletionContributor() {
             /* ---------- load->library ---------- */
             if (isLibraryCall) {
                 val standardLibraries = listOf(
-                    "session", "form_validation", "email", "pagination", "zip",
-                    "upload", "image_lib", "cart", "encryption", "table", "ftp", "xmlrpc"
+                    "session", "form_validation", "email", "pagination", "zip", "unit_test",
+                    "upload", "image_lib", "cart", "encryption", "table", "ftp", "xmlrpc",
+                    "user_agent", "parser", "trackback"
                 )
                 for (lib in standardLibraries) {
                     result.addElement(LookupElementBuilder.create(lib))
@@ -437,6 +461,19 @@ fun findLoadedLibraries(fileText: String): List<String> {
         result.add(propName)
     }
     return result.distinct().sorted()
+}
+
+/** From file: load->driver('X') or load->driver('X', ..., 'alias') → property names on $this (alias or lowercase X). */
+fun findLoadedDrivers(fileText: String): List<String> {
+    val result = mutableSetOf<String>()
+    // Group 1: driver name, group 2: optional alias (third parameter)
+    val regex = Regex("load->driver\\s*\\(\\s*['\"]([^'\"]+)['\"]\\s*(?:,\\s*[^)]*)?(?:,\\s*['\"]([^'\"]+)['\"])?\\s*\\)")
+    regex.findAll(fileText).forEach { m ->
+        val alias = m.groupValues[2].trim()
+        val propName = if (alias.isNotEmpty()) alias else m.groupValues[1].trim().lowercase().replace("-", "_")
+        result.add(propName)
+    }
+    return result.distinct().sorted()
 }/**
  * Members (methods + properties) of native CI3 libraries loaded with load->library('name').
  * Returns null for custom libraries (use findLibraryMethods for application/libraries/).
@@ -448,7 +485,38 @@ fun getNativeLibraryMembers(libraryPropertyName: String): List<String>? {
             "add_data", "add_dir", "read_file", "read_dir",
             "archive", "download", "get_zip", "clear_data"
         )
+        "session" -> listOf(
+            "userdata", "set_userdata", "has_userdata", "unset_userdata",
+            "flashdata", "set_flashdata", "mark_as_flash", "keep_flashdata",
+            "set_tempdata", "tempdata", "mark_as_temp", "unset_tempdata",
+            "session_id", "sess_destroy"
+        )
+        "agent" -> listOf(
+            "is_browser", "is_mobile", "is_robot", "is_referral",
+            "browser", "version", "mobile", "robot", "platform",
+            "referrer", "agent_string", "accept_lang", "languages",
+            "accept_charset", "charsets", "parse"
+        )
+        "parser" -> listOf(
+            "parse", "parse_string", "set_delimiters"
+        )
+        "trackback" -> listOf(
+            "send", "receive", "send_error", "send_success", "data",
+            "process", "extract_urls", "validate_url", "get_id",
+            "convert_xml", "limit_characters", "convert_ascii",
+            "set_error", "display_errors"
+        )
+        "cache" -> listOf(
+            "is_supported", "get", "save", "delete",
+            "increment", "decrement", "clean",
+            "cache_info", "get_metadata",
+            "apc", "file", "memcached", "wincache", "redis", "dummy"
+        )
         "benchmark" -> listOf("mark", "elapsed_time", "memory_usage")
+        "unit", "unit_test" -> listOf(
+            "run", "report", "result", "use_strict", "active",
+            "set_test_items", "set_template"
+        )
         else -> null
     }
 }
@@ -459,6 +527,37 @@ fun findLibraryMethods(project: Project, libraryPropertyName: String): List<Stri
     val text = String(libFile.contentsToByteArray())
     val regex = Regex("(?:public|protected)\\s+function\\s+(\\w+)\\s*\\(")
     return regex.findAll(text).map { it.groupValues[1] }.distinct().sorted().toList()
+}
+
+/** Public (and protected) methods from the driver parent class in application/libraries/ (by property name, e.g. cache). */
+fun findDriverMethods(project: Project, driverPropertyName: String): List<String> {
+    val driverFile = findDriverFileByPropertyName(project, driverPropertyName) ?: return emptyList()
+    val text = String(driverFile.contentsToByteArray())
+    val regex = Regex("(?:public|protected)\\s+function\\s+(\\w+)\\s*\\(")
+    return regex.findAll(text).map { it.groupValues[1] }.distinct().sorted().toList()
+}
+
+private fun findDriverFileByPropertyName(project: Project, propertyName: String): VirtualFile? {
+    val baseDir = project.baseDir ?: return null
+    val libsDir = baseDir.findChild("application")?.findChild("libraries") ?: return null
+    val withUcfirst = propertyName.split("_").joinToString("_") { it.replaceFirstChar { c -> c.uppercaseChar() } }
+    fun findRecursive(dir: VirtualFile, fileName: String): VirtualFile? {
+        dir.findChild(fileName)?.let { return it }
+        for (child in dir.children) {
+            if (child.isDirectory) {
+                // Check if it's a driver directory (e.g. Cache/Cache.php)
+                val driverDir = child.findChild("drivers")
+                if (driverDir != null) {
+                    // Parent class is in the driver directory's parent
+                    child.findChild(fileName)?.let { return it }
+                }
+                findRecursive(child, fileName)?.let { return it }
+            }
+        }
+        return null
+    }
+    return findRecursive(libsDir, "$withUcfirst.php")
+        ?: findRecursive(libsDir, "${propertyName.lowercase()}.php")
 }
 
 private fun findLibraryFileByPropertyName(project: Project, propertyName: String): VirtualFile? {

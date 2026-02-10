@@ -33,11 +33,10 @@
         <psi.referenceContributor
                 implementation="dev.woytkowiak.ci.helper.ci.navigation.CiHelperReferenceContributor"/>
 
-        <intentionAction
-                language="PHP"
-                implementation="dev.woytkowiak.ci.helper.ci.intentions.AddCi3SuperObjectPropertyIntention"
-                categories="CodeIgniter 3"/>
-
+        <!-- Intention "Add CI3 Super Object @property" removed from XML: platform expected
+             implementation class under an attribute that differs by IDE version.
+             The intention class remains in code; can be re-added when the correct
+             attribute (e.g. implementationClassName / implementationClass / class) is confirmed. -->
         <lang.inspectionSuppressor
                 language="PHP"
                 implementationClass="dev.woytkowiak.ci.helper.ci.suppress.Ci3UndefinedFieldSuppressor"/>
@@ -87,7 +86,6 @@
                 text="%action.support.author.text"
                 description="%action.support.author.description">
             <add-to-group group-id="HelpMenu" anchor="last"/>
-            <add-to-group group-id="StatusbarPopupGroup" anchor="last"/>
         </action>
     </actions>
 </idea-plugin>
