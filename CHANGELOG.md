@@ -3,6 +3,18 @@
 # ci3-phpstorm-helper Changelog
 
 
+## [0.0.4]
+### Fixed
+- Removed action registration to non-existent group ```StatusbarPopupGroup```; "Support author" stays in Help menu only
+- Removed ```intentionAction``` registration from ```plugin.xml``` to fix "implementation class is not specified" error (intention class kept in code, no longer shown in Alt+Enter until re-registered)
+
+### Added
+- Added support to ```session``` library
+- Added support to ```unit testing``` library
+- Added support to ```User Agent``` library
+- Added support to ```Trackback``` library
+- Added support to custom ```drivers```
+
 ## [0.0.3]
 ### Fixed
 - Now plugin helps with model metods like ```$this->employee_model``` you will get lis with all methods available in Employee_model
