@@ -106,6 +106,8 @@ class CiModelCompletionContributor : CompletionContributor() {
                     "output",
                     "security",
                     "form_validation",
+                    "agent",
+                    "parser",
                     "benchmark"
                 )
 
@@ -170,8 +172,9 @@ class CiModelCompletionContributor : CompletionContributor() {
             /* ---------- load->library ---------- */
             if (isLibraryCall) {
                 val standardLibraries = listOf(
-                    "session", "form_validation", "email", "pagination", "zip",
-                    "upload", "image_lib", "cart", "encryption", "table", "ftp", "xmlrpc"
+                    "session", "form_validation", "email", "pagination", "zip", "unit_test",
+                    "upload", "image_lib", "cart", "encryption", "table", "ftp", "xmlrpc",
+                    "user_agent", "parser"
                 )
                 for (lib in standardLibraries) {
                     result.addElement(LookupElementBuilder.create(lib))
@@ -448,7 +451,26 @@ fun getNativeLibraryMembers(libraryPropertyName: String): List<String>? {
             "add_data", "add_dir", "read_file", "read_dir",
             "archive", "download", "get_zip", "clear_data"
         )
+        "session" -> listOf(
+            "userdata", "set_userdata", "has_userdata", "unset_userdata",
+            "flashdata", "set_flashdata", "mark_as_flash", "keep_flashdata",
+            "set_tempdata", "tempdata", "mark_as_temp", "unset_tempdata",
+            "session_id", "sess_destroy"
+        )
+        "agent" -> listOf(
+            "is_browser", "is_mobile", "is_robot", "is_referral",
+            "browser", "version", "mobile", "robot", "platform",
+            "referrer", "agent_string", "accept_lang", "languages",
+            "accept_charset", "charsets", "parse"
+        )
+        "parser" -> listOf(
+            "parse", "parse_string", "set_delimiters"
+        )
         "benchmark" -> listOf("mark", "elapsed_time", "memory_usage")
+        "unit", "unit_test" -> listOf(
+            "run", "report", "result", "use_strict", "active",
+            "set_test_items", "set_template"
+        )
         else -> null
     }
 }

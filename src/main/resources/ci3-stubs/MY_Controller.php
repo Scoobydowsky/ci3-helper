@@ -16,6 +16,8 @@
  * @property CI_Output $output
  * @property CI_Security $security
  * @property CI_Form_validation $form_validation
+ * @property CI_User_agent $agent
+ * @property CI_Parser $parser
  */
 class MY_Controller extends CI_Controller {
 }

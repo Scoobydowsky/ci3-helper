@@ -25,7 +25,12 @@ class Ci3LibraryTypeProvider : PhpTypeProvider4 {
     /** Native / core property name -> stub class (no leading backslash). Benchmark is always loaded. */
     private val nativeLibraryTypes = mapOf(
         "zip" to "CI_Zip",
-        "benchmark" to "CI_Benchmark"
+        "session" to "CI_Session",
+        "agent" to "CI_User_agent",
+        "parser" to "CI_Parser",
+        "benchmark" to "CI_Benchmark",
+        "unit" to "CI_Unit_test",
+        "unit_test" to "CI_Unit_test"
     )
 
     override fun getType(element: PsiElement): PhpType? {
