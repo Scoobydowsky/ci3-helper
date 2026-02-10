@@ -13,7 +13,7 @@ object CiViewUtils {
      * Views directory in the project (application/views) or null.
      */
     fun getViewsDir(project: Project): VirtualFile? {
-        val baseDir = project.baseDir ?: return null
+        val baseDir = project.guessProjectBaseDir() ?: return null
         return baseDir.findChild("application")?.findChild("views")
     }
 

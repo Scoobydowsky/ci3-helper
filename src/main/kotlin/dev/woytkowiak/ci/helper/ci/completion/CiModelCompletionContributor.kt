@@ -4,6 +4,7 @@ import com.intellij.codeInsight.completion.*
 import com.intellij.codeInsight.lookup.LookupElementBuilder
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
+import dev.woytkowiak.ci.helper.ci.guessProjectBaseDir
 import com.intellij.patterns.PlatformPatterns
 import com.intellij.util.ProcessingContext
 import dev.woytkowiak.ci.helper.ci.Ci3PluginState
@@ -343,7 +344,7 @@ class CiModelCompletionContributor : CompletionContributor() {
 fun findModels(project: Project): List<String> {
     val result = mutableListOf<String>()
 
-    val baseDir = project.baseDir ?: return emptyList()
+    val baseDir = project.guessProjectBaseDir() ?: return emptyList()
     val modelsDir = baseDir.findChild("application")
         ?.findChild("models") ?: return emptyList()
 
@@ -388,7 +389,7 @@ fun findModelMethods(project: Project, modelPropertyName: String, fileText: Stri
 
 /** Model file in application/models/ (e.g. Order_model → application/models/Order_model.php). Also searches subdirectories. */
 fun resolveModelFile(project: Project, modelClassName: String): VirtualFile? {
-    val baseDir = project.baseDir ?: return null
+    val baseDir = project.guessProjectBaseDir() ?: return null
     val modelsDir = baseDir.findChild("application")?.findChild("models") ?: return null
     val fileName = "$modelClassName.php"
     modelsDir.findFileByRelativePath(fileName)?.let { return it }
@@ -405,7 +406,7 @@ fun resolveModelFile(project: Project, modelClassName: String): VirtualFile? {
 /* ---------------- DATABASE CONFIG ---------------- */
 
 fun findDatabaseConnections(project: Project): List<String> {
-    val baseDir = project.baseDir ?: return emptyList()
+    val baseDir = project.guessProjectBaseDir() ?: return emptyList()
 
     val dbConfig = baseDir.findChild("application")
         ?.findChild("config")
@@ -433,7 +434,7 @@ fun findLoadedDatabases(fileText: String): List<String> {
 
 fun findLibraries(project: Project): List<String> {
     val result = mutableListOf<String>()
-    val baseDir = project.baseDir ?: return emptyList()
+    val baseDir = project.guessProjectBaseDir() ?: return emptyList()
     val libsDir = baseDir.findChild("application")
         ?.findChild("libraries") ?: return emptyList()
     collectLibraries(libsDir, result)
@@ -538,7 +539,7 @@ fun findDriverMethods(project: Project, driverPropertyName: String): List<String
 }
 
 private fun findDriverFileByPropertyName(project: Project, propertyName: String): VirtualFile? {
-    val baseDir = project.baseDir ?: return null
+    val baseDir = project.guessProjectBaseDir() ?: return null
     val libsDir = baseDir.findChild("application")?.findChild("libraries") ?: return null
     val withUcfirst = propertyName.split("_").joinToString("_") { it.replaceFirstChar { c -> c.uppercaseChar() } }
     fun findRecursive(dir: VirtualFile, fileName: String): VirtualFile? {
@@ -561,7 +562,7 @@ private fun findDriverFileByPropertyName(project: Project, propertyName: String)
 }
 
 private fun findLibraryFileByPropertyName(project: Project, propertyName: String): VirtualFile? {
-    val baseDir = project.baseDir ?: return null
+    val baseDir = project.guessProjectBaseDir() ?: return null
     val libsDir = baseDir.findChild("application")?.findChild("libraries") ?: return null
     val withUcfirst = propertyName.split("_").joinToString("_") { it.replaceFirstChar { c -> c.uppercaseChar() } }
     fun findRecursive(dir: VirtualFile, fileName: String): VirtualFile? {
@@ -583,7 +584,7 @@ fun getLibraryClassName(project: Project, propertyName: String): String? =
 
 fun findHelpers(project: Project): List<String> {
     val result = mutableListOf<String>()
-    val baseDir = project.baseDir ?: return emptyList()
+    val baseDir = project.guessProjectBaseDir() ?: return emptyList()
     val helpersDir = baseDir.findChild("application")
         ?.findChild("helpers") ?: return emptyList()
     collectHelpers(helpersDir, result)
@@ -603,7 +604,7 @@ private fun collectHelpers(dir: VirtualFile, result: MutableList<String>) {
 
 /** Helper file in application/helpers/ (e.g. form → application/helpers/form_helper.php). Also searches subdirectories. */
 fun resolveHelperFile(project: Project, helperName: String): VirtualFile? {
-    val baseDir = project.baseDir ?: return null
+    val baseDir = project.guessProjectBaseDir() ?: return null
     val helpersDir = baseDir.findChild("application")?.findChild("helpers") ?: return null
     val fileName = "${helperName}_helper.php"
     helpersDir.findChild(fileName)?.let { return it }
@@ -620,7 +621,7 @@ fun resolveHelperFile(project: Project, helperName: String): VirtualFile? {
 /* ---------------- CONFIG FILES (load->config) ---------------- */
 
 fun findConfigFileNames(project: Project): List<String> {
-    val baseDir = project.baseDir ?: return emptyList()
+    val baseDir = project.guessProjectBaseDir() ?: return emptyList()
     val configDir = baseDir.findChild("application")
         ?.findChild("config") ?: return emptyList()
     return configDir.children
@@ -633,7 +634,7 @@ fun findConfigFileNames(project: Project): List<String> {
 
 fun findLanguageKeys(project: Project): List<String> {
     val result = mutableSetOf<String>()
-    val baseDir = project.baseDir ?: return emptyList()
+    val baseDir = project.guessProjectBaseDir() ?: return emptyList()
     val langDir = baseDir.findChild("application")
         ?.findChild("language") ?: return emptyList()
     for (localeDir in langDir.children) {
@@ -654,7 +655,7 @@ fun findLanguageKeys(project: Project): List<String> {
 
 fun findCustomDrivers(project: Project): List<String> {
     val result = mutableSetOf<String>()
-    val baseDir = project.baseDir ?: return emptyList()
+    val baseDir = project.guessProjectBaseDir() ?: return emptyList()
     val libsDir = baseDir.findChild("application")
         ?.findChild("libraries") ?: return emptyList()
     for (file in libsDir.children) {
@@ -670,7 +671,7 @@ fun findCustomDrivers(project: Project): List<String> {
 
 fun findConfigKeys(project: Project): List<String> {
     val result = mutableSetOf<String>()
-    val baseDir = project.baseDir ?: return emptyList()
+    val baseDir = project.guessProjectBaseDir() ?: return emptyList()
     val configDir = baseDir.findChild("application")
         ?.findChild("config") ?: return emptyList()
 
@@ -688,7 +689,7 @@ fun findConfigKeys(project: Project): List<String> {
 
 fun findInputKeys(project: Project): List<String> {
     val result = mutableSetOf<String>()
-    val baseDir = project.baseDir ?: return emptyList()
+    val baseDir = project.guessProjectBaseDir() ?: return emptyList()
     val appDir = baseDir.findChild("application") ?: return emptyList()
 
     fun scanFile(content: String, patterns: List<Regex>) {
@@ -729,7 +730,7 @@ fun findInputKeys(project: Project): List<String> {
 
 fun getServerKeys(project: Project): List<String> {
     val result = mutableSetOf<String>()
-    val baseDir = project.baseDir ?: return emptyList()
+    val baseDir = project.guessProjectBaseDir() ?: return emptyList()
     val appDir = baseDir.findChild("application") ?: return emptyList()
 
     val standardServerKeys = listOf(
@@ -782,7 +783,7 @@ fun getRequestHeaderNames(): List<String> = listOf(
 
 fun findControllerMethodsForRoutes(project: Project): List<String> {
     val result = mutableListOf<String>()
-    val baseDir = project.baseDir ?: return emptyList()
+    val baseDir = project.guessProjectBaseDir() ?: return emptyList()
     val controllersDir = baseDir.findChild("application")
         ?.findChild("controllers") ?: return emptyList()
 
