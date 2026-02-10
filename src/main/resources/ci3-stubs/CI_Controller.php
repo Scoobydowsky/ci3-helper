@@ -17,6 +17,7 @@
  * @property CI_Zip $zip
  * @property CI_User_agent $agent
  * @property CI_Parser $parser
+ * @property CI_Trackback $trackback
  * @property CI_Benchmark $benchmark
  */
 class CI_Controller {

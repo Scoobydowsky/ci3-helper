@@ -108,6 +108,7 @@ class CiModelCompletionContributor : CompletionContributor() {
                     "form_validation",
                     "agent",
                     "parser",
+                    "trackback",
                     "benchmark"
                 )
 
@@ -174,7 +175,7 @@ class CiModelCompletionContributor : CompletionContributor() {
                 val standardLibraries = listOf(
                     "session", "form_validation", "email", "pagination", "zip", "unit_test",
                     "upload", "image_lib", "cart", "encryption", "table", "ftp", "xmlrpc",
-                    "user_agent", "parser"
+                    "user_agent", "parser", "trackback"
                 )
                 for (lib in standardLibraries) {
                     result.addElement(LookupElementBuilder.create(lib))
@@ -465,6 +466,12 @@ fun getNativeLibraryMembers(libraryPropertyName: String): List<String>? {
         )
         "parser" -> listOf(
             "parse", "parse_string", "set_delimiters"
+        )
+        "trackback" -> listOf(
+            "send", "receive", "send_error", "send_success", "data",
+            "process", "extract_urls", "validate_url", "get_id",
+            "convert_xml", "limit_characters", "convert_ascii",
+            "set_error", "display_errors"
         )
         "benchmark" -> listOf("mark", "elapsed_time", "memory_usage")
         "unit", "unit_test" -> listOf(
