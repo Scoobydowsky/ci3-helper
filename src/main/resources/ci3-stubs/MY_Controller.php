@@ -19,6 +19,7 @@
  * @property CI_User_agent $agent
  * @property CI_Parser $parser
  * @property CI_Trackback $trackback
+ * @property CI_Cache $cache
  */
 class MY_Controller extends CI_Controller {
 }

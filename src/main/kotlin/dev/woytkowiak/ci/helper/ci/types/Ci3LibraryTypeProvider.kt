@@ -29,6 +29,7 @@ class Ci3LibraryTypeProvider : PhpTypeProvider4 {
         "agent" to "CI_User_agent",
         "parser" to "CI_Parser",
         "trackback" to "CI_Trackback",
+        "cache" to "CI_Cache",
         "benchmark" to "CI_Benchmark",
         "unit" to "CI_Unit_test",
         "unit_test" to "CI_Unit_test"

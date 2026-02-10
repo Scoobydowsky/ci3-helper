@@ -18,6 +18,7 @@
  * @property CI_User_agent $agent
  * @property CI_Parser $parser
  * @property CI_Trackback $trackback
+ * @property CI_Cache $cache
  * @property CI_Benchmark $benchmark
  */
 class CI_Controller {
