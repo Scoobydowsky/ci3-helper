@@ -3,6 +3,10 @@
 # ci3-phpstorm-helper Changelog
 
 
+## [0.0.5]
+### Fixed
+- Replace deprecated `TextFieldWithBrowseButton.addBrowseFolderListener(...)` with `addBrowseFolderListener(Project, FileChooserDescriptor)` in CreateCi3ClassDialog
+
 ## [0.0.4]
 ### Fixed
 - Removed action registration to non-existent group ```StatusbarPopupGroup```; "Support author" stays in Help menu only

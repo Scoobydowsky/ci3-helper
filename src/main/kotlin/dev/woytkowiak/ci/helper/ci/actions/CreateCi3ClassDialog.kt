@@ -80,10 +80,9 @@ class CreateCi3ClassDialog(
             override fun changedUpdate(e: DocumentEvent) = updateFileNameFromName()
         })
         directoryField.addBrowseFolderListener(
-            MyBundle.message("action.create.ci3.wizard.choose.directory"),
-            null,
             project,
             FileChooserDescriptorFactory.createSingleFolderDescriptor()
+                .withTitle(MyBundle.message("action.create.ci3.wizard.choose.directory"))
         )
         init()
     }
