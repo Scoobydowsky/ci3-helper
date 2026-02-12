@@ -11,7 +11,7 @@
 
 ### Added
 - Added support to ```javascript```
-
+- Added support to ```caching``` library.
 ## [0.0.4]
 ### Fixed
 - Removed action registration to non-existent group ```StatusbarPopupGroup```; "Support author" stays in Help menu only
