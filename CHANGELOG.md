@@ -9,6 +9,9 @@
 - Replace deprecated `Project.getBaseDir()` / `project.basePath` with `guessProjectBaseDir()` (ModuleManager/content roots) in completion, navigation, views, stubs and directory finder
 - Replace deprecated `StatusBarWidget.getPresentation()` with `getPresentation(PlatformType)` in Ci3StatusBarWidget
 
+### Added
+- Added support to ```javascript```
+
 ## [0.0.4]
 ### Fixed
 - Removed action registration to non-existent group ```StatusbarPopupGroup```; "Support author" stays in Help menu only

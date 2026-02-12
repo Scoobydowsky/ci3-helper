@@ -117,7 +117,9 @@ class CiModelCompletionContributor : CompletionContributor() {
                     "parser",
                     "trackback",
                     "cache",
-                    "benchmark"
+                    "benchmark",
+                    "javascript",
+                    "jquery"
                 )
 
                 for (prop in baseProps) {
@@ -196,7 +198,7 @@ class CiModelCompletionContributor : CompletionContributor() {
                 val standardLibraries = listOf(
                     "session", "form_validation", "email", "pagination", "zip", "unit_test",
                     "upload", "image_lib", "cart", "encryption", "table", "ftp", "xmlrpc",
-                    "user_agent", "parser", "trackback"
+                    "user_agent", "parser", "trackback", "javascript", "javascript/jquery"
                 )
                 for (lib in standardLibraries) {
                     result.addElement(LookupElementBuilder.create(lib))
@@ -458,8 +460,13 @@ fun findLoadedLibraries(fileText: String): List<String> {
     val regex = Regex("load->library\\s*\\(\\s*['\"]([^'\"]+)['\"]\\s*(?:,\\s*[^)]*)?(?:,\\s*['\"]([^'\"]+)['\"])?\\s*\\)")
     regex.findAll(fileText).forEach { m ->
         val alias = m.groupValues[2].trim()
-        val propName = if (alias.isNotEmpty()) alias else m.groupValues[1].trim().lowercase().replace("-", "_")
+        val libName = m.groupValues[1].trim().lowercase().replace("-", "_")
+        val propName = if (alias.isNotEmpty()) alias else libName
         result.add(propName)
+        // CI3 driver-style load: 'javascript/jquery' → $this->jquery; add segment after last /
+        if (propName == libName && "/" in libName) {
+            result.add(libName.substringAfterLast("/"))
+        }
     }
     return result.distinct().sorted()
 }
@@ -514,6 +521,15 @@ fun getNativeLibraryMembers(libraryPropertyName: String): List<String>? {
             "apc", "file", "memcached", "wincache", "redis", "dummy"
         )
         "benchmark" -> listOf("mark", "elapsed_time", "memory_usage")
+        "javascript", "jquery" -> listOf(
+            "compile", "script", "clear_js", "external", "inline",
+            "blur", "change", "click", "dblclick", "error", "focus", "hover",
+            "keydown", "keyup", "load", "mousedown", "mouseup", "mouseover",
+            "resize", "scroll", "unload",
+            "hide", "show", "toggle", "animate", "fadeIn", "fadeOut", "toggleClass",
+            "slideUp", "slideDown", "slideToggle", "effect",
+            "corner", "tablesorter", "modal", "calendar"
+        )
         "unit", "unit_test" -> listOf(
             "run", "report", "result", "use_strict", "active",
             "set_test_items", "set_template"

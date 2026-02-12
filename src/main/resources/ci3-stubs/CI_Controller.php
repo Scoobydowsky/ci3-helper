@@ -20,6 +20,8 @@
  * @property CI_Trackback $trackback
  * @property CI_Cache $cache
  * @property CI_Benchmark $benchmark
+ * @property CI_Javascript $javascript
+ * @property CI_Javascript $jquery
  */
 class CI_Controller {
 }
