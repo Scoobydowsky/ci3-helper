@@ -125,7 +125,8 @@ class CiModelCompletionContributor : CompletionContributor() {
                     "cache",
                     "benchmark",
                     "javascript",
-                    "jquery"
+                    "jquery",
+                    "cart"
                 )
 
                 for (prop in baseProps) {
@@ -595,6 +596,11 @@ fun getNativeLibraryMembers(libraryPropertyName: String): List<String>? {
             "connect", "upload", "download", "rename", "move",
             "delete_file", "delete_dir", "list_files", "mirror",
             "mkdir", "chmod", "changedir", "close"
+        )
+        "cart" -> listOf(
+            "insert", "update", "remove", "total", "total_items",
+            "contents", "get_item", "has_options", "product_options",
+            "format_number", "destroy"
         )
         else -> null
     }

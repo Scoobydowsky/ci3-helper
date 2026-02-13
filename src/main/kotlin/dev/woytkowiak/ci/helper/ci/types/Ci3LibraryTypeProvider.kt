@@ -40,7 +40,8 @@ class Ci3LibraryTypeProvider : PhpTypeProvider4 {
         "language" to "CI_Lang",
         "encrypt" to "CI_Encrypt",
         "encryption" to "CI_Encryption",
-        "ftp" to "CI_Ftp"
+        "ftp" to "CI_Ftp",
+        "cart" to "CI_Cart"
     )
 
     override fun getType(element: PsiElement): PhpType? {

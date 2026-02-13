@@ -28,6 +28,7 @@
  * @property CI_Encrypt $encrypt
  * @property CI_Encryption $encryption
  * @property CI_Ftp $ftp
+ * @property CI_Cart $cart
  */
 class CI_Controller {
 }

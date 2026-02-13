@@ -47,6 +47,16 @@
                 language="PHP"
                 implementationClass="dev.woytkowiak.ci.helper.ci.navigation.CiViewFindUsagesProvider"/>
 
+        <localInspection
+                id="Ci3DeprecatedCartUsage"
+                shortName="Ci3DeprecatedCart"
+                displayName="Deprecated CodeIgniter 3 Cart library usage"
+                groupPath="PHP"
+                groupName="CodeIgniter 3"
+                enabledByDefault="true"
+                level="WARNING"
+                implementationClass="dev.woytkowiak.ci.helper.ci.inspection.Ci3DeprecatedCartUsageInspection"/>
+
     </extensions>
 
     <extensions defaultExtensionNs="com.jetbrains.php">
