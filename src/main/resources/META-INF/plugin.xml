@@ -34,6 +34,8 @@
                 implementation="dev.woytkowiak.ci.helper.ci.navigation.CiModelReferenceContributor"/>
         <psi.referenceContributor
                 implementation="dev.woytkowiak.ci.helper.ci.navigation.CiHelperReferenceContributor"/>
+        <psi.referenceContributor
+                implementation="dev.woytkowiak.ci.helper.ci.navigation.CiConfigReferenceContributor"/>
 
         <!-- Intention "Add CI3 Super Object @property" removed from XML: platform expected
              implementation class under an attribute that differs by IDE version.

@@ -81,6 +81,8 @@ class CiModelCompletionContributor : CompletionContributor() {
             val isLanguageLoad = currentLine.contains("load->language(")
             val isDriverLoad = currentLine.contains("load->driver(")
             val isConfigItemCall = currentLine.contains("config->item(")
+            val afterConfigArrow = currentLine.substringAfter("config->", "")
+            val isConfigMethodCall = currentLine.contains("\$this->config->") && !afterConfigArrow.trimStart().startsWith("(")
             val afterInputArrow = currentLine.substringAfter("input->", "")
             val isInputMethodCall = currentLine.contains("\$this->input->") && !afterInputArrow.trimStart().startsWith("(")
             val isInputKeyCall = currentLine.contains("input->post(") || currentLine.contains("input->get(") ||
@@ -100,7 +102,7 @@ class CiModelCompletionContributor : CompletionContributor() {
             if (!isThisCall && !isModelCall && !isViewCall &&
                 !isDbCall && !isDatabaseLoad && !isLibraryCall && !isHelperCall &&
                 !isConfigLoad && !isLanguageLoad && !isDriverLoad &&
-                !isConfigItemCall && !isInputKeyCall && !isInputMethodCall && !isInputServerCall &&
+                !isConfigItemCall && !isConfigMethodCall && !isInputKeyCall && !isInputMethodCall && !isInputServerCall &&
                 !isInputHeaderCall && !isOutputMethodCall && !isRouteValue && !isLibraryMethodCall && !isDriverMethodCall && !isModelMethodCall && !isBenchmarkMethodCall && !isLoadMethodCall
             ) {
                 return
@@ -302,6 +304,22 @@ class CiModelCompletionContributor : CompletionContributor() {
                 val keys = findConfigKeys(project)
                 for (key in keys) {
                     result.addElement(LookupElementBuilder.create(key))
+                }
+            }
+
+            /* ---------- $this->config-> (Config class – always loaded) ---------- */
+            if (isConfigMethodCall) {
+                val configMethods = listOf(
+                    "item",
+                    "set_item",
+                    "slash_item",
+                    "load",
+                    "site_url",
+                    "base_url",
+                    "system_url"
+                )
+                for (method in configMethods) {
+                    result.addElement(LookupElementBuilder.create(method))
                 }
             }
 
@@ -712,6 +730,13 @@ fun findConfigFileNames(project: Project): List<String> {
         .filter { !it.isDirectory && it.name.endsWith(".php") }
         .map { it.nameWithoutExtension }
         .sorted()
+}
+
+/** Config file application/config/{name}.php for load->config('name'). */
+fun resolveConfigFile(project: Project, configName: String): VirtualFile? {
+    val baseDir = project.guessProjectBaseDir() ?: return null
+    val configDir = baseDir.findChild("application")?.findChild("config") ?: return null
+    return configDir.findChild("$configName.php")
 }
 
 /* ---------------- LANGUAGE FILES (load->language) ---------------- */
