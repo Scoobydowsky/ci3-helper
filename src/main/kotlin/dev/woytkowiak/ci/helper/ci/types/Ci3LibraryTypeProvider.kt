@@ -45,7 +45,8 @@ class Ci3LibraryTypeProvider : PhpTypeProvider4 {
         "xmlrpc" to "CI_Xmlrpc",
         "xmlrpcs" to "CI_Xmlrpcs",
         "email" to "CI_Email",
-        "typography" to "CI_Typography"
+        "typography" to "CI_Typography",
+        "uri" to "CI_URI"
     )
 
     override fun getType(element: PsiElement): PhpType? {

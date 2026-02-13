@@ -60,6 +60,10 @@ class CiModelCompletionContributor : CompletionContributor() {
                 afterFirstArrow.contains("->") &&
                 !afterFirstArrow.substringAfter("->").trimStart().startsWith("(") &&
                 firstPropName == "benchmark"
+            val isUriMethodCall = currentLine.contains("\$this->") &&
+                afterFirstArrow.contains("->") &&
+                !afterFirstArrow.substringAfter("->").trimStart().startsWith("(") &&
+                firstPropName == "uri"
             val isLoadMethodCall = currentLine.contains("\$this->load->") &&
                 afterFirstArrow.contains("->") &&
                 !afterFirstArrow.substringAfter("->").trimStart().startsWith("(") &&
@@ -103,7 +107,7 @@ class CiModelCompletionContributor : CompletionContributor() {
                 !isDbCall && !isDatabaseLoad && !isLibraryCall && !isHelperCall &&
                 !isConfigLoad && !isLanguageLoad && !isDriverLoad &&
                 !isConfigItemCall && !isConfigMethodCall && !isInputKeyCall && !isInputMethodCall && !isInputServerCall &&
-                !isInputHeaderCall && !isOutputMethodCall && !isRouteValue && !isLibraryMethodCall && !isDriverMethodCall && !isModelMethodCall && !isBenchmarkMethodCall && !isLoadMethodCall
+                !isInputHeaderCall && !isOutputMethodCall && !isRouteValue && !isLibraryMethodCall && !isDriverMethodCall && !isModelMethodCall && !isBenchmarkMethodCall && !isUriMethodCall && !isLoadMethodCall
             ) {
                 return
             }
@@ -166,6 +170,14 @@ class CiModelCompletionContributor : CompletionContributor() {
             /* ---------- $this->benchmark-> (Benchmark class – always loaded) ---------- */
             if (isBenchmarkMethodCall) {
                 val methods = getNativeLibraryMembers("benchmark") ?: emptyList()
+                for (method in methods) {
+                    result.addElement(LookupElementBuilder.create(method))
+                }
+            }
+
+            /* ---------- $this->uri-> (URI class – always loaded) ---------- */
+            if (isUriMethodCall) {
+                val methods = getNativeLibraryMembers("uri") ?: emptyList()
                 for (method in methods) {
                     result.addElement(LookupElementBuilder.create(method))
                 }
@@ -580,6 +592,13 @@ fun getNativeLibraryMembers(libraryPropertyName: String): List<String>? {
             "apc", "file", "memcached", "wincache", "redis", "dummy"
         )
         "benchmark" -> listOf("mark", "elapsed_time", "memory_usage")
+        "uri" -> listOf(
+            "segment", "rsegment", "slash_segment", "slash_rsegment",
+            "uri_to_assoc", "ruri_to_assoc", "assoc_to_uri",
+            "uri_string", "ruri_string",
+            "total_segments", "total_rsegments",
+            "segment_array", "rsegment_array"
+        )
         "calendar" -> listOf(
             "initialize", "generate", "get_month_name", "get_day_names",
             "adjust_date", "get_total_days", "default_template", "parse_template"
