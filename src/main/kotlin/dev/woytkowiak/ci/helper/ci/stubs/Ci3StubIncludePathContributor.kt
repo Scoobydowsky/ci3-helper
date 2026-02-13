@@ -30,7 +30,8 @@ class Ci3StubIncludePathContributor : PhpIncludedPathsContributor {
             "CI_Session.php", "CI_Form_validation.php", "CI_URI.php", "CI_Router.php",
             "CI_Output.php", "CI_Security.php", "CI_Zip.php", "CI_Benchmark.php",
             "CI_User_agent.php", "CI_Parser.php", "CI_Trackback.php", "CI_Cache.php",
-            "CI_Unit_test.php", "CI_Javascript.php", "CI_Upload.php", "CI_Lang.php"
+            "CI_Unit_test.php", "CI_Javascript.php", "CI_Upload.php", "CI_Lang.php",
+            "CI_Encrypt.php"
         )
         stubNames.forEach { name ->
             val stubFile = File(stubsDir, name)

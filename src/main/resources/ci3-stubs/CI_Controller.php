@@ -25,6 +25,7 @@
  * @property CI_Calendar $calendar
  * @property CI_Upload $upload
  * @property CI_Lang $lang
+ * @property CI_Encrypt $encrypt
  */
 class CI_Controller {
 }

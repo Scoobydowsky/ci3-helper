@@ -215,7 +215,7 @@ class CiModelCompletionContributor : CompletionContributor() {
             if (isLibraryCall) {
                 val standardLibraries = listOf(
                     "session", "form_validation", "email", "pagination", "zip", "unit_test",
-                    "upload", "image_lib", "cart", "encryption", "table", "ftp", "xmlrpc",
+                    "upload", "image_lib", "cart", "encrypt", "encryption", "table", "ftp", "xmlrpc",
                     "user_agent", "parser", "trackback", "javascript", "javascript/jquery",
                     "calendar", "language"
                 )
@@ -524,7 +524,6 @@ fun findLoadedDrivers(fileText: String): List<String> {
  * Returns null for custom libraries (use findLibraryMethods for application/libraries/).
  */
 fun getNativeLibraryMembers(libraryPropertyName: String): List<String>? {
-    val langLibMethods = listOf("load", "line")
     return when (libraryPropertyName) {
         "zip" -> listOf(
             "compression_level",
@@ -585,6 +584,9 @@ fun getNativeLibraryMembers(libraryPropertyName: String): List<String>? {
             "set_allowed_types", "set_image_properties", "set_xss_clean", "set_error",
             "is_image", "is_allowed_filetype", "is_allowed_filesize", "is_allowed_dimensions",
             "validate_upload_path", "get_extension", "limit_filename_length", "do_xss_clean"
+        )
+        "encrypt" -> listOf(
+            "encode", "decode", "set_cipher", "set_mode", "encode_from_legacy"
         )
         else -> null
     }
