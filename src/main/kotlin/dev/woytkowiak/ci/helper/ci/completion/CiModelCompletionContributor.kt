@@ -60,6 +60,10 @@ class CiModelCompletionContributor : CompletionContributor() {
                 afterFirstArrow.contains("->") &&
                 !afterFirstArrow.substringAfter("->").trimStart().startsWith("(") &&
                 firstPropName == "benchmark"
+            val isLoadMethodCall = currentLine.contains("\$this->load->") &&
+                afterFirstArrow.contains("->") &&
+                !afterFirstArrow.substringAfter("->").trimStart().startsWith("(") &&
+                firstPropName == "load"
             val isDriverMethodCall = currentLine.contains("\$this->") &&
                 afterFirstArrow.contains("->") &&
                 !afterFirstArrow.substringAfter("->").trimStart().startsWith("(") &&
@@ -95,7 +99,7 @@ class CiModelCompletionContributor : CompletionContributor() {
                 !isDbCall && !isDatabaseLoad && !isLibraryCall && !isHelperCall &&
                 !isConfigLoad && !isLanguageLoad && !isDriverLoad &&
                 !isConfigItemCall && !isInputKeyCall && !isInputMethodCall && !isInputServerCall &&
-                !isInputHeaderCall && !isRouteValue && !isLibraryMethodCall && !isDriverMethodCall && !isModelMethodCall && !isBenchmarkMethodCall
+                !isInputHeaderCall && !isRouteValue && !isLibraryMethodCall && !isDriverMethodCall && !isModelMethodCall && !isBenchmarkMethodCall && !isLoadMethodCall
             ) {
                 return
             }
@@ -155,6 +159,18 @@ class CiModelCompletionContributor : CompletionContributor() {
             if (isBenchmarkMethodCall) {
                 val methods = getNativeLibraryMembers("benchmark") ?: emptyList()
                 for (method in methods) {
+                    result.addElement(LookupElementBuilder.create(method))
+                }
+            }
+
+            /* ---------- $this->load-> (Loader / CI_Loader methods) ---------- */
+            if (isLoadMethodCall) {
+                val loadMethods = listOf(
+                    "library", "driver", "view", "vars", "get_var", "get_vars", "clear_vars",
+                    "model", "database", "dbforge", "dbutil", "helper", "file", "language",
+                    "config", "is_loaded", "add_package_path", "remove_package_path", "get_package_paths"
+                )
+                for (method in loadMethods) {
                     result.addElement(LookupElementBuilder.create(method))
                 }
             }
