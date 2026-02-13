@@ -87,6 +87,8 @@ class CiModelCompletionContributor : CompletionContributor() {
                 currentLine.contains("input->cookie(")
             val isInputServerCall = currentLine.contains("input->server(")
             val isInputHeaderCall = currentLine.contains("input->get_request_header(")
+            val afterOutputArrow = currentLine.substringAfter("output->", "")
+            val isOutputMethodCall = currentLine.contains("\$this->output->") && !afterOutputArrow.trimStart().startsWith("(")
             val isRoutesFile = position.containingFile.name == "routes.php"
             val isRouteValue = isRoutesFile && currentLine.contains("\$route[") && (currentLine.contains("='") || currentLine.contains("=\""))
 
@@ -99,7 +101,7 @@ class CiModelCompletionContributor : CompletionContributor() {
                 !isDbCall && !isDatabaseLoad && !isLibraryCall && !isHelperCall &&
                 !isConfigLoad && !isLanguageLoad && !isDriverLoad &&
                 !isConfigItemCall && !isInputKeyCall && !isInputMethodCall && !isInputServerCall &&
-                !isInputHeaderCall && !isRouteValue && !isLibraryMethodCall && !isDriverMethodCall && !isModelMethodCall && !isBenchmarkMethodCall && !isLoadMethodCall
+                !isInputHeaderCall && !isOutputMethodCall && !isRouteValue && !isLibraryMethodCall && !isDriverMethodCall && !isModelMethodCall && !isBenchmarkMethodCall && !isLoadMethodCall
             ) {
                 return
             }
@@ -343,6 +345,24 @@ class CiModelCompletionContributor : CompletionContributor() {
             if (isInputHeaderCall) {
                 for (header in getRequestHeaderNames()) {
                     result.addElement(LookupElementBuilder.create(header))
+                }
+            }
+
+            /* ---------- $this->output-> (Output class – always loaded) ---------- */
+            if (isOutputMethodCall) {
+                val outputMethods = listOf(
+                    "get_output",
+                    "set_output",
+                    "append_output",
+                    "set_header",
+                    "set_status_header",
+                    "set_content_type",
+                    "enable_profiler",
+                    "set_cache",
+                    "cache"
+                )
+                for (method in outputMethods) {
+                    result.addElement(LookupElementBuilder.create(method))
                 }
             }
 
