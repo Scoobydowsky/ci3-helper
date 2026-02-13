@@ -214,7 +214,8 @@ class CiModelCompletionContributor : CompletionContributor() {
                 val standardLibraries = listOf(
                     "session", "form_validation", "email", "pagination", "zip", "unit_test",
                     "upload", "image_lib", "cart", "encryption", "table", "ftp", "xmlrpc",
-                    "user_agent", "parser", "trackback", "javascript", "javascript/jquery"
+                    "user_agent", "parser", "trackback", "javascript", "javascript/jquery",
+                    "calendar"
                 )
                 for (lib in standardLibraries) {
                     result.addElement(LookupElementBuilder.create(lib))
@@ -537,6 +538,10 @@ fun getNativeLibraryMembers(libraryPropertyName: String): List<String>? {
             "apc", "file", "memcached", "wincache", "redis", "dummy"
         )
         "benchmark" -> listOf("mark", "elapsed_time", "memory_usage")
+        "calendar" -> listOf(
+            "initialize", "generate", "get_month_name", "get_day_names",
+            "adjust_date", "get_total_days", "default_template", "parse_template"
+        )
         "javascript", "jquery" -> listOf(
             "compile", "script", "clear_js", "external", "inline",
             "blur", "change", "click", "dblclick", "error", "focus", "hover",

@@ -22,6 +22,7 @@
  * @property CI_Benchmark $benchmark
  * @property CI_Javascript $javascript
  * @property CI_Javascript $jquery
+ * @property CI_Calendar $calendar
  * @property CI_Upload $upload
  */
 class CI_Controller {
