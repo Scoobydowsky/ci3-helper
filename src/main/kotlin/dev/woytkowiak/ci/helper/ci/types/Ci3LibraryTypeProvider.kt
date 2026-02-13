@@ -38,7 +38,8 @@ class Ci3LibraryTypeProvider : PhpTypeProvider4 {
         "calendar" to "CI_Calendar",
         "lang" to "CI_Lang",
         "language" to "CI_Lang",
-        "encrypt" to "CI_Encrypt"
+        "encrypt" to "CI_Encrypt",
+        "encryption" to "CI_Encryption"
     )
 
     override fun getType(element: PsiElement): PhpType? {

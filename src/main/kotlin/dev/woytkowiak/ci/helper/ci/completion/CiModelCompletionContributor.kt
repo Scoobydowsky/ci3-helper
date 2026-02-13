@@ -588,6 +588,9 @@ fun getNativeLibraryMembers(libraryPropertyName: String): List<String>? {
         "encrypt" -> listOf(
             "encode", "decode", "set_cipher", "set_mode", "encode_from_legacy"
         )
+        "encryption" -> listOf(
+            "initialize", "encrypt", "decrypt", "create_key", "hkdf"
+        )
         else -> null
     }
 }
