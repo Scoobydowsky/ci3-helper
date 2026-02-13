@@ -550,6 +550,14 @@ fun getNativeLibraryMembers(libraryPropertyName: String): List<String>? {
             "run", "report", "result", "use_strict", "active",
             "set_test_items", "set_template"
         )
+        "upload" -> listOf(
+            "initialize", "do_upload", "data", "display_errors",
+            "set_upload_path", "set_filename", "set_max_filesize", "set_max_filename",
+            "set_max_width", "set_max_height", "set_min_width", "set_min_height",
+            "set_allowed_types", "set_image_properties", "set_xss_clean", "set_error",
+            "is_image", "is_allowed_filetype", "is_allowed_filesize", "is_allowed_dimensions",
+            "validate_upload_path", "get_extension", "limit_filename_length", "do_xss_clean"
+        )
         else -> null
     }
 }

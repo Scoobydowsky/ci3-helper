@@ -14,6 +14,7 @@
 ### Added
 - Added support to ```javascript```library.
 - Added support to ```caching``` library.
+- Added support to ```file upload``` library.
 
 
 ## [0.0.4]
