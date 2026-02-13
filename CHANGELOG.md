@@ -16,6 +16,7 @@
 - Added support to ```caching``` library.
 - Added support to ```file upload``` library.
 - Added support to ```calendar``` library.
+- Added support to ```language``` library.
 
 
 ## [0.0.4]

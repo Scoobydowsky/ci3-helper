@@ -215,7 +215,7 @@ class CiModelCompletionContributor : CompletionContributor() {
                     "session", "form_validation", "email", "pagination", "zip", "unit_test",
                     "upload", "image_lib", "cart", "encryption", "table", "ftp", "xmlrpc",
                     "user_agent", "parser", "trackback", "javascript", "javascript/jquery",
-                    "calendar"
+                    "calendar", "language"
                 )
                 for (lib in standardLibraries) {
                     result.addElement(LookupElementBuilder.create(lib))
@@ -504,6 +504,7 @@ fun findLoadedDrivers(fileText: String): List<String> {
  * Returns null for custom libraries (use findLibraryMethods for application/libraries/).
  */
 fun getNativeLibraryMembers(libraryPropertyName: String): List<String>? {
+    val langLibMethods = listOf("load", "line")
     return when (libraryPropertyName) {
         "zip" -> listOf(
             "compression_level",
@@ -555,6 +556,8 @@ fun getNativeLibraryMembers(libraryPropertyName: String): List<String>? {
             "run", "report", "result", "use_strict", "active",
             "set_test_items", "set_template"
         )
+        "lang" -> listOf("load", "line")
+        "language" -> listOf("load", "line")
         "upload" -> listOf(
             "initialize", "do_upload", "data", "display_errors",
             "set_upload_path", "set_filename", "set_max_filesize", "set_max_filename",
