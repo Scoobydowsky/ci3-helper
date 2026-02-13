@@ -591,6 +591,11 @@ fun getNativeLibraryMembers(libraryPropertyName: String): List<String>? {
         "encryption" -> listOf(
             "initialize", "encrypt", "decrypt", "create_key", "hkdf"
         )
+        "ftp" -> listOf(
+            "connect", "upload", "download", "rename", "move",
+            "delete_file", "delete_dir", "list_files", "mirror",
+            "mkdir", "chmod", "changedir", "close"
+        )
         else -> null
     }
 }

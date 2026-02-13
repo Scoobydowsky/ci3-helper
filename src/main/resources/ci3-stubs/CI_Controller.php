@@ -27,6 +27,7 @@
  * @property CI_Lang $lang
  * @property CI_Encrypt $encrypt
  * @property CI_Encryption $encryption
+ * @property CI_Ftp $ftp
  */
 class CI_Controller {
 }
