@@ -592,6 +592,11 @@ fun getNativeLibraryMembers(libraryPropertyName: String): List<String>? {
             "slideUp", "slideDown", "slideToggle", "effect",
             "corner", "tablesorter", "modal", "calendar"
         )
+        "email" -> listOf(
+            "from", "reply_to", "to", "cc", "bcc", "subject", "message",
+            "set_alt_message", "set_header", "clear", "send", "attach",
+            "attachment_cid", "print_debugger", "initialize"
+        )
         "unit", "unit_test" -> listOf(
             "run", "report", "result", "use_strict", "active",
             "set_test_items", "set_template"
