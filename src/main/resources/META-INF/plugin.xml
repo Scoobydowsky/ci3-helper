@@ -29,6 +29,8 @@
         <psi.referenceContributor
                 implementation="dev.woytkowiak.ci.helper.ci.navigation.CiLibraryReferenceContributor"/>
         <psi.referenceContributor
+                implementation="dev.woytkowiak.ci.helper.ci.navigation.CiDriverReferenceContributor"/>
+        <psi.referenceContributor
                 implementation="dev.woytkowiak.ci.helper.ci.navigation.CiModelReferenceContributor"/>
         <psi.referenceContributor
                 implementation="dev.woytkowiak.ci.helper.ci.navigation.CiHelperReferenceContributor"/>

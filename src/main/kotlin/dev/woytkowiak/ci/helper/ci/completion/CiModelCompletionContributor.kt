@@ -4,6 +4,7 @@ import com.intellij.codeInsight.completion.*
 import com.intellij.codeInsight.lookup.LookupElementBuilder
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
+import dev.woytkowiak.ci.helper.ci.guessProjectBaseDir
 import com.intellij.patterns.PlatformPatterns
 import com.intellij.util.ProcessingContext
 import dev.woytkowiak.ci.helper.ci.Ci3PluginState
@@ -59,6 +60,10 @@ class CiModelCompletionContributor : CompletionContributor() {
                 afterFirstArrow.contains("->") &&
                 !afterFirstArrow.substringAfter("->").trimStart().startsWith("(") &&
                 firstPropName == "benchmark"
+            val isLoadMethodCall = currentLine.contains("\$this->load->") &&
+                afterFirstArrow.contains("->") &&
+                !afterFirstArrow.substringAfter("->").trimStart().startsWith("(") &&
+                firstPropName == "load"
             val isDriverMethodCall = currentLine.contains("\$this->") &&
                 afterFirstArrow.contains("->") &&
                 !afterFirstArrow.substringAfter("->").trimStart().startsWith("(") &&
@@ -94,7 +99,7 @@ class CiModelCompletionContributor : CompletionContributor() {
                 !isDbCall && !isDatabaseLoad && !isLibraryCall && !isHelperCall &&
                 !isConfigLoad && !isLanguageLoad && !isDriverLoad &&
                 !isConfigItemCall && !isInputKeyCall && !isInputMethodCall && !isInputServerCall &&
-                !isInputHeaderCall && !isRouteValue && !isLibraryMethodCall && !isDriverMethodCall && !isModelMethodCall && !isBenchmarkMethodCall
+                !isInputHeaderCall && !isRouteValue && !isLibraryMethodCall && !isDriverMethodCall && !isModelMethodCall && !isBenchmarkMethodCall && !isLoadMethodCall
             ) {
                 return
             }
@@ -116,7 +121,9 @@ class CiModelCompletionContributor : CompletionContributor() {
                     "parser",
                     "trackback",
                     "cache",
-                    "benchmark"
+                    "benchmark",
+                    "javascript",
+                    "jquery"
                 )
 
                 for (prop in baseProps) {
@@ -152,6 +159,18 @@ class CiModelCompletionContributor : CompletionContributor() {
             if (isBenchmarkMethodCall) {
                 val methods = getNativeLibraryMembers("benchmark") ?: emptyList()
                 for (method in methods) {
+                    result.addElement(LookupElementBuilder.create(method))
+                }
+            }
+
+            /* ---------- $this->load-> (Loader / CI_Loader methods) ---------- */
+            if (isLoadMethodCall) {
+                val loadMethods = listOf(
+                    "library", "driver", "view", "vars", "get_var", "get_vars", "clear_vars",
+                    "model", "database", "dbforge", "dbutil", "helper", "file", "language",
+                    "config", "is_loaded", "add_package_path", "remove_package_path", "get_package_paths"
+                )
+                for (method in loadMethods) {
                     result.addElement(LookupElementBuilder.create(method))
                 }
             }
@@ -195,7 +214,8 @@ class CiModelCompletionContributor : CompletionContributor() {
                 val standardLibraries = listOf(
                     "session", "form_validation", "email", "pagination", "zip", "unit_test",
                     "upload", "image_lib", "cart", "encryption", "table", "ftp", "xmlrpc",
-                    "user_agent", "parser", "trackback"
+                    "user_agent", "parser", "trackback", "javascript", "javascript/jquery",
+                    "calendar", "language"
                 )
                 for (lib in standardLibraries) {
                     result.addElement(LookupElementBuilder.create(lib))
@@ -343,7 +363,7 @@ class CiModelCompletionContributor : CompletionContributor() {
 fun findModels(project: Project): List<String> {
     val result = mutableListOf<String>()
 
-    val baseDir = project.baseDir ?: return emptyList()
+    val baseDir = project.guessProjectBaseDir() ?: return emptyList()
     val modelsDir = baseDir.findChild("application")
         ?.findChild("models") ?: return emptyList()
 
@@ -388,7 +408,7 @@ fun findModelMethods(project: Project, modelPropertyName: String, fileText: Stri
 
 /** Model file in application/models/ (e.g. Order_model → application/models/Order_model.php). Also searches subdirectories. */
 fun resolveModelFile(project: Project, modelClassName: String): VirtualFile? {
-    val baseDir = project.baseDir ?: return null
+    val baseDir = project.guessProjectBaseDir() ?: return null
     val modelsDir = baseDir.findChild("application")?.findChild("models") ?: return null
     val fileName = "$modelClassName.php"
     modelsDir.findFileByRelativePath(fileName)?.let { return it }
@@ -405,7 +425,7 @@ fun resolveModelFile(project: Project, modelClassName: String): VirtualFile? {
 /* ---------------- DATABASE CONFIG ---------------- */
 
 fun findDatabaseConnections(project: Project): List<String> {
-    val baseDir = project.baseDir ?: return emptyList()
+    val baseDir = project.guessProjectBaseDir() ?: return emptyList()
 
     val dbConfig = baseDir.findChild("application")
         ?.findChild("config")
@@ -433,7 +453,7 @@ fun findLoadedDatabases(fileText: String): List<String> {
 
 fun findLibraries(project: Project): List<String> {
     val result = mutableListOf<String>()
-    val baseDir = project.baseDir ?: return emptyList()
+    val baseDir = project.guessProjectBaseDir() ?: return emptyList()
     val libsDir = baseDir.findChild("application")
         ?.findChild("libraries") ?: return emptyList()
     collectLibraries(libsDir, result)
@@ -457,8 +477,13 @@ fun findLoadedLibraries(fileText: String): List<String> {
     val regex = Regex("load->library\\s*\\(\\s*['\"]([^'\"]+)['\"]\\s*(?:,\\s*[^)]*)?(?:,\\s*['\"]([^'\"]+)['\"])?\\s*\\)")
     regex.findAll(fileText).forEach { m ->
         val alias = m.groupValues[2].trim()
-        val propName = if (alias.isNotEmpty()) alias else m.groupValues[1].trim().lowercase().replace("-", "_")
+        val libName = m.groupValues[1].trim().lowercase().replace("-", "_")
+        val propName = if (alias.isNotEmpty()) alias else libName
         result.add(propName)
+        // CI3 driver-style load: 'javascript/jquery' → $this->jquery; add segment after last /
+        if (propName == libName && "/" in libName) {
+            result.add(libName.substringAfterLast("/"))
+        }
     }
     return result.distinct().sorted()
 }
@@ -479,6 +504,7 @@ fun findLoadedDrivers(fileText: String): List<String> {
  * Returns null for custom libraries (use findLibraryMethods for application/libraries/).
  */
 fun getNativeLibraryMembers(libraryPropertyName: String): List<String>? {
+    val langLibMethods = listOf("load", "line")
     return when (libraryPropertyName) {
         "zip" -> listOf(
             "compression_level",
@@ -513,9 +539,32 @@ fun getNativeLibraryMembers(libraryPropertyName: String): List<String>? {
             "apc", "file", "memcached", "wincache", "redis", "dummy"
         )
         "benchmark" -> listOf("mark", "elapsed_time", "memory_usage")
+        "calendar" -> listOf(
+            "initialize", "generate", "get_month_name", "get_day_names",
+            "adjust_date", "get_total_days", "default_template", "parse_template"
+        )
+        "javascript", "jquery" -> listOf(
+            "compile", "script", "clear_js", "external", "inline",
+            "blur", "change", "click", "dblclick", "error", "focus", "hover",
+            "keydown", "keyup", "load", "mousedown", "mouseup", "mouseover",
+            "resize", "scroll", "unload",
+            "hide", "show", "toggle", "animate", "fadeIn", "fadeOut", "toggleClass",
+            "slideUp", "slideDown", "slideToggle", "effect",
+            "corner", "tablesorter", "modal", "calendar"
+        )
         "unit", "unit_test" -> listOf(
             "run", "report", "result", "use_strict", "active",
             "set_test_items", "set_template"
+        )
+        "lang" -> listOf("load", "line")
+        "language" -> listOf("load", "line")
+        "upload" -> listOf(
+            "initialize", "do_upload", "data", "display_errors",
+            "set_upload_path", "set_filename", "set_max_filesize", "set_max_filename",
+            "set_max_width", "set_max_height", "set_min_width", "set_min_height",
+            "set_allowed_types", "set_image_properties", "set_xss_clean", "set_error",
+            "is_image", "is_allowed_filetype", "is_allowed_filesize", "is_allowed_dimensions",
+            "validate_upload_path", "get_extension", "limit_filename_length", "do_xss_clean"
         )
         else -> null
     }
@@ -538,7 +587,7 @@ fun findDriverMethods(project: Project, driverPropertyName: String): List<String
 }
 
 private fun findDriverFileByPropertyName(project: Project, propertyName: String): VirtualFile? {
-    val baseDir = project.baseDir ?: return null
+    val baseDir = project.guessProjectBaseDir() ?: return null
     val libsDir = baseDir.findChild("application")?.findChild("libraries") ?: return null
     val withUcfirst = propertyName.split("_").joinToString("_") { it.replaceFirstChar { c -> c.uppercaseChar() } }
     fun findRecursive(dir: VirtualFile, fileName: String): VirtualFile? {
@@ -561,7 +610,7 @@ private fun findDriverFileByPropertyName(project: Project, propertyName: String)
 }
 
 private fun findLibraryFileByPropertyName(project: Project, propertyName: String): VirtualFile? {
-    val baseDir = project.baseDir ?: return null
+    val baseDir = project.guessProjectBaseDir() ?: return null
     val libsDir = baseDir.findChild("application")?.findChild("libraries") ?: return null
     val withUcfirst = propertyName.split("_").joinToString("_") { it.replaceFirstChar { c -> c.uppercaseChar() } }
     fun findRecursive(dir: VirtualFile, fileName: String): VirtualFile? {
@@ -583,7 +632,7 @@ fun getLibraryClassName(project: Project, propertyName: String): String? =
 
 fun findHelpers(project: Project): List<String> {
     val result = mutableListOf<String>()
-    val baseDir = project.baseDir ?: return emptyList()
+    val baseDir = project.guessProjectBaseDir() ?: return emptyList()
     val helpersDir = baseDir.findChild("application")
         ?.findChild("helpers") ?: return emptyList()
     collectHelpers(helpersDir, result)
@@ -603,7 +652,7 @@ private fun collectHelpers(dir: VirtualFile, result: MutableList<String>) {
 
 /** Helper file in application/helpers/ (e.g. form → application/helpers/form_helper.php). Also searches subdirectories. */
 fun resolveHelperFile(project: Project, helperName: String): VirtualFile? {
-    val baseDir = project.baseDir ?: return null
+    val baseDir = project.guessProjectBaseDir() ?: return null
     val helpersDir = baseDir.findChild("application")?.findChild("helpers") ?: return null
     val fileName = "${helperName}_helper.php"
     helpersDir.findChild(fileName)?.let { return it }
@@ -620,7 +669,7 @@ fun resolveHelperFile(project: Project, helperName: String): VirtualFile? {
 /* ---------------- CONFIG FILES (load->config) ---------------- */
 
 fun findConfigFileNames(project: Project): List<String> {
-    val baseDir = project.baseDir ?: return emptyList()
+    val baseDir = project.guessProjectBaseDir() ?: return emptyList()
     val configDir = baseDir.findChild("application")
         ?.findChild("config") ?: return emptyList()
     return configDir.children
@@ -633,7 +682,7 @@ fun findConfigFileNames(project: Project): List<String> {
 
 fun findLanguageKeys(project: Project): List<String> {
     val result = mutableSetOf<String>()
-    val baseDir = project.baseDir ?: return emptyList()
+    val baseDir = project.guessProjectBaseDir() ?: return emptyList()
     val langDir = baseDir.findChild("application")
         ?.findChild("language") ?: return emptyList()
     for (localeDir in langDir.children) {
@@ -654,7 +703,7 @@ fun findLanguageKeys(project: Project): List<String> {
 
 fun findCustomDrivers(project: Project): List<String> {
     val result = mutableSetOf<String>()
-    val baseDir = project.baseDir ?: return emptyList()
+    val baseDir = project.guessProjectBaseDir() ?: return emptyList()
     val libsDir = baseDir.findChild("application")
         ?.findChild("libraries") ?: return emptyList()
     for (file in libsDir.children) {
@@ -670,7 +719,7 @@ fun findCustomDrivers(project: Project): List<String> {
 
 fun findConfigKeys(project: Project): List<String> {
     val result = mutableSetOf<String>()
-    val baseDir = project.baseDir ?: return emptyList()
+    val baseDir = project.guessProjectBaseDir() ?: return emptyList()
     val configDir = baseDir.findChild("application")
         ?.findChild("config") ?: return emptyList()
 
@@ -688,7 +737,7 @@ fun findConfigKeys(project: Project): List<String> {
 
 fun findInputKeys(project: Project): List<String> {
     val result = mutableSetOf<String>()
-    val baseDir = project.baseDir ?: return emptyList()
+    val baseDir = project.guessProjectBaseDir() ?: return emptyList()
     val appDir = baseDir.findChild("application") ?: return emptyList()
 
     fun scanFile(content: String, patterns: List<Regex>) {
@@ -729,7 +778,7 @@ fun findInputKeys(project: Project): List<String> {
 
 fun getServerKeys(project: Project): List<String> {
     val result = mutableSetOf<String>()
-    val baseDir = project.baseDir ?: return emptyList()
+    val baseDir = project.guessProjectBaseDir() ?: return emptyList()
     val appDir = baseDir.findChild("application") ?: return emptyList()
 
     val standardServerKeys = listOf(
@@ -782,7 +831,7 @@ fun getRequestHeaderNames(): List<String> = listOf(
 
 fun findControllerMethodsForRoutes(project: Project): List<String> {
     val result = mutableListOf<String>()
-    val baseDir = project.baseDir ?: return emptyList()
+    val baseDir = project.guessProjectBaseDir() ?: return emptyList()
     val controllersDir = baseDir.findChild("application")
         ?.findChild("controllers") ?: return emptyList()
 

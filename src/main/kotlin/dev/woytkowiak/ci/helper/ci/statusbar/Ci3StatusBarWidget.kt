@@ -69,7 +69,8 @@ class Ci3StatusBarWidget(private val project: Project) : JPanel(), CustomStatusB
 
     override fun ID(): String = "CodeIgniter3Helper"
 
-    override fun getPresentation(): StatusBarWidget.WidgetPresentation = object : StatusBarWidget.IconPresentation {
+    @Suppress("DEPRECATION", "OVERRIDE_DEPRECATION")
+    override fun getPresentation(type: StatusBarWidget.PlatformType): StatusBarWidget.WidgetPresentation = object : StatusBarWidget.IconPresentation {
         override fun getIcon(): javax.swing.Icon = if (state.isEnabled) Ci3Icons.Ci3 else disabledIcon
         override fun getTooltipText(): String? = buildTooltip()
         override fun getClickConsumer(): Consumer<MouseEvent>? = null

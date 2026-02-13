@@ -1,5 +1,6 @@
 package dev.woytkowiak.ci.helper.ci.navigation
 
+import dev.woytkowiak.ci.helper.ci.guessProjectBaseDir
 import com.intellij.openapi.util.TextRange
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.patterns.PlatformPatterns
@@ -35,7 +36,7 @@ class CiLibraryReferenceContributor : PsiReferenceContributor() {
             if (!isInsideLoadLibrary(element, text)) return PsiReference.EMPTY_ARRAY
 
             val project = element.project
-            val baseDir = project.baseDir ?: return PsiReference.EMPTY_ARRAY
+            val baseDir = project.guessProjectBaseDir() ?: return PsiReference.EMPTY_ARRAY
             val libsDir = baseDir.findChild("application")?.findChild("libraries")
                 ?: return PsiReference.EMPTY_ARRAY
             val target = findLibraryFile(libsDir, text) ?: return PsiReference.EMPTY_ARRAY

@@ -1,6 +1,9 @@
 <?php
 /**
  * Stub CI_Loader for PhpStorm – CodeIgniter 3 Loader class.
+ * Loads libraries, drivers, views, models, helpers, config, language files, and packages.
+ * Access in controllers as $this->load (initialized automatically).
+ *
  * @see https://codeigniter.com/userguide3/libraries/loader.html
  */
 class CI_Loader

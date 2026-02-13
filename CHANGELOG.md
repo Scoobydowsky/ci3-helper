@@ -3,6 +3,22 @@
 # ci3-phpstorm-helper Changelog
 
 
+## [0.0.5]
+### Fixed
+- Replace deprecated `TextFieldWithBrowseButton.addBrowseFolderListener(...)` with `addBrowseFolderListener(Project, FileChooserDescriptor)` in CreateCi3ClassDialog
+- Replace deprecated `Project.getBaseDir()` / `project.basePath` with `guessProjectBaseDir()` (ModuleManager/content roots) in completion, navigation, views, stubs and directory finder
+- Replace deprecated `StatusBarWidget.getPresentation()` with `getPresentation(PlatformType)` in Ci3StatusBarWidget
+
+### Changed 
+- Improvements in ```loading``` library.
+### Added
+- Added support to ```javascript```library.
+- Added support to ```caching``` library.
+- Added support to ```file upload``` library.
+- Added support to ```calendar``` library.
+- Added support to ```language``` library.
+
+
 ## [0.0.4]
 ### Fixed
 - Removed action registration to non-existent group ```StatusbarPopupGroup```; "Support author" stays in Help menu only

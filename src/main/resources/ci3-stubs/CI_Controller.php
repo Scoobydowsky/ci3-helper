@@ -20,6 +20,11 @@
  * @property CI_Trackback $trackback
  * @property CI_Cache $cache
  * @property CI_Benchmark $benchmark
+ * @property CI_Javascript $javascript
+ * @property CI_Javascript $jquery
+ * @property CI_Calendar $calendar
+ * @property CI_Upload $upload
+ * @property CI_Lang $lang
  */
 class CI_Controller {
 }

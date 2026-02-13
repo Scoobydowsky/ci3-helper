@@ -32,7 +32,12 @@ class Ci3LibraryTypeProvider : PhpTypeProvider4 {
         "cache" to "CI_Cache",
         "benchmark" to "CI_Benchmark",
         "unit" to "CI_Unit_test",
-        "unit_test" to "CI_Unit_test"
+        "unit_test" to "CI_Unit_test",
+        "javascript" to "CI_Javascript",
+        "jquery" to "CI_Javascript",
+        "calendar" to "CI_Calendar",
+        "lang" to "CI_Lang",
+        "language" to "CI_Lang"
     )
 
     override fun getType(element: PsiElement): PhpType? {

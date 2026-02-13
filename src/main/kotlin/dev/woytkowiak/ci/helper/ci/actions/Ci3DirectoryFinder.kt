@@ -2,6 +2,7 @@ package dev.woytkowiak.ci.helper.ci.actions
 
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.LocalFileSystem
+import dev.woytkowiak.ci.helper.ci.guessProjectBaseDir
 import com.intellij.psi.PsiDirectory
 import com.intellij.psi.PsiManager
 import java.io.File
@@ -21,7 +22,7 @@ object Ci3DirectoryFinder {
      */
     fun findDefaultDirectory(project: Project, fallback: PsiDirectory, folderName: String): PsiDirectory {
         if (folderName !in CI3_FOLDERS) return fallback
-        val basePath = project.basePath ?: return fallback
+        val basePath = project.guessProjectBaseDir()?.path ?: return fallback
         val vfs = LocalFileSystem.getInstance()
 
         // application/controllers, application/models, application/views
