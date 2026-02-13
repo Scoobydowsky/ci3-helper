@@ -44,7 +44,8 @@ class Ci3LibraryTypeProvider : PhpTypeProvider4 {
         "cart" to "CI_Cart",
         "xmlrpc" to "CI_Xmlrpc",
         "xmlrpcs" to "CI_Xmlrpcs",
-        "email" to "CI_Email"
+        "email" to "CI_Email",
+        "typography" to "CI_Typography"
     )
 
     override fun getType(element: PsiElement): PhpType? {

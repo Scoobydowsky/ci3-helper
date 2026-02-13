@@ -31,6 +31,7 @@
  * @property CI_Cart $cart
  * @property CI_Xmlrpc $xmlrpc
  * @property CI_Xmlrpcs $xmlrpcs
+ * @property CI_Typography $typography
  */
 class CI_Controller {
 }

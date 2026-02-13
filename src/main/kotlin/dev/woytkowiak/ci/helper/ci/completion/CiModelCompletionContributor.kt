@@ -130,7 +130,8 @@ class CiModelCompletionContributor : CompletionContributor() {
                     "jquery",
                     "cart",
                     "xmlrpc",
-                    "xmlrpcs"
+                    "xmlrpcs",
+                    "typography"
                 )
 
                 for (prop in baseProps) {
@@ -222,7 +223,7 @@ class CiModelCompletionContributor : CompletionContributor() {
                     "session", "form_validation", "email", "pagination", "zip", "unit_test",
                     "upload", "image_lib", "cart", "encrypt", "encryption", "table", "ftp", "xmlrpc", "xmlrpcs",
                     "user_agent", "parser", "trackback", "javascript", "javascript/jquery",
-                    "calendar", "language"
+                    "calendar", "language", "typography"
                 )
                 for (lib in standardLibraries) {
                     result.addElement(LookupElementBuilder.create(lib))
@@ -596,6 +597,9 @@ fun getNativeLibraryMembers(libraryPropertyName: String): List<String>? {
             "from", "reply_to", "to", "cc", "bcc", "subject", "message",
             "set_alt_message", "set_header", "clear", "send", "attach",
             "attachment_cid", "print_debugger", "initialize"
+        )
+        "typography" -> listOf(
+            "auto_typography", "format_characters", "nl2br_except_pre", "protect_braced_quotes"
         )
         "unit", "unit_test" -> listOf(
             "run", "report", "result", "use_strict", "active",
