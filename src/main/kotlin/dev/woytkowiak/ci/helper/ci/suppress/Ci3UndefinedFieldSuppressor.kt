@@ -27,7 +27,7 @@ class Ci3UndefinedFieldSuppressor : InspectionSuppressor {
     /** Native CI3 libraries loaded with load->library('name') — property names on $this. */
     private val nativeLibraryProperties = setOf(
         "zip", "email", "pagination", "upload", "image_lib",
-        "cart", "encryption", "table", "ftp", "xmlrpc",
+        "cart", "encryption", "table", "ftp", "xmlrpc", "xmlrpcs",
         "javascript", "jquery", "calendar", "lang"
     )
 

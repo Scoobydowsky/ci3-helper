@@ -128,7 +128,9 @@ class CiModelCompletionContributor : CompletionContributor() {
                     "benchmark",
                     "javascript",
                     "jquery",
-                    "cart"
+                    "cart",
+                    "xmlrpc",
+                    "xmlrpcs"
                 )
 
                 for (prop in baseProps) {
@@ -218,7 +220,7 @@ class CiModelCompletionContributor : CompletionContributor() {
             if (isLibraryCall) {
                 val standardLibraries = listOf(
                     "session", "form_validation", "email", "pagination", "zip", "unit_test",
-                    "upload", "image_lib", "cart", "encrypt", "encryption", "table", "ftp", "xmlrpc",
+                    "upload", "image_lib", "cart", "encrypt", "encryption", "table", "ftp", "xmlrpc", "xmlrpcs",
                     "user_agent", "parser", "trackback", "javascript", "javascript/jquery",
                     "calendar", "language"
                 )
@@ -620,6 +622,12 @@ fun getNativeLibraryMembers(libraryPropertyName: String): List<String>? {
             "contents", "get_item", "has_options", "product_options",
             "format_number", "destroy"
         )
+        "xmlrpc" -> listOf(
+            "initialize", "server", "timeout", "method", "request",
+            "send_request", "display_error", "display_response",
+            "send_error_message", "send_response"
+        )
+        "xmlrpcs" -> listOf("initialize", "serve")
         else -> null
     }
 }
