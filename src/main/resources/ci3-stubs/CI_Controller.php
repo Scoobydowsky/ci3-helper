@@ -25,6 +25,12 @@
  * @property CI_Calendar $calendar
  * @property CI_Upload $upload
  * @property CI_Lang $lang
+ * @property CI_Encrypt $encrypt
+ * @property CI_Encryption $encryption
+ * @property CI_Ftp $ftp
+ * @property CI_Cart $cart
+ * @property CI_Xmlrpc $xmlrpc
+ * @property CI_Xmlrpcs $xmlrpcs
  */
 class CI_Controller {
 }

@@ -37,7 +37,13 @@ class Ci3LibraryTypeProvider : PhpTypeProvider4 {
         "jquery" to "CI_Javascript",
         "calendar" to "CI_Calendar",
         "lang" to "CI_Lang",
-        "language" to "CI_Lang"
+        "language" to "CI_Lang",
+        "encrypt" to "CI_Encrypt",
+        "encryption" to "CI_Encryption",
+        "ftp" to "CI_Ftp",
+        "cart" to "CI_Cart",
+        "xmlrpc" to "CI_Xmlrpc",
+        "xmlrpcs" to "CI_Xmlrpcs"
     )
 
     override fun getType(element: PsiElement): PhpType? {

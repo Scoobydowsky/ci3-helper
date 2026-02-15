@@ -34,6 +34,8 @@
                 implementation="dev.woytkowiak.ci.helper.ci.navigation.CiModelReferenceContributor"/>
         <psi.referenceContributor
                 implementation="dev.woytkowiak.ci.helper.ci.navigation.CiHelperReferenceContributor"/>
+        <psi.referenceContributor
+                implementation="dev.woytkowiak.ci.helper.ci.navigation.CiConfigReferenceContributor"/>
 
         <!-- Intention "Add CI3 Super Object @property" removed from XML: platform expected
              implementation class under an attribute that differs by IDE version.
@@ -46,6 +48,16 @@
         <lang.findUsagesProvider
                 language="PHP"
                 implementationClass="dev.woytkowiak.ci.helper.ci.navigation.CiViewFindUsagesProvider"/>
+
+        <localInspection
+                id="Ci3DeprecatedCartUsage"
+                shortName="Ci3DeprecatedCart"
+                displayName="Deprecated CodeIgniter 3 Cart library usage"
+                groupPath="PHP"
+                groupName="CodeIgniter 3"
+                enabledByDefault="true"
+                level="WARNING"
+                implementationClass="dev.woytkowiak.ci.helper.ci.inspection.Ci3DeprecatedCartUsageInspection"/>
 
     </extensions>
 

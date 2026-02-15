@@ -81,12 +81,16 @@ class CiModelCompletionContributor : CompletionContributor() {
             val isLanguageLoad = currentLine.contains("load->language(")
             val isDriverLoad = currentLine.contains("load->driver(")
             val isConfigItemCall = currentLine.contains("config->item(")
+            val afterConfigArrow = currentLine.substringAfter("config->", "")
+            val isConfigMethodCall = currentLine.contains("\$this->config->") && !afterConfigArrow.trimStart().startsWith("(")
             val afterInputArrow = currentLine.substringAfter("input->", "")
             val isInputMethodCall = currentLine.contains("\$this->input->") && !afterInputArrow.trimStart().startsWith("(")
             val isInputKeyCall = currentLine.contains("input->post(") || currentLine.contains("input->get(") ||
                 currentLine.contains("input->cookie(")
             val isInputServerCall = currentLine.contains("input->server(")
             val isInputHeaderCall = currentLine.contains("input->get_request_header(")
+            val afterOutputArrow = currentLine.substringAfter("output->", "")
+            val isOutputMethodCall = currentLine.contains("\$this->output->") && !afterOutputArrow.trimStart().startsWith("(")
             val isRoutesFile = position.containingFile.name == "routes.php"
             val isRouteValue = isRoutesFile && currentLine.contains("\$route[") && (currentLine.contains("='") || currentLine.contains("=\""))
 
@@ -98,8 +102,8 @@ class CiModelCompletionContributor : CompletionContributor() {
             if (!isThisCall && !isModelCall && !isViewCall &&
                 !isDbCall && !isDatabaseLoad && !isLibraryCall && !isHelperCall &&
                 !isConfigLoad && !isLanguageLoad && !isDriverLoad &&
-                !isConfigItemCall && !isInputKeyCall && !isInputMethodCall && !isInputServerCall &&
-                !isInputHeaderCall && !isRouteValue && !isLibraryMethodCall && !isDriverMethodCall && !isModelMethodCall && !isBenchmarkMethodCall && !isLoadMethodCall
+                !isConfigItemCall && !isConfigMethodCall && !isInputKeyCall && !isInputMethodCall && !isInputServerCall &&
+                !isInputHeaderCall && !isOutputMethodCall && !isRouteValue && !isLibraryMethodCall && !isDriverMethodCall && !isModelMethodCall && !isBenchmarkMethodCall && !isLoadMethodCall
             ) {
                 return
             }
@@ -123,7 +127,10 @@ class CiModelCompletionContributor : CompletionContributor() {
                     "cache",
                     "benchmark",
                     "javascript",
-                    "jquery"
+                    "jquery",
+                    "cart",
+                    "xmlrpc",
+                    "xmlrpcs"
                 )
 
                 for (prop in baseProps) {
@@ -213,7 +220,7 @@ class CiModelCompletionContributor : CompletionContributor() {
             if (isLibraryCall) {
                 val standardLibraries = listOf(
                     "session", "form_validation", "email", "pagination", "zip", "unit_test",
-                    "upload", "image_lib", "cart", "encryption", "table", "ftp", "xmlrpc",
+                    "upload", "image_lib", "cart", "encrypt", "encryption", "table", "ftp", "xmlrpc", "xmlrpcs",
                     "user_agent", "parser", "trackback", "javascript", "javascript/jquery",
                     "calendar", "language"
                 )
@@ -302,6 +309,22 @@ class CiModelCompletionContributor : CompletionContributor() {
                 }
             }
 
+            /* ---------- $this->config-> (Config class – always loaded) ---------- */
+            if (isConfigMethodCall) {
+                val configMethods = listOf(
+                    "item",
+                    "set_item",
+                    "slash_item",
+                    "load",
+                    "site_url",
+                    "base_url",
+                    "system_url"
+                )
+                for (method in configMethods) {
+                    result.addElement(LookupElementBuilder.create(method))
+                }
+            }
+
             /* ---------- $this->input-> (request handling methods) ---------- */
             if (isInputMethodCall) {
                 val inputMethods = listOf(
@@ -343,6 +366,24 @@ class CiModelCompletionContributor : CompletionContributor() {
             if (isInputHeaderCall) {
                 for (header in getRequestHeaderNames()) {
                     result.addElement(LookupElementBuilder.create(header))
+                }
+            }
+
+            /* ---------- $this->output-> (Output class – always loaded) ---------- */
+            if (isOutputMethodCall) {
+                val outputMethods = listOf(
+                    "get_output",
+                    "set_output",
+                    "append_output",
+                    "set_header",
+                    "set_status_header",
+                    "set_content_type",
+                    "enable_profiler",
+                    "set_cache",
+                    "cache"
+                )
+                for (method in outputMethods) {
+                    result.addElement(LookupElementBuilder.create(method))
                 }
             }
 
@@ -504,7 +545,6 @@ fun findLoadedDrivers(fileText: String): List<String> {
  * Returns null for custom libraries (use findLibraryMethods for application/libraries/).
  */
 fun getNativeLibraryMembers(libraryPropertyName: String): List<String>? {
-    val langLibMethods = listOf("load", "line")
     return when (libraryPropertyName) {
         "zip" -> listOf(
             "compression_level",
@@ -566,6 +606,28 @@ fun getNativeLibraryMembers(libraryPropertyName: String): List<String>? {
             "is_image", "is_allowed_filetype", "is_allowed_filesize", "is_allowed_dimensions",
             "validate_upload_path", "get_extension", "limit_filename_length", "do_xss_clean"
         )
+        "encrypt" -> listOf(
+            "encode", "decode", "set_cipher", "set_mode", "encode_from_legacy"
+        )
+        "encryption" -> listOf(
+            "initialize", "encrypt", "decrypt", "create_key", "hkdf"
+        )
+        "ftp" -> listOf(
+            "connect", "upload", "download", "rename", "move",
+            "delete_file", "delete_dir", "list_files", "mirror",
+            "mkdir", "chmod", "changedir", "close"
+        )
+        "cart" -> listOf(
+            "insert", "update", "remove", "total", "total_items",
+            "contents", "get_item", "has_options", "product_options",
+            "format_number", "destroy"
+        )
+        "xmlrpc" -> listOf(
+            "initialize", "server", "timeout", "method", "request",
+            "send_request", "display_error", "display_response",
+            "send_error_message", "send_response"
+        )
+        "xmlrpcs" -> listOf("initialize", "serve")
         else -> null
     }
 }
@@ -676,6 +738,13 @@ fun findConfigFileNames(project: Project): List<String> {
         .filter { !it.isDirectory && it.name.endsWith(".php") }
         .map { it.nameWithoutExtension }
         .sorted()
+}
+
+/** Config file application/config/{name}.php for load->config('name'). */
+fun resolveConfigFile(project: Project, configName: String): VirtualFile? {
+    val baseDir = project.guessProjectBaseDir() ?: return null
+    val configDir = baseDir.findChild("application")?.findChild("config") ?: return null
+    return configDir.findChild("$configName.php")
 }
 
 /* ---------------- LANGUAGE FILES (load->language) ---------------- */

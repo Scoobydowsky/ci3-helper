@@ -2,6 +2,16 @@
 
 # ci3-phpstorm-helper Changelog
 
+## [0.0.6]
+### Added
+- Added support to ```Encrypt``` library
+- Added support to ```Output``` library
+- Added support to ```Encryption``` library
+- Added support to ```FTP``` library 
+- Added support to ```Shopping Cart``` library (throws info about deprecation when is used)
+- Added support to ```Config``` library
+- Added support to ```XML-RPC``` library
+
 
 ## [0.0.5]
 ### Fixed
