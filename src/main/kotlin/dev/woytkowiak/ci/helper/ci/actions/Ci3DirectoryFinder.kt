@@ -8,16 +8,16 @@ import com.intellij.psi.PsiManager
 import java.io.File
 
 /**
- * Finds default CodeIgniter 3 directories: application/controllers, application/models, application/views.
+ * Finds default CodeIgniter 3 directories: application/controllers, application/models, application/views, application/libraries.
  * If CI3 structure is not found, returns the directory chosen by the user.
  */
 object Ci3DirectoryFinder {
 
     private const val APPLICATION = "application"
-    private val CI3_FOLDERS = listOf("controllers", "models", "views")
+    private val CI3_FOLDERS = listOf("controllers", "models", "views", "libraries")
 
     /**
-     * @param folderName "controllers", "models" or "views"
+     * @param folderName "controllers", "models", "views" or "libraries"
      * @return target directory (e.g. application/controllers) or fallback when not found
      */
     fun findDefaultDirectory(project: Project, fallback: PsiDirectory, folderName: String): PsiDirectory {

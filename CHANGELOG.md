@@ -2,6 +2,12 @@
 
 # ci3-phpstorm-helper Changelog
 
+## [0.0.7]
+### Added
+- Added support to ```Email```
+- Added support to ```Typography```
+- Added support to ```URI```
+- Added Create CI3 Library action in context menu RMB->New->CodeIngiter
 ## [0.0.6]
 ### Added
 - Added support to ```Encrypt``` library

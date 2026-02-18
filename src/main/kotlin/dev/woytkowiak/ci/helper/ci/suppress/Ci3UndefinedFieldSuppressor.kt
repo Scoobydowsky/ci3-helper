@@ -28,7 +28,7 @@ class Ci3UndefinedFieldSuppressor : InspectionSuppressor {
     private val nativeLibraryProperties = setOf(
         "zip", "email", "pagination", "upload", "image_lib",
         "cart", "encryption", "table", "ftp", "xmlrpc", "xmlrpcs",
-        "javascript", "jquery", "calendar", "lang"
+        "javascript", "jquery", "calendar", "lang", "typography"
     )
 
     override fun isSuppressedFor(element: PsiElement, toolId: String): Boolean {

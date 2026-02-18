@@ -73,6 +73,7 @@
         <internalFileTemplate name="CI3 Model.php"/>
         <internalFileTemplate name="CI3 View.php"/>
         <internalFileTemplate name="CI3 API Controller.php"/>
+        <internalFileTemplate name="CI3 Library.php"/>
     </extensions>
 
     <actions>
@@ -94,6 +95,10 @@
                     class="dev.woytkowiak.ci.helper.ci.actions.CreateCi3ApiControllerAction"
                     text="%action.create.ci3.api.text"
                     description="%action.create.ci3.api.text"/>
+            <action id="Create.Ci3.Library"
+                    class="dev.woytkowiak.ci.helper.ci.actions.CreateCi3LibraryAction"
+                    text="%action.create.ci3.library.text"
+                    description="%action.create.ci3.library.text"/>
         </group>
         <action id="Support.Ci3.Author"
                 class="dev.woytkowiak.ci.helper.ci.actions.SupportAuthorAction"
