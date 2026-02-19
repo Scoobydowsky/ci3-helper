@@ -64,6 +64,10 @@ class CiModelCompletionContributor : CompletionContributor() {
                 afterFirstArrow.contains("->") &&
                 !afterFirstArrow.substringAfter("->").trimStart().startsWith("(") &&
                 firstPropName == "uri"
+            val isSecurityMethodCall = currentLine.contains("\$this->") &&
+                afterFirstArrow.contains("->") &&
+                !afterFirstArrow.substringAfter("->").trimStart().startsWith("(") &&
+                firstPropName == "security"
             val isLoadMethodCall = currentLine.contains("\$this->load->") &&
                 afterFirstArrow.contains("->") &&
                 !afterFirstArrow.substringAfter("->").trimStart().startsWith("(") &&
@@ -107,7 +111,7 @@ class CiModelCompletionContributor : CompletionContributor() {
                 !isDbCall && !isDatabaseLoad && !isLibraryCall && !isHelperCall &&
                 !isConfigLoad && !isLanguageLoad && !isDriverLoad &&
                 !isConfigItemCall && !isConfigMethodCall && !isInputKeyCall && !isInputMethodCall && !isInputServerCall &&
-                !isInputHeaderCall && !isOutputMethodCall && !isRouteValue && !isLibraryMethodCall && !isDriverMethodCall && !isModelMethodCall && !isBenchmarkMethodCall && !isUriMethodCall && !isLoadMethodCall
+                !isInputHeaderCall && !isOutputMethodCall && !isRouteValue && !isLibraryMethodCall && !isDriverMethodCall && !isModelMethodCall && !isBenchmarkMethodCall && !isUriMethodCall && !isSecurityMethodCall && !isLoadMethodCall
             ) {
                 return
             }
@@ -178,6 +182,14 @@ class CiModelCompletionContributor : CompletionContributor() {
             /* ---------- $this->uri-> (URI class – always loaded) ---------- */
             if (isUriMethodCall) {
                 val methods = getNativeLibraryMembers("uri") ?: emptyList()
+                for (method in methods) {
+                    result.addElement(LookupElementBuilder.create(method))
+                }
+            }
+
+            /* ---------- $this->security-> (Security class – always loaded) ---------- */
+            if (isSecurityMethodCall) {
+                val methods = getNativeLibraryMembers("security") ?: emptyList()
                 for (method in methods) {
                     result.addElement(LookupElementBuilder.create(method))
                 }
@@ -598,6 +610,10 @@ fun getNativeLibraryMembers(libraryPropertyName: String): List<String>? {
             "uri_string", "ruri_string",
             "total_segments", "total_rsegments",
             "segment_array", "rsegment_array"
+        )
+        "security" -> listOf(
+            "xss_clean", "sanitize_filename", "get_csrf_token_name",
+            "get_csrf_hash", "entity_decode", "get_random_bytes"
         )
         "calendar" -> listOf(
             "initialize", "generate", "get_month_name", "get_day_names",

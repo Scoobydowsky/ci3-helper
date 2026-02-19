@@ -2,6 +2,11 @@
 
 # ci3-phpstorm-helper Changelog
 
+## [0.0.8]
+### Added
+- Added support to ```Security``` library
+
+
 ## [0.0.7]
 ### Added
 - Added support to ```Email```
