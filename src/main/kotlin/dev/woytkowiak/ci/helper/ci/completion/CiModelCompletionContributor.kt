@@ -687,6 +687,10 @@ fun getNativeLibraryMembers(libraryPropertyName: String): List<String>? {
             "is_image", "is_allowed_filetype", "is_allowed_filesize", "is_allowed_dimensions",
             "validate_upload_path", "get_extension", "limit_filename_length", "do_xss_clean"
         )
+        "image_lib" -> listOf(
+            "initialize", "resize", "crop", "rotate", "watermark",
+            "clear", "display_errors"
+        )
         "encrypt" -> listOf(
             "encode", "decode", "set_cipher", "set_mode", "encode_from_legacy"
         )
