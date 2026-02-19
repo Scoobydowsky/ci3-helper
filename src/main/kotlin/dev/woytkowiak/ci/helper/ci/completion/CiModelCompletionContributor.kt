@@ -68,6 +68,14 @@ class CiModelCompletionContributor : CompletionContributor() {
                 afterFirstArrow.contains("->") &&
                 !afterFirstArrow.substringAfter("->").trimStart().startsWith("(") &&
                 firstPropName == "security"
+            val isPaginationMethodCall = currentLine.contains("\$this->") &&
+                afterFirstArrow.contains("->") &&
+                !afterFirstArrow.substringAfter("->").trimStart().startsWith("(") &&
+                firstPropName == "pagination"
+            val isFormValidationMethodCall = currentLine.contains("\$this->") &&
+                afterFirstArrow.contains("->") &&
+                !afterFirstArrow.substringAfter("->").trimStart().startsWith("(") &&
+                firstPropName == "form_validation"
             val isLoadMethodCall = currentLine.contains("\$this->load->") &&
                 afterFirstArrow.contains("->") &&
                 !afterFirstArrow.substringAfter("->").trimStart().startsWith("(") &&
@@ -111,7 +119,7 @@ class CiModelCompletionContributor : CompletionContributor() {
                 !isDbCall && !isDatabaseLoad && !isLibraryCall && !isHelperCall &&
                 !isConfigLoad && !isLanguageLoad && !isDriverLoad &&
                 !isConfigItemCall && !isConfigMethodCall && !isInputKeyCall && !isInputMethodCall && !isInputServerCall &&
-                !isInputHeaderCall && !isOutputMethodCall && !isRouteValue && !isLibraryMethodCall && !isDriverMethodCall && !isModelMethodCall && !isBenchmarkMethodCall && !isUriMethodCall && !isSecurityMethodCall && !isLoadMethodCall
+                !isInputHeaderCall && !isOutputMethodCall && !isRouteValue && !isLibraryMethodCall && !isDriverMethodCall && !isModelMethodCall && !isBenchmarkMethodCall && !isUriMethodCall && !isSecurityMethodCall && !isPaginationMethodCall && !isFormValidationMethodCall && !isLoadMethodCall
             ) {
                 return
             }
@@ -190,6 +198,22 @@ class CiModelCompletionContributor : CompletionContributor() {
             /* ---------- $this->security-> (Security class – always loaded) ---------- */
             if (isSecurityMethodCall) {
                 val methods = getNativeLibraryMembers("security") ?: emptyList()
+                for (method in methods) {
+                    result.addElement(LookupElementBuilder.create(method))
+                }
+            }
+
+            /* ---------- $this->pagination-> (Pagination class – loaded via load->library) ---------- */
+            if (isPaginationMethodCall) {
+                val methods = getNativeLibraryMembers("pagination") ?: emptyList()
+                for (method in methods) {
+                    result.addElement(LookupElementBuilder.create(method))
+                }
+            }
+
+            /* ---------- $this->form_validation-> (Form Validation class – loaded via load->library) ---------- */
+            if (isFormValidationMethodCall) {
+                val methods = getNativeLibraryMembers("form_validation") ?: emptyList()
                 for (method in methods) {
                     result.addElement(LookupElementBuilder.create(method))
                 }
@@ -614,6 +638,14 @@ fun getNativeLibraryMembers(libraryPropertyName: String): List<String>? {
         "security" -> listOf(
             "xss_clean", "sanitize_filename", "get_csrf_token_name",
             "get_csrf_hash", "entity_decode", "get_random_bytes"
+        )
+        "pagination" -> listOf(
+            "initialize", "create_links"
+        )
+        "form_validation" -> listOf(
+            "set_rules", "set_data", "set_message", "set_error_delimiters",
+            "error", "error_array", "error_string", "run", "reset_validation",
+            "has_rule", "set_value", "set_select", "set_radio", "set_checkbox"
         )
         "calendar" -> listOf(
             "initialize", "generate", "get_month_name", "get_day_names",

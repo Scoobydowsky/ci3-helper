@@ -47,7 +47,8 @@ class Ci3LibraryTypeProvider : PhpTypeProvider4 {
         "email" to "CI_Email",
         "typography" to "CI_Typography",
         "uri" to "CI_URI",
-        "security" to "CI_Security"
+        "security" to "CI_Security",
+        "form_validation" to "CI_Form_validation"
     )
 
     override fun getType(element: PsiElement): PhpType? {
