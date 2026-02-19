@@ -7,7 +7,7 @@
 - Added support to ```Security``` library
 - Added support to ```Pagination``` library
 - Added support to ```Form Validation``` library
-- 
+- Added support to ```Input``` library
 
 ## [0.0.7]
 ### Added

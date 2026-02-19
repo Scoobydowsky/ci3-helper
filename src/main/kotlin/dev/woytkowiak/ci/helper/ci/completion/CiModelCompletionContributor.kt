@@ -102,7 +102,8 @@ class CiModelCompletionContributor : CompletionContributor() {
             val afterInputArrow = currentLine.substringAfter("input->", "")
             val isInputMethodCall = currentLine.contains("\$this->input->") && !afterInputArrow.trimStart().startsWith("(")
             val isInputKeyCall = currentLine.contains("input->post(") || currentLine.contains("input->get(") ||
-                currentLine.contains("input->cookie(")
+                currentLine.contains("input->cookie(") || currentLine.contains("input->post_get(") ||
+                currentLine.contains("input->get_post(") || currentLine.contains("input->input_stream(")
             val isInputServerCall = currentLine.contains("input->server(")
             val isInputHeaderCall = currentLine.contains("input->get_request_header(")
             val afterOutputArrow = currentLine.substringAfter("output->", "")
@@ -379,6 +380,7 @@ class CiModelCompletionContributor : CompletionContributor() {
                 val inputMethods = listOf(
                     "post",
                     "get",
+                    "post_get",
                     "get_post",
                     "cookie",
                     "server",
@@ -388,7 +390,10 @@ class CiModelCompletionContributor : CompletionContributor() {
                     "method",
                     "request_headers",
                     "get_request_header",
-                    "input_stream"
+                    "input_stream",
+                    "set_cookie",
+                    "is_ajax_request",
+                    "is_cli_request"
                 )
                 for (method in inputMethods) {
                     result.addElement(LookupElementBuilder.create(method))
@@ -901,6 +906,9 @@ fun findInputKeys(project: Project): List<String> {
         Regex("->post\\s*\\(\\s*['\"]([^'\"]+)['\"]"),
         Regex("->get\\s*\\(\\s*['\"]([^'\"]+)['\"]"),
         Regex("->cookie\\s*\\(\\s*['\"]([^'\"]+)['\"]"),
+        Regex("->post_get\\s*\\(\\s*['\"]([^'\"]+)['\"]"),
+        Regex("->get_post\\s*\\(\\s*['\"]([^'\"]+)['\"]"),
+        Regex("->input_stream\\s*\\(\\s*['\"]([^'\"]+)['\"]"),
         Regex("set_cookie\\s*\\(\\s*['\"]([^'\"]+)['\"]"),
         Regex("get_cookie\\s*\\(\\s*['\"]([^'\"]+)['\"]")
     )
