@@ -76,6 +76,10 @@ class CiModelCompletionContributor : CompletionContributor() {
                 afterFirstArrow.contains("->") &&
                 !afterFirstArrow.substringAfter("->").trimStart().startsWith("(") &&
                 firstPropName == "form_validation"
+            val isMigrationMethodCall = currentLine.contains("\$this->") &&
+                afterFirstArrow.contains("->") &&
+                !afterFirstArrow.substringAfter("->").trimStart().startsWith("(") &&
+                firstPropName == "migration"
             val isLoadMethodCall = currentLine.contains("\$this->load->") &&
                 afterFirstArrow.contains("->") &&
                 !afterFirstArrow.substringAfter("->").trimStart().startsWith("(") &&
@@ -120,7 +124,7 @@ class CiModelCompletionContributor : CompletionContributor() {
                 !isDbCall && !isDatabaseLoad && !isLibraryCall && !isHelperCall &&
                 !isConfigLoad && !isLanguageLoad && !isDriverLoad &&
                 !isConfigItemCall && !isConfigMethodCall && !isInputKeyCall && !isInputMethodCall && !isInputServerCall &&
-                !isInputHeaderCall && !isOutputMethodCall && !isRouteValue && !isLibraryMethodCall && !isDriverMethodCall && !isModelMethodCall && !isBenchmarkMethodCall && !isUriMethodCall && !isSecurityMethodCall && !isPaginationMethodCall && !isFormValidationMethodCall && !isLoadMethodCall
+                !isInputHeaderCall && !isOutputMethodCall && !isRouteValue && !isLibraryMethodCall && !isDriverMethodCall && !isModelMethodCall && !isBenchmarkMethodCall && !isUriMethodCall && !isSecurityMethodCall && !isPaginationMethodCall && !isFormValidationMethodCall && !isMigrationMethodCall && !isLoadMethodCall
             ) {
                 return
             }
@@ -220,6 +224,14 @@ class CiModelCompletionContributor : CompletionContributor() {
                 }
             }
 
+            /* ---------- $this->migration-> (Migration class – loaded via load->library) ---------- */
+            if (isMigrationMethodCall) {
+                val methods = getNativeLibraryMembers("migration") ?: emptyList()
+                for (method in methods) {
+                    result.addElement(LookupElementBuilder.create(method))
+                }
+            }
+
             /* ---------- $this->load-> (Loader / CI_Loader methods) ---------- */
             if (isLoadMethodCall) {
                 val loadMethods = listOf(
@@ -272,7 +284,7 @@ class CiModelCompletionContributor : CompletionContributor() {
                     "session", "form_validation", "email", "pagination", "zip", "unit_test",
                     "upload", "image_lib", "cart", "encrypt", "encryption", "table", "ftp", "xmlrpc", "xmlrpcs",
                     "user_agent", "parser", "trackback", "javascript", "javascript/jquery",
-                    "calendar", "language", "typography"
+                    "calendar", "language", "typography", "migration"
                 )
                 for (lib in standardLibraries) {
                     result.addElement(LookupElementBuilder.create(lib))
@@ -651,6 +663,9 @@ fun getNativeLibraryMembers(libraryPropertyName: String): List<String>? {
             "set_rules", "set_data", "set_message", "set_error_delimiters",
             "error", "error_array", "error_string", "run", "reset_validation",
             "has_rule", "set_value", "set_select", "set_radio", "set_checkbox"
+        )
+        "migration" -> listOf(
+            "current", "error_string", "find_migrations", "latest", "version"
         )
         "calendar" -> listOf(
             "initialize", "generate", "get_month_name", "get_day_names",

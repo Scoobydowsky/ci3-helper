@@ -9,6 +9,7 @@
 - Added support to ```Form Validation``` library
 - Added support to ```Input``` library
 - Added support to ```Image Manipulation``` library
+- Added initial support for the ```Migration``` library (advanced migration management coming soon)
 
 ## [0.0.7]
 ### Added
