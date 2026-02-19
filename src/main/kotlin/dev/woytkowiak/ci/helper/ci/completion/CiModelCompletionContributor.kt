@@ -80,6 +80,10 @@ class CiModelCompletionContributor : CompletionContributor() {
                 afterFirstArrow.contains("->") &&
                 !afterFirstArrow.substringAfter("->").trimStart().startsWith("(") &&
                 firstPropName == "migration"
+            val isTableMethodCall = currentLine.contains("\$this->") &&
+                afterFirstArrow.contains("->") &&
+                !afterFirstArrow.substringAfter("->").trimStart().startsWith("(") &&
+                firstPropName == "table"
             val isLoadMethodCall = currentLine.contains("\$this->load->") &&
                 afterFirstArrow.contains("->") &&
                 !afterFirstArrow.substringAfter("->").trimStart().startsWith("(") &&
@@ -124,7 +128,7 @@ class CiModelCompletionContributor : CompletionContributor() {
                 !isDbCall && !isDatabaseLoad && !isLibraryCall && !isHelperCall &&
                 !isConfigLoad && !isLanguageLoad && !isDriverLoad &&
                 !isConfigItemCall && !isConfigMethodCall && !isInputKeyCall && !isInputMethodCall && !isInputServerCall &&
-                !isInputHeaderCall && !isOutputMethodCall && !isRouteValue && !isLibraryMethodCall && !isDriverMethodCall && !isModelMethodCall && !isBenchmarkMethodCall && !isUriMethodCall && !isSecurityMethodCall && !isPaginationMethodCall && !isFormValidationMethodCall && !isMigrationMethodCall && !isLoadMethodCall
+                !isInputHeaderCall && !isOutputMethodCall && !isRouteValue && !isLibraryMethodCall && !isDriverMethodCall && !isModelMethodCall && !isBenchmarkMethodCall && !isUriMethodCall && !isSecurityMethodCall && !isPaginationMethodCall && !isFormValidationMethodCall && !isMigrationMethodCall && !isTableMethodCall && !isLoadMethodCall
             ) {
                 return
             }
@@ -227,6 +231,14 @@ class CiModelCompletionContributor : CompletionContributor() {
             /* ---------- $this->migration-> (Migration class – loaded via load->library) ---------- */
             if (isMigrationMethodCall) {
                 val methods = getNativeLibraryMembers("migration") ?: emptyList()
+                for (method in methods) {
+                    result.addElement(LookupElementBuilder.create(method))
+                }
+            }
+
+            /* ---------- $this->table-> (Table class – loaded via load->library) ---------- */
+            if (isTableMethodCall) {
+                val methods = getNativeLibraryMembers("table") ?: emptyList()
                 for (method in methods) {
                     result.addElement(LookupElementBuilder.create(method))
                 }
@@ -666,6 +678,10 @@ fun getNativeLibraryMembers(libraryPropertyName: String): List<String>? {
         )
         "migration" -> listOf(
             "current", "error_string", "find_migrations", "latest", "version"
+        )
+        "table" -> listOf(
+            "generate", "set_caption", "set_heading", "add_row",
+            "make_columns", "set_template", "set_empty", "clear"
         )
         "calendar" -> listOf(
             "initialize", "generate", "get_month_name", "get_day_names",
