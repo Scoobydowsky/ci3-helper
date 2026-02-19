@@ -59,9 +59,40 @@ class CI_Form_validation
     public function set_radio($field = '', $value = '', $default = false) {}
 
     /**
-     * @param string $list Callback: Model->method or function name
-     * @param string $param Optional parameter to pass
+     * @param string|array $lang Rule name or array of rule => message
+     * @param string $val Message (when $lang is string)
      * @return CI_Form_validation
      */
     public function set_message($lang, $val = '') {}
+
+    /**
+     * Set data array to validate (instead of $_POST).
+     * @param array $data
+     * @return CI_Form_validation
+     */
+    public function set_data(array $data) {}
+
+    /**
+     * @param string $prefix HTML prefix for each error
+     * @param string $suffix HTML suffix for each error
+     * @return CI_Form_validation
+     */
+    public function set_error_delimiters($prefix = ' ', $suffix = ' ') {}
+
+    /**
+     * Get all error messages as string with delimiters.
+     * @param string $prefix
+     * @param string $suffix
+     * @return string
+     */
+    public function error_string($prefix = '', $suffix = '') {}
+
+    /** Clear rules and field data. Use before validating another set. @return void */
+    public function reset_validation() {}
+
+    /**
+     * @param string $field Field name
+     * @return bool Whether the field has a rule
+     */
+    public function has_rule($field) {}
 }

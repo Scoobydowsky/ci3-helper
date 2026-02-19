@@ -64,6 +64,26 @@ class CiModelCompletionContributor : CompletionContributor() {
                 afterFirstArrow.contains("->") &&
                 !afterFirstArrow.substringAfter("->").trimStart().startsWith("(") &&
                 firstPropName == "uri"
+            val isSecurityMethodCall = currentLine.contains("\$this->") &&
+                afterFirstArrow.contains("->") &&
+                !afterFirstArrow.substringAfter("->").trimStart().startsWith("(") &&
+                firstPropName == "security"
+            val isPaginationMethodCall = currentLine.contains("\$this->") &&
+                afterFirstArrow.contains("->") &&
+                !afterFirstArrow.substringAfter("->").trimStart().startsWith("(") &&
+                firstPropName == "pagination"
+            val isFormValidationMethodCall = currentLine.contains("\$this->") &&
+                afterFirstArrow.contains("->") &&
+                !afterFirstArrow.substringAfter("->").trimStart().startsWith("(") &&
+                firstPropName == "form_validation"
+            val isMigrationMethodCall = currentLine.contains("\$this->") &&
+                afterFirstArrow.contains("->") &&
+                !afterFirstArrow.substringAfter("->").trimStart().startsWith("(") &&
+                firstPropName == "migration"
+            val isTableMethodCall = currentLine.contains("\$this->") &&
+                afterFirstArrow.contains("->") &&
+                !afterFirstArrow.substringAfter("->").trimStart().startsWith("(") &&
+                firstPropName == "table"
             val isLoadMethodCall = currentLine.contains("\$this->load->") &&
                 afterFirstArrow.contains("->") &&
                 !afterFirstArrow.substringAfter("->").trimStart().startsWith("(") &&
@@ -90,7 +110,8 @@ class CiModelCompletionContributor : CompletionContributor() {
             val afterInputArrow = currentLine.substringAfter("input->", "")
             val isInputMethodCall = currentLine.contains("\$this->input->") && !afterInputArrow.trimStart().startsWith("(")
             val isInputKeyCall = currentLine.contains("input->post(") || currentLine.contains("input->get(") ||
-                currentLine.contains("input->cookie(")
+                currentLine.contains("input->cookie(") || currentLine.contains("input->post_get(") ||
+                currentLine.contains("input->get_post(") || currentLine.contains("input->input_stream(")
             val isInputServerCall = currentLine.contains("input->server(")
             val isInputHeaderCall = currentLine.contains("input->get_request_header(")
             val afterOutputArrow = currentLine.substringAfter("output->", "")
@@ -107,7 +128,7 @@ class CiModelCompletionContributor : CompletionContributor() {
                 !isDbCall && !isDatabaseLoad && !isLibraryCall && !isHelperCall &&
                 !isConfigLoad && !isLanguageLoad && !isDriverLoad &&
                 !isConfigItemCall && !isConfigMethodCall && !isInputKeyCall && !isInputMethodCall && !isInputServerCall &&
-                !isInputHeaderCall && !isOutputMethodCall && !isRouteValue && !isLibraryMethodCall && !isDriverMethodCall && !isModelMethodCall && !isBenchmarkMethodCall && !isUriMethodCall && !isLoadMethodCall
+                !isInputHeaderCall && !isOutputMethodCall && !isRouteValue && !isLibraryMethodCall && !isDriverMethodCall && !isModelMethodCall && !isBenchmarkMethodCall && !isUriMethodCall && !isSecurityMethodCall && !isPaginationMethodCall && !isFormValidationMethodCall && !isMigrationMethodCall && !isTableMethodCall && !isLoadMethodCall
             ) {
                 return
             }
@@ -183,6 +204,46 @@ class CiModelCompletionContributor : CompletionContributor() {
                 }
             }
 
+            /* ---------- $this->security-> (Security class – always loaded) ---------- */
+            if (isSecurityMethodCall) {
+                val methods = getNativeLibraryMembers("security") ?: emptyList()
+                for (method in methods) {
+                    result.addElement(LookupElementBuilder.create(method))
+                }
+            }
+
+            /* ---------- $this->pagination-> (Pagination class – loaded via load->library) ---------- */
+            if (isPaginationMethodCall) {
+                val methods = getNativeLibraryMembers("pagination") ?: emptyList()
+                for (method in methods) {
+                    result.addElement(LookupElementBuilder.create(method))
+                }
+            }
+
+            /* ---------- $this->form_validation-> (Form Validation class – loaded via load->library) ---------- */
+            if (isFormValidationMethodCall) {
+                val methods = getNativeLibraryMembers("form_validation") ?: emptyList()
+                for (method in methods) {
+                    result.addElement(LookupElementBuilder.create(method))
+                }
+            }
+
+            /* ---------- $this->migration-> (Migration class – loaded via load->library) ---------- */
+            if (isMigrationMethodCall) {
+                val methods = getNativeLibraryMembers("migration") ?: emptyList()
+                for (method in methods) {
+                    result.addElement(LookupElementBuilder.create(method))
+                }
+            }
+
+            /* ---------- $this->table-> (Table class – loaded via load->library) ---------- */
+            if (isTableMethodCall) {
+                val methods = getNativeLibraryMembers("table") ?: emptyList()
+                for (method in methods) {
+                    result.addElement(LookupElementBuilder.create(method))
+                }
+            }
+
             /* ---------- $this->load-> (Loader / CI_Loader methods) ---------- */
             if (isLoadMethodCall) {
                 val loadMethods = listOf(
@@ -235,7 +296,7 @@ class CiModelCompletionContributor : CompletionContributor() {
                     "session", "form_validation", "email", "pagination", "zip", "unit_test",
                     "upload", "image_lib", "cart", "encrypt", "encryption", "table", "ftp", "xmlrpc", "xmlrpcs",
                     "user_agent", "parser", "trackback", "javascript", "javascript/jquery",
-                    "calendar", "language", "typography"
+                    "calendar", "language", "typography", "migration"
                 )
                 for (lib in standardLibraries) {
                     result.addElement(LookupElementBuilder.create(lib))
@@ -343,6 +404,7 @@ class CiModelCompletionContributor : CompletionContributor() {
                 val inputMethods = listOf(
                     "post",
                     "get",
+                    "post_get",
                     "get_post",
                     "cookie",
                     "server",
@@ -352,7 +414,10 @@ class CiModelCompletionContributor : CompletionContributor() {
                     "method",
                     "request_headers",
                     "get_request_header",
-                    "input_stream"
+                    "input_stream",
+                    "set_cookie",
+                    "is_ajax_request",
+                    "is_cli_request"
                 )
                 for (method in inputMethods) {
                     result.addElement(LookupElementBuilder.create(method))
@@ -599,6 +664,25 @@ fun getNativeLibraryMembers(libraryPropertyName: String): List<String>? {
             "total_segments", "total_rsegments",
             "segment_array", "rsegment_array"
         )
+        "security" -> listOf(
+            "xss_clean", "sanitize_filename", "get_csrf_token_name",
+            "get_csrf_hash", "entity_decode", "get_random_bytes"
+        )
+        "pagination" -> listOf(
+            "initialize", "create_links"
+        )
+        "form_validation" -> listOf(
+            "set_rules", "set_data", "set_message", "set_error_delimiters",
+            "error", "error_array", "error_string", "run", "reset_validation",
+            "has_rule", "set_value", "set_select", "set_radio", "set_checkbox"
+        )
+        "migration" -> listOf(
+            "current", "error_string", "find_migrations", "latest", "version"
+        )
+        "table" -> listOf(
+            "generate", "set_caption", "set_heading", "add_row",
+            "make_columns", "set_template", "set_empty", "clear"
+        )
         "calendar" -> listOf(
             "initialize", "generate", "get_month_name", "get_day_names",
             "adjust_date", "get_total_days", "default_template", "parse_template"
@@ -633,6 +717,10 @@ fun getNativeLibraryMembers(libraryPropertyName: String): List<String>? {
             "set_allowed_types", "set_image_properties", "set_xss_clean", "set_error",
             "is_image", "is_allowed_filetype", "is_allowed_filesize", "is_allowed_dimensions",
             "validate_upload_path", "get_extension", "limit_filename_length", "do_xss_clean"
+        )
+        "image_lib" -> listOf(
+            "initialize", "resize", "crop", "rotate", "watermark",
+            "clear", "display_errors"
         )
         "encrypt" -> listOf(
             "encode", "decode", "set_cipher", "set_mode", "encode_from_legacy"
@@ -853,6 +941,9 @@ fun findInputKeys(project: Project): List<String> {
         Regex("->post\\s*\\(\\s*['\"]([^'\"]+)['\"]"),
         Regex("->get\\s*\\(\\s*['\"]([^'\"]+)['\"]"),
         Regex("->cookie\\s*\\(\\s*['\"]([^'\"]+)['\"]"),
+        Regex("->post_get\\s*\\(\\s*['\"]([^'\"]+)['\"]"),
+        Regex("->get_post\\s*\\(\\s*['\"]([^'\"]+)['\"]"),
+        Regex("->input_stream\\s*\\(\\s*['\"]([^'\"]+)['\"]"),
         Regex("set_cookie\\s*\\(\\s*['\"]([^'\"]+)['\"]"),
         Regex("get_cookie\\s*\\(\\s*['\"]([^'\"]+)['\"]")
     )

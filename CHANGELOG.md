@@ -2,6 +2,16 @@
 
 # ci3-phpstorm-helper Changelog
 
+## [0.0.8]
+### Added
+- Added support to ```Security``` library
+- Added support to ```Pagination``` library
+- Added support to ```Form Validation``` library
+- Added support to ```Input``` library
+- Added support to ```Image Manipulation``` library
+- Added initial support for the ```Migration``` library (advanced migration management coming soon)
+- Added support to ```HTML table``` library
+
 ## [0.0.7]
 ### Added
 - Added support to ```Email```
