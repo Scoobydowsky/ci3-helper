@@ -6,7 +6,7 @@ PhpStorm plugin for working with CodeIgniter 3 projects.
 
 <!-- Plugin description -->
 Adds CodeIgniter 3 support to PhpStorm: completion, navigation, and scaffolding so you can work faster with fewer false alarms.
-
+[Plugin Repository](https://github.com/Scoobydowsky/ci3-phpstorm-helper)|[Donate](https://github.com/sponsors/Scoobydowsky).
 - Completion — models, views, libraries, routes in load->view(), load->model(), load->library(), and routes
 - Go to Definition (Ctrl+B) — jump to file or symbol from loaders and route definitions
 - Views — completion and go-to in load->view(); Find Usages shows where a view is loaded
@@ -14,7 +14,7 @@ Adds CodeIgniter 3 support to PhpStorm: completion, navigation, and scaffolding 
 - Stubs — CI types recognized so the IDE does not flag valid code
 - New → CodeIgniter 3 — create Controllers, Models, Views, and API Controllers from the context menu
 
-[Plugin Repository](https://github.com/Scoobydowsky/ci3-phpstorm-helper) — If the plugin helps you, consider [Donate](https://github.com/sponsors/Scoobydowsky).
+
 <!-- Plugin description end -->
 
 ## Requirements

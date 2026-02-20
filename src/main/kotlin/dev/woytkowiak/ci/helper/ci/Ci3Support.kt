@@ -7,5 +7,5 @@ package dev.woytkowiak.ci.helper.ci
  */
 object Ci3Support {
     const val URL = "https://github.com/Scoobydowsky/ci3-phpstorm-helper#support"
-    const val VERSION = "0.0.8"
+    const val VERSION = "0.0.9"
 }

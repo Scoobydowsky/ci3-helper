@@ -312,7 +312,7 @@ class CiModelCompletionContributor : CompletionContributor() {
             /* ---------- load->helper ---------- */
             if (isHelperCall) {
                 val standardHelpers = listOf(
-                    "url", "form", "html", "text", "date", "array", "file"
+                    "url", "form", "html", "text", "date", "array", "directory", "download", "email", "file", "captcha", "cookie"
                 )
                 for (h in standardHelpers) {
                     result.addElement(LookupElementBuilder.create(h))
@@ -831,7 +831,7 @@ private fun collectHelpers(dir: VirtualFile, result: MutableList<String>) {
 }
 
 /** Native CI3 helpers that have stubs in .ci3-helper/stubs/ for "Go to Declaration" when not overridden in application/helpers. */
-private val NATIVE_HELPERS_WITH_STUBS = setOf("array")
+private val NATIVE_HELPERS_WITH_STUBS = setOf("array", "captcha", "cookie", "date", "directory", "download", "email", "file", "form")
 
 /** Helper file in application/helpers/ (e.g. form → application/helpers/form_helper.php). Also searches subdirectories. Falls back to .ci3-helper/stubs/ for native helpers. */
 fun resolveHelperFile(project: Project, helperName: String): VirtualFile? {
