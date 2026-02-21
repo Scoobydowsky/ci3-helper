@@ -1,14 +1,7 @@
 <?php
 /**
- * Stub funkcji globalnych CI3 dla PhpStorm.
- * @see https://codeigniter.com/userguide3/general/ancillary_classes.html#get_instance
- *
- * @return CI_Controller
- */
-function get_instance() {}
-
-/**
- * Array Helper (load with: $this->load->helper('array');)
+ * CodeIgniter 3 Array Helper (stub for IDE).
+ * Load with: $this->load->helper('array');
  * @see https://codeigniter.com/userguide3/helpers/array_helper.html
  */
 

@@ -3,8 +3,10 @@ package dev.woytkowiak.ci.helper.ci.completion
 import com.intellij.codeInsight.completion.*
 import com.intellij.codeInsight.lookup.LookupElementBuilder
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.vfs.LocalFileSystem
 import com.intellij.openapi.vfs.VirtualFile
 import dev.woytkowiak.ci.helper.ci.guessProjectBaseDir
+import java.io.File
 import com.intellij.patterns.PlatformPatterns
 import com.intellij.util.ProcessingContext
 import dev.woytkowiak.ci.helper.ci.Ci3PluginState
@@ -310,7 +312,7 @@ class CiModelCompletionContributor : CompletionContributor() {
             /* ---------- load->helper ---------- */
             if (isHelperCall) {
                 val standardHelpers = listOf(
-                    "url", "form", "html", "text", "date", "array", "file"
+                    "url", "form", "html", "text", "date", "array", "directory", "download", "email", "file", "captcha", "cookie"
                 )
                 for (h in standardHelpers) {
                     result.addElement(LookupElementBuilder.create(h))
@@ -828,20 +830,30 @@ private fun collectHelpers(dir: VirtualFile, result: MutableList<String>) {
     }
 }
 
-/** Helper file in application/helpers/ (e.g. form → application/helpers/form_helper.php). Also searches subdirectories. */
+/** Native CI3 helpers that have stubs in .ci3-helper/stubs/ for "Go to Declaration" when not overridden in application/helpers. */
+private val NATIVE_HELPERS_WITH_STUBS = setOf("array", "captcha", "cookie", "date", "directory", "download", "email", "file", "form")
+
+/** Helper file in application/helpers/ (e.g. form → application/helpers/form_helper.php). Also searches subdirectories. Falls back to .ci3-helper/stubs/ for native helpers. */
 fun resolveHelperFile(project: Project, helperName: String): VirtualFile? {
     val baseDir = project.guessProjectBaseDir() ?: return null
-    val helpersDir = baseDir.findChild("application")?.findChild("helpers") ?: return null
+    val helpersDir = baseDir.findChild("application")?.findChild("helpers")
     val fileName = "${helperName}_helper.php"
-    helpersDir.findChild(fileName)?.let { return it }
-    fun findRecursive(dir: VirtualFile): VirtualFile? {
-        dir.findChild(fileName)?.let { return it }
-        for (child in dir.children) {
-            if (child.isDirectory) findRecursive(child)?.let { return it }
+    if (helpersDir != null) {
+        helpersDir.findChild(fileName)?.let { return it }
+        fun findRecursive(dir: VirtualFile): VirtualFile? {
+            dir.findChild(fileName)?.let { return it }
+            for (child in dir.children) {
+                if (child.isDirectory) findRecursive(child)?.let { return it }
+            }
+            return null
         }
-        return null
+        findRecursive(helpersDir)?.let { return it }
     }
-    return findRecursive(helpersDir)
+    if (helperName in NATIVE_HELPERS_WITH_STUBS) {
+        val stubFile = File(baseDir.path, ".ci3-helper/stubs/$fileName")
+        return LocalFileSystem.getInstance().refreshAndFindFileByPath(stubFile.absolutePath)
+    }
+    return null
 }
 
 /* ---------------- CONFIG FILES (load->config) ---------------- */

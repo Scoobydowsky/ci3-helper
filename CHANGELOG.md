@@ -2,6 +2,20 @@
 
 # ci3-phpstorm-helper Changelog
 
+## [0.0.9]
+Now im started on including Helpers. 
+
+### Added
+- Added support to ```Array``` helper
+- Added support to ```CAPTCHA``` helper
+- Added support to ```Directory``` helper
+- Added support to ```Email``` helper (valid_email, send_email)
+- Added support to ```File``` helper (read_file, write_file, delete_files, get_filenames, get_dir_file_info, get_file_info, get_mime_by_extension, symbolic_permissions, octal_permissions)
+- Added support to ```Cookie``` helper
+- Added support to ```Date``` helper
+- Added support to ```Download``` helper
+- Added support to ```Form``` helper
+
 ## [0.0.8]
 ### Added
 - Added support to ```Security``` library
