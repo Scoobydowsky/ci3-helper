@@ -25,7 +25,7 @@ class Ci3StubIncludePathContributor : PhpIncludedPathsContributor {
         if (!stubsDir.isDirectory) stubsDir.mkdirs()
 
         val stubNames = listOf(
-            "CI_Controller.php", "MY_Controller.php", "global_functions.php", "array_helper.php", "captcha_helper.php", "cookie_helper.php", "date_helper.php", "directory_helper.php", "download_helper.php", "email_helper.php", "file_helper.php", "form_helper.php",
+            "CI_Controller.php", "MY_Controller.php", "global_functions.php", "array_helper.php", "captcha_helper.php", "cookie_helper.php", "date_helper.php", "directory_helper.php", "download_helper.php", "email_helper.php", "file_helper.php", "form_helper.php", "html_helper.php", "inflector_helper.php", "language_helper.php", "number_helper.php", "path_helper.php", "security_helper.php", "smiley_helper.php", "string_helper.php", "text_helper.php", "typography_helper.php", "url_helper.php", "xml_helper.php",
             "CI_Loader.php", "CI_Input.php", "CI_Config.php", "CI_DB_query_builder.php",
             "CI_Session.php", "CI_Form_validation.php", "CI_URI.php", "CI_Router.php",
             "CI_Output.php", "CI_Security.php", "CI_Zip.php", "CI_Benchmark.php",

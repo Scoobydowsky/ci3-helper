@@ -58,6 +58,114 @@
                 enabledByDefault="true"
                 level="WARNING"
                 implementationClass="dev.woytkowiak.ci.helper.ci.inspection.Ci3DeprecatedCartUsageInspection"/>
+        <localInspection
+                id="Ci3HtmlHelperNotLoaded"
+                shortName="Ci3HtmlHelperNotLoaded"
+                displayName="HTML helper function used without loading HTML helper"
+                groupPath="PHP"
+                groupName="CodeIgniter 3"
+                enabledByDefault="true"
+                level="WARNING"
+                implementationClass="dev.woytkowiak.ci.helper.ci.inspection.Ci3HtmlHelperNotLoadedInspection"/>
+        <localInspection
+                id="Ci3InflectorHelperNotLoaded"
+                shortName="Ci3InflectorHelperNotLoaded"
+                displayName="Inflector helper function used without loading Inflector helper"
+                groupPath="PHP"
+                groupName="CodeIgniter 3"
+                enabledByDefault="true"
+                level="WARNING"
+                implementationClass="dev.woytkowiak.ci.helper.ci.inspection.Ci3InflectorHelperNotLoadedInspection"/>
+        <localInspection
+                id="Ci3LanguageHelperNotLoaded"
+                shortName="Ci3LanguageHelperNotLoaded"
+                displayName="Language helper function used without loading Language helper"
+                groupPath="PHP"
+                groupName="CodeIgniter 3"
+                enabledByDefault="true"
+                level="WARNING"
+                implementationClass="dev.woytkowiak.ci.helper.ci.inspection.Ci3LanguageHelperNotLoadedInspection"/>
+        <localInspection
+                id="Ci3NumberHelperNotLoaded"
+                shortName="Ci3NumberHelperNotLoaded"
+                displayName="Number helper function used without loading Number helper"
+                groupPath="PHP"
+                groupName="CodeIgniter 3"
+                enabledByDefault="true"
+                level="WARNING"
+                implementationClass="dev.woytkowiak.ci.helper.ci.inspection.Ci3NumberHelperNotLoadedInspection"/>
+        <localInspection
+                id="Ci3PathHelperNotLoaded"
+                shortName="Ci3PathHelperNotLoaded"
+                displayName="Path helper function used without loading Path helper"
+                groupPath="PHP"
+                groupName="CodeIgniter 3"
+                enabledByDefault="true"
+                level="WARNING"
+                implementationClass="dev.woytkowiak.ci.helper.ci.inspection.Ci3PathHelperNotLoadedInspection"/>
+        <localInspection
+                id="Ci3SecurityHelperNotLoaded"
+                shortName="Ci3SecurityHelperNotLoaded"
+                displayName="Security helper function used without loading Security helper"
+                groupPath="PHP"
+                groupName="CodeIgniter 3"
+                enabledByDefault="true"
+                level="WARNING"
+                implementationClass="dev.woytkowiak.ci.helper.ci.inspection.Ci3SecurityHelperNotLoadedInspection"/>
+        <localInspection
+                id="Ci3SmileyHelperNotLoaded"
+                shortName="Ci3SmileyHelperNotLoaded"
+                displayName="Smiley helper function used without loading Smiley helper"
+                groupPath="PHP"
+                groupName="CodeIgniter 3"
+                enabledByDefault="true"
+                level="WARNING"
+                implementationClass="dev.woytkowiak.ci.helper.ci.inspection.Ci3SmileyHelperNotLoadedInspection"/>
+        <localInspection
+                id="Ci3StringHelperNotLoaded"
+                shortName="Ci3StringHelperNotLoaded"
+                displayName="String helper function used without loading String helper"
+                groupPath="PHP"
+                groupName="CodeIgniter 3"
+                enabledByDefault="true"
+                level="WARNING"
+                implementationClass="dev.woytkowiak.ci.helper.ci.inspection.Ci3StringHelperNotLoadedInspection"/>
+        <localInspection
+                id="Ci3TextHelperNotLoaded"
+                shortName="Ci3TextHelperNotLoaded"
+                displayName="Text helper function used without loading Text helper"
+                groupPath="PHP"
+                groupName="CodeIgniter 3"
+                enabledByDefault="true"
+                level="WARNING"
+                implementationClass="dev.woytkowiak.ci.helper.ci.inspection.Ci3TextHelperNotLoadedInspection"/>
+        <localInspection
+                id="Ci3TypographyHelperNotLoaded"
+                shortName="Ci3TypographyHelperNotLoaded"
+                displayName="Typography helper function used without loading Typography helper"
+                groupPath="PHP"
+                groupName="CodeIgniter 3"
+                enabledByDefault="true"
+                level="WARNING"
+                implementationClass="dev.woytkowiak.ci.helper.ci.inspection.Ci3TypographyHelperNotLoadedInspection"/>
+        <localInspection
+                id="Ci3UrlHelperNotLoaded"
+                shortName="Ci3UrlHelperNotLoaded"
+                displayName="URL helper function used without loading URL helper"
+                groupPath="PHP"
+                groupName="CodeIgniter 3"
+                enabledByDefault="true"
+                level="WARNING"
+                implementationClass="dev.woytkowiak.ci.helper.ci.inspection.Ci3UrlHelperNotLoadedInspection"/>
+        <localInspection
+                id="Ci3XmlHelperNotLoaded"
+                shortName="Ci3XmlHelperNotLoaded"
+                displayName="XML helper function used without loading XML helper"
+                groupPath="PHP"
+                groupName="CodeIgniter 3"
+                enabledByDefault="true"
+                level="WARNING"
+                implementationClass="dev.woytkowiak.ci.helper.ci.inspection.Ci3XmlHelperNotLoadedInspection"/>
 
     </extensions>
 
