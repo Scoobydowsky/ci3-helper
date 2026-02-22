@@ -1,6 +1,20 @@
 <!-- Keep a Changelog guide -> https://keepachangelog.com -->
 
 # ci3-phpstorm-helper Changelog
+## [0.0.10]
+### Added
+- Added support to ```Html``` helper
+- Added support to ```Inflector``` helper
+- Added support to ```Language``` helper
+- Added support to ```Number``` helper
+- Added support to ```Path``` helper
+- Added support to ```Security``` helper
+- Added support to ```Smiley``` helper
+- Added support to ```String``` helper
+- Added support to ```Text``` helper
+- Added support to ```Typography``` helper
+- Added support to ```Url``` helper
+- Added support to ```XML``` helper
 
 ## [0.0.9]
 Now im started on including Helpers. 
