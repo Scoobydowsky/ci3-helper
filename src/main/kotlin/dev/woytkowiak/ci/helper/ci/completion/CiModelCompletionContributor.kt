@@ -120,6 +120,9 @@ class CiModelCompletionContributor : CompletionContributor() {
             val isOutputMethodCall = currentLine.contains("\$this->output->") && !afterOutputArrow.trimStart().startsWith("(")
             val isRoutesFile = position.containingFile.name == "routes.php"
             val isRouteValue = isRoutesFile && currentLine.contains("\$route[") && (currentLine.contains("='") || currentLine.contains("=\""))
+            val isHooksFile = position.containingFile.name == "hooks.php"
+            val isHookPointKey = isHooksFile && currentLine.contains("\$hook[")
+            val isHookArrayKey = isHooksFile && currentLine.contains("=>")
 
             val isDbCall =
                 currentLine.contains("db->") ||
@@ -130,7 +133,8 @@ class CiModelCompletionContributor : CompletionContributor() {
                 !isDbCall && !isDatabaseLoad && !isLibraryCall && !isHelperCall &&
                 !isConfigLoad && !isLanguageLoad && !isDriverLoad &&
                 !isConfigItemCall && !isConfigMethodCall && !isInputKeyCall && !isInputMethodCall && !isInputServerCall &&
-                !isInputHeaderCall && !isOutputMethodCall && !isRouteValue && !isLibraryMethodCall && !isDriverMethodCall && !isModelMethodCall && !isBenchmarkMethodCall && !isUriMethodCall && !isSecurityMethodCall && !isPaginationMethodCall && !isFormValidationMethodCall && !isMigrationMethodCall && !isTableMethodCall && !isLoadMethodCall
+                !isInputHeaderCall && !isOutputMethodCall && !isRouteValue && !isLibraryMethodCall && !isDriverMethodCall && !isModelMethodCall && !isBenchmarkMethodCall && !isUriMethodCall && !isSecurityMethodCall && !isPaginationMethodCall && !isFormValidationMethodCall && !isMigrationMethodCall && !isTableMethodCall && !isLoadMethodCall &&
+                !isHookPointKey && !isHookArrayKey
             ) {
                 return
             }
@@ -474,10 +478,38 @@ class CiModelCompletionContributor : CompletionContributor() {
                     result.addElement(LookupElementBuilder.create(cm))
                 }
             }
+
+            /* ---------- hooks.php: hook point names ($hook['...']) ---------- */
+            if (isHookPointKey) {
+                for (point in HOOK_POINT_NAMES) {
+                    result.addElement(LookupElementBuilder.create(point))
+                }
+            }
+
+            /* ---------- hooks.php: hook array keys ('class', 'function', 'filename', 'filepath', 'params') ---------- */
+            if (isHookArrayKey) {
+                for (key in HOOK_ARRAY_KEYS) {
+                    result.addElement(LookupElementBuilder.create(key))
+                }
+            }
         }
 
     }
 }
+
+/** CI3 hook points (application/config/hooks.php). */
+private val HOOK_POINT_NAMES = listOf(
+    "pre_system",
+    "pre_controller",
+    "post_controller_constructor",
+    "post_controller",
+    "display_override",
+    "cache_override",
+    "post_system"
+)
+
+/** Keys for hook definition array: class, function, filename, filepath, params. */
+private val HOOK_ARRAY_KEYS = listOf("class", "function", "filename", "filepath", "params")
 
 /* ---------------- MODELS ---------------- */
 

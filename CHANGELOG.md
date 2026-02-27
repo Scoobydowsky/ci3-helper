@@ -2,6 +2,10 @@
 
 # ci3-phpstorm-helper Changelog
 
+## [Unreleased]
+### Added
+- **CI3 Hooks** ([docs](https://codeigniter.com/userguide3/general/hooks.html)): completion in `hooks.php` for hook points and array keys; Go to Declaration from `filename`/`filepath` to hook file or dir; New → Hook action with template and optional `hooks.php` entry; inspections for invalid hook point and missing hook file; line marker and Find Usages for hook files.
+
 ## [0.0.12]
 ### Added
 - **Views (from [CI3 Views](https://codeigniter.com/userguide3/general/views.html)):**

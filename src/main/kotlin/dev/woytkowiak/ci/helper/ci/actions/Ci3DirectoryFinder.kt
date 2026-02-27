@@ -14,7 +14,7 @@ import java.io.File
 object Ci3DirectoryFinder {
 
     private const val APPLICATION = "application"
-    private val CI3_FOLDERS = listOf("controllers", "models", "views", "libraries")
+    private val CI3_FOLDERS = listOf("controllers", "models", "views", "libraries", "hooks")
 
     /**
      * @param folderName "controllers", "models", "views" or "libraries"
