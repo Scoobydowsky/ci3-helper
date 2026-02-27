@@ -1,0 +1,23 @@
+<?php
+defined('BASEPATH') OR exit('No direct script access allowed');
+
+/**
+ * CLI Task Controller ${NAME}
+ *
+ * Run via terminal:
+ *   php index.php ${NAME} index
+ *
+ * Tip: Keep tasks CLI-only by guarding with is_cli().
+ */
+class ${NAME} extends ${EXTENDS} {
+
+    public function __construct() {
+        parent::__construct();
+        if ( ! is_cli()) { show_404(); }
+    }
+
+    public function index($to = 'World') {
+        echo "Hello {$to}!".PHP_EOL;
+    }
+}
+
