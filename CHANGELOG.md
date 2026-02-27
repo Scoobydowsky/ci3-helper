@@ -8,6 +8,7 @@
 - **Inspection**: `output->cache()` without `load->view()` in the same method — warns that page caching only works with view output (weak warning).
 - **Quick doc**: CI_Output stub notes for `cache()` and `delete_cache()` — manual cache deletion after config changes; cache stored in `application/cache/`.
 - **Cache driver** ([CI3 Caching library](https://codeigniter.com/userguide3/libraries/caching.html)): CI_Cache stub class doc updated with load example and `key_prefix` usage note.
+- **Compatibility functions** ([CI3 Compatibility](https://codeigniter.com/userguide3/general/compatibility_functions.html)): stubs in `global_functions.php` for password hashing (`password_hash`, `password_verify`, `password_get_info`, `password_needs_rehash`), hash (`hash_equals`, `hash_pbkdf2`), multibyte (`mb_strlen`, `mb_strpos`, `mb_substr`), and standard backports (`array_column`, `hex2bin`); constants `PASSWORD_DEFAULT`, `PASSWORD_BCRYPT`, `MB_ENABLED`.
 
 ## [0.0.12]
 ### Added
