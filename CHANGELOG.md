@@ -1,6 +1,12 @@
 <!-- Keep a Changelog guide -> https://keepachangelog.com -->
 
 # ci3-phpstorm-helper Changelog
+
+## [0.0.11]
+### Added
+- Now use of reserved Names shows error or warning in IDE problems section,
+
+
 ## [0.0.10]
 ### Added
 - Added support to ```Html``` helper

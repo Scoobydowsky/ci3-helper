@@ -167,6 +167,43 @@
                 level="WARNING"
                 implementationClass="dev.woytkowiak.ci.helper.ci.inspection.Ci3XmlHelperNotLoadedInspection"/>
 
+        <localInspection
+                id="Ci3ReservedControllerName"
+                shortName="Ci3ReservedControllerName"
+                displayName="Reserved CodeIgniter 3 controller name used"
+                groupPath="PHP"
+                groupName="CodeIgniter 3"
+                enabledByDefault="true"
+                level="ERROR"
+                implementationClass="dev.woytkowiak.ci.helper.ci.inspection.Ci3ReservedControllerNameInspection"/>
+        <localInspection
+                id="Ci3ReservedFunctionName"
+                shortName="Ci3ReservedFunctionName"
+                displayName="Reserved CodeIgniter 3 function name declared"
+                groupPath="PHP"
+                groupName="CodeIgniter 3"
+                enabledByDefault="true"
+                level="ERROR"
+                implementationClass="dev.woytkowiak.ci.helper.ci.inspection.Ci3ReservedFunctionNameInspection"/>
+        <localInspection
+                id="Ci3ReservedVariableName"
+                shortName="Ci3ReservedVariableName"
+                displayName="Reserved CodeIgniter 3 variable name used"
+                groupPath="PHP"
+                groupName="CodeIgniter 3"
+                enabledByDefault="true"
+                level="WARNING"
+                implementationClass="dev.woytkowiak.ci.helper.ci.inspection.Ci3ReservedVariableNameInspection"/>
+        <localInspection
+                id="Ci3ReservedConstantName"
+                shortName="Ci3ReservedConstantName"
+                displayName="Reserved CodeIgniter 3 constant name declared"
+                groupPath="PHP"
+                groupName="CodeIgniter 3"
+                enabledByDefault="true"
+                level="ERROR"
+                implementationClass="dev.woytkowiak.ci.helper.ci.inspection.Ci3ReservedConstantNameInspection"/>
+
     </extensions>
 
     <extensions defaultExtensionNs="com.jetbrains.php">
