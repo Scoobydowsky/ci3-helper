@@ -51,6 +51,10 @@
                 language="PHP"
                 implementationClass="dev.woytkowiak.ci.helper.ci.navigation.CiViewFindUsagesProvider"/>
 
+        <codeInsight.lineMarkerProvider
+                language="PHP"
+                implementationClass="dev.woytkowiak.ci.helper.ci.navigation.CiViewLineMarkerProvider"/>
+
         <localInspection
                 id="Ci3DeprecatedCartUsage"
                 shortName="Ci3DeprecatedCart"
@@ -223,6 +227,26 @@
                 enabledByDefault="true"
                 level="ERROR"
                 implementationClass="dev.woytkowiak.ci.helper.ci.inspection.Ci3ReservedConstantNameInspection"/>
+
+        <localInspection
+                id="Ci3ViewNotFound"
+                shortName="Ci3ViewNotFound"
+                displayName="CodeIgniter 3 view not found for load->view()"
+                groupPath="PHP"
+                groupName="CodeIgniter 3"
+                enabledByDefault="true"
+                level="WARNING"
+                implementationClass="dev.woytkowiak.ci.helper.ci.inspection.Ci3ViewNotFoundInspection"/>
+
+        <localInspection
+                id="Ci3ViewReturnIgnored"
+                shortName="Ci3ViewReturnIgnored"
+                displayName="CodeIgniter 3 load->view() return value ignored"
+                groupPath="PHP"
+                groupName="CodeIgniter 3"
+                enabledByDefault="true"
+                level="WEAK_WARNING"
+                implementationClass="dev.woytkowiak.ci.helper.ci.inspection.Ci3ViewReturnIgnoredInspection"/>
 
     </extensions>
 
