@@ -1,6 +1,17 @@
 <!-- Keep a Changelog guide -> https://keepachangelog.com -->
 
 # ci3-phpstorm-helper Changelog
+
+## [0.0.11]
+### Added
+- Now use of reserved Names shows error or warning in IDE problems section.
+- **Controllers (from [CI3 Controllers](https://codeigniter.com/userguide3/general/controllers.html)):**
+  - Inspection: controller method must not have the same name as the class (PHP4 constructor legacy).
+  - Inspection: if a controller defines `__construct()`, it must call `parent::__construct()`.
+  - Support for controllers in subdirectories: "Go to Declaration" in `routes.php` and route completion now resolve e.g. `products/shoes` to `application/controllers/products/Shoes.php`.
+- New controller file template includes `__construct()` with `parent::__construct()`.
+
+
 ## [0.0.10]
 ### Added
 - Added support to ```Html``` helper

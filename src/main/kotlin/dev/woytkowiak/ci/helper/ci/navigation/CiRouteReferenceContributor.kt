@@ -44,7 +44,8 @@ class CiRouteReferenceContributor : PsiReferenceContributor() {
                 ?.findChild("controllers")
                 ?: return PsiReference.EMPTY_ARRAY
 
-            val controllerFile = controllersDir.findChild("$controllerPart.php")
+            // Support subdirectories: "products/shoes" -> application/controllers/products/Shoes.php
+            val controllerFile = resolveControllerFile(controllersDir, controllerPart)
                 ?: return PsiReference.EMPTY_ARRAY
 
             val start = if (text.startsWith("'") || text.startsWith("\"")) 1 else 0
@@ -67,4 +68,31 @@ class CiRouteReferenceContributor : PsiReferenceContributor() {
 
         override fun getVariants(): Array<Any> = emptyArray()
     }
+}
+
+/**
+ * Resolves route segment (e.g. "products/shoes") to controller file.
+ * CI3: first segment = folder, rest = path; filename may be ucfirst (Shoes.php).
+ */
+private fun resolveControllerFile(controllersDir: VirtualFile, controllerPart: String): VirtualFile? {
+    if (!controllerPart.contains("/")) {
+        val direct = controllersDir.findChild("$controllerPart.php")
+        if (direct != null) return direct
+        val ucfirst = controllerPart.replaceFirstChar { it.uppercase() }
+        return controllersDir.findChild("$ucfirst.php")
+    }
+    val segments = controllerPart.split("/")
+    var dir = controllersDir
+    for (i in segments.indices) {
+        val seg = segments[i]
+        if (i == segments.lastIndex) {
+            val file = dir.findChild("$seg.php")
+            if (file != null) return file
+            val ucfirst = seg.replaceFirstChar { it.uppercase() }
+            return dir.findChild("$ucfirst.php")
+        }
+        dir = dir.findChild(seg) ?: return null
+        if (!dir.isDirectory) return null
+    }
+    return null
 }

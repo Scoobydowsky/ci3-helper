@@ -1035,17 +1035,28 @@ fun findControllerMethodsForRoutes(project: Project): List<String> {
     val controllersDir = baseDir.findChild("application")
         ?.findChild("controllers") ?: return emptyList()
 
-    for (file in controllersDir.children) {
-        if (file.isDirectory) continue
-        if (!file.name.endsWith(".php")) continue
-        val controllerName = file.nameWithoutExtension
-        val methods = findControllerMethods(file)
-        result.add(controllerName)
-        for (method in methods) {
-            result.add("$controllerName/$method")
+    collectControllerRoutes(controllersDir, "", result)
+    return result.distinct().sorted()
+}
+
+/**
+ * Recursively collects route segments for controllers (including subdirectories).
+ * CI3: application/controllers/products/Shoes.php -> "products/shoes", "products/shoes/show", ...
+ */
+private fun collectControllerRoutes(dir: VirtualFile, pathPrefix: String, result: MutableList<String>) {
+    for (file in dir.children) {
+        if (file.isDirectory) {
+            collectControllerRoutes(file, "$pathPrefix${file.name}/", result)
+        } else if (file.name.endsWith(".php")) {
+            val segment = file.nameWithoutExtension.lowercase()
+            val routePrefix = if (pathPrefix.isEmpty()) segment else pathPrefix.lowercase() + segment
+            val methods = findControllerMethods(file)
+            result.add(routePrefix)
+            for (method in methods) {
+                result.add("$routePrefix/$method")
+            }
         }
     }
-    return result.distinct().sorted()
 }
 
 private fun findControllerMethods(controllerFile: VirtualFile): List<String> {

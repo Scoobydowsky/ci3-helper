@@ -15,6 +15,8 @@
         <applicationService
                 serviceImplementation="dev.woytkowiak.ci.helper.ci.Ci3PluginState"/>
 
+        <configurationType implementation="dev.woytkowiak.ci.helper.ci.cli.Ci3CliConfigurationType"/>
+
         <statusBarWidgetFactory
                 id="CodeIgniter3Helper"
                 implementation="dev.woytkowiak.ci.helper.ci.statusbar.Ci3StatusBarWidgetFactory"/>
@@ -167,6 +169,61 @@
                 level="WARNING"
                 implementationClass="dev.woytkowiak.ci.helper.ci.inspection.Ci3XmlHelperNotLoadedInspection"/>
 
+        <localInspection
+                id="Ci3ReservedControllerName"
+                shortName="Ci3ReservedControllerName"
+                displayName="Reserved CodeIgniter 3 controller name used"
+                groupPath="PHP"
+                groupName="CodeIgniter 3"
+                enabledByDefault="true"
+                level="ERROR"
+                implementationClass="dev.woytkowiak.ci.helper.ci.inspection.Ci3ReservedControllerNameInspection"/>
+        <localInspection
+                id="Ci3ControllerConstructor"
+                shortName="Ci3ControllerConstructor"
+                displayName="CI3 controller constructor must call parent::__construct()"
+                groupPath="PHP"
+                groupName="CodeIgniter 3"
+                enabledByDefault="true"
+                level="ERROR"
+                implementationClass="dev.woytkowiak.ci.helper.ci.inspection.Ci3ControllerConstructorInspection"/>
+        <localInspection
+                id="Ci3CliOnlyIsCliGuard"
+                shortName="Ci3CliOnlyIsCliGuard"
+                displayName="CLI-only controller should guard execution with is_cli()"
+                groupPath="PHP"
+                groupName="CodeIgniter 3"
+                enabledByDefault="true"
+                level="WARNING"
+                implementationClass="dev.woytkowiak.ci.helper.ci.inspection.Ci3CliOnlyControllerShouldCheckIsCliInspection"/>
+        <localInspection
+                id="Ci3ReservedFunctionName"
+                shortName="Ci3ReservedFunctionName"
+                displayName="Reserved CodeIgniter 3 function name declared"
+                groupPath="PHP"
+                groupName="CodeIgniter 3"
+                enabledByDefault="true"
+                level="ERROR"
+                implementationClass="dev.woytkowiak.ci.helper.ci.inspection.Ci3ReservedFunctionNameInspection"/>
+        <localInspection
+                id="Ci3ReservedVariableName"
+                shortName="Ci3ReservedVariableName"
+                displayName="Reserved CodeIgniter 3 variable name used"
+                groupPath="PHP"
+                groupName="CodeIgniter 3"
+                enabledByDefault="true"
+                level="WARNING"
+                implementationClass="dev.woytkowiak.ci.helper.ci.inspection.Ci3ReservedVariableNameInspection"/>
+        <localInspection
+                id="Ci3ReservedConstantName"
+                shortName="Ci3ReservedConstantName"
+                displayName="Reserved CodeIgniter 3 constant name declared"
+                groupPath="PHP"
+                groupName="CodeIgniter 3"
+                enabledByDefault="true"
+                level="ERROR"
+                implementationClass="dev.woytkowiak.ci.helper.ci.inspection.Ci3ReservedConstantNameInspection"/>
+
     </extensions>
 
     <extensions defaultExtensionNs="com.jetbrains.php">
@@ -182,6 +239,7 @@
         <internalFileTemplate name="CI3 View.php"/>
         <internalFileTemplate name="CI3 API Controller.php"/>
         <internalFileTemplate name="CI3 Library.php"/>
+        <internalFileTemplate name="CI3 CLI Task Controller.php"/>
     </extensions>
 
     <actions>
@@ -191,6 +249,10 @@
                     class="dev.woytkowiak.ci.helper.ci.actions.CreateCi3ControllerAction"
                     text="%action.create.ci3.controller.text"
                     description="%action.create.ci3.controller.text"/>
+            <action id="Create.Ci3.CliTaskController"
+                    class="dev.woytkowiak.ci.helper.ci.actions.CreateCi3CliTaskControllerAction"
+                    text="%action.create.ci3.cli.controller.text"
+                    description="%action.create.ci3.cli.controller.text"/>
             <action id="Create.Ci3.Model"
                     class="dev.woytkowiak.ci.helper.ci.actions.CreateCi3ModelAction"
                     text="%action.create.ci3.model.text"
@@ -208,6 +270,19 @@
                     text="%action.create.ci3.library.text"
                     description="%action.create.ci3.library.text"/>
         </group>
+
+        <group id="Ci3CliContextGroup" text="%group.Ci3CliContextGroup.text" popup="true" icon="dev.woytkowiak.ci.helper.ci.Ci3Icons.Ci3">
+            <add-to-group group-id="EditorPopupMenu" anchor="last"/>
+            <action id="Ci3.Cli.RunController"
+                    class="dev.woytkowiak.ci.helper.ci.actions.RunCi3CliControllerAction"
+                    text="%action.ci3.cli.run.text"
+                    description="%action.ci3.cli.run.description"/>
+            <action id="Ci3.Cli.CopyCommand"
+                    class="dev.woytkowiak.ci.helper.ci.actions.CopyCi3CliCommandAction"
+                    text="%action.ci3.cli.copy.text"
+                    description="%action.ci3.cli.copy.description"/>
+        </group>
+
         <action id="Support.Ci3.Author"
                 class="dev.woytkowiak.ci.helper.ci.actions.SupportAuthorAction"
                 text="%action.support.author.text"
