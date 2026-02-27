@@ -52,6 +52,10 @@ If you like the plugin and want to support its development:
 
 You can also use [GitHub Sponsors](https://github.com/sponsors/Scoobydowsky) or any other platform you prefer. Thank you for any support.
 
+## Development
+
+This plugin is developed with the support of **Cursor** (AI-assisted coding). Parts of the codebase, inspections, and features are created or refined with AI assistance in the development process.
+
 ## License
 
 Apache 2.0 — see [LICENSE](LICENSE).

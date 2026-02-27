@@ -52,6 +52,22 @@ class Ci3ReservedControllerNameInspection : LocalInspectionTool() {
                         )
                     }
                 }
+
+                // 3) In CI controllers: method must not have the same name as the class (PHP4 constructor legacy)
+                if (extendsCiOrMyController(phpClass)) {
+                    val className = phpClass.name ?: return@visitPhpClass
+                    for (method in phpClass.methods) {
+                        val methodName = method.name ?: continue
+                        if (methodName.equals(className, ignoreCase = true)) {
+                            holder.registerProblem(
+                                method.nameIdentifier ?: method,
+                                "Do not name a controller method identically to the class name '$className' – it may be invoked as constructor (PHP4 legacy).",
+                                ProblemHighlightType.ERROR,
+                                *emptyArray()
+                            )
+                        }
+                    }
+                }
             }
         }
     }

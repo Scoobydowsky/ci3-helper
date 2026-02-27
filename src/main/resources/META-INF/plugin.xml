@@ -177,6 +177,15 @@
                 level="ERROR"
                 implementationClass="dev.woytkowiak.ci.helper.ci.inspection.Ci3ReservedControllerNameInspection"/>
         <localInspection
+                id="Ci3ControllerConstructor"
+                shortName="Ci3ControllerConstructor"
+                displayName="CI3 controller constructor must call parent::__construct()"
+                groupPath="PHP"
+                groupName="CodeIgniter 3"
+                enabledByDefault="true"
+                level="ERROR"
+                implementationClass="dev.woytkowiak.ci.helper.ci.inspection.Ci3ControllerConstructorInspection"/>
+        <localInspection
                 id="Ci3ReservedFunctionName"
                 shortName="Ci3ReservedFunctionName"
                 displayName="Reserved CodeIgniter 3 function name declared"
