@@ -57,18 +57,29 @@ class CI_Output
     public function enable_profiler($val = true) {}
 
     /**
-     * Set cache time in seconds for the output.
+     * Set cache time in seconds for the output (internal use).
      * @param int $time Cache duration in seconds
      * @return CI_Output
      */
     public function set_cache($time) {}
 
     /**
-     * Alias for set_cache – cache the output for given seconds.
-     * @param int $time Cache duration in seconds
+     * Enable page caching for the current output. Page is cached in application/cache/.
+     * Works only when output is generated via load->view(). $n = minutes to cache.
+     * If you change config that affects output, delete cache manually (e.g. delete_cache() or clear application/cache/).
+     * @see https://codeigniter.com/userguide3/general/caching.html
+     * @param int $n Number of minutes the page should remain cached before refresh
      * @return CI_Output
      */
-    public function cache($time) {}
+    public function cache($n) {}
+
+    /**
+     * Delete cached page(s). Call with no args for current URI, or pass URI path.
+     * Use after config changes that affect output; otherwise old cached pages may be served.
+     * @param string|null $uri URI segment to delete (e.g. '/foo/bar'), or null for current URI
+     * @return void
+     */
+    public function delete_cache($uri = null) {}
 
     /** @return void */
     public function _display($output = '') {}

@@ -2,6 +2,13 @@
 
 # ci3-phpstorm-helper Changelog
 
+## [0.0.13]
+### Added
+- **Output / page caching** ([CI3 Caching](https://codeigniter.com/userguide3/general/caching.html)): `delete_cache()` and `delete_cache($uri)` in CI_Output stub and completion; clarified `cache($n)` docblock (minutes, view requirement).
+- **Inspection**: `output->cache()` without `load->view()` in the same method — warns that page caching only works with view output (weak warning).
+- **Quick doc**: CI_Output stub notes for `cache()` and `delete_cache()` — manual cache deletion after config changes; cache stored in `application/cache/`.
+- **Cache driver** ([CI3 Caching library](https://codeigniter.com/userguide3/libraries/caching.html)): CI_Cache stub class doc updated with load example and `key_prefix` usage note.
+
 ## [0.0.12]
 ### Added
 - **CI3 Hooks** ([docs](https://codeigniter.com/userguide3/general/hooks.html)): completion in `hooks.php` for hook points and array keys; Go to Declaration from `filename`/`filepath` to hook file or dir; New → Hook action with template and optional `hooks.php` entry; inspections for invalid hook point and missing hook file; line marker and Find Usages for hook files.

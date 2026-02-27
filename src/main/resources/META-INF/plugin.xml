@@ -288,6 +288,15 @@
                 enabledByDefault="true"
                 level="WARNING"
                 implementationClass="dev.woytkowiak.ci.helper.ci.inspection.Ci3ModelNotFoundInspection"/>
+        <localInspection
+                id="Ci3OutputCacheWithoutView"
+                shortName="Ci3OutputCacheWithoutView"
+                displayName="CodeIgniter 3 output->cache() without load->view() in method"
+                groupPath="PHP"
+                groupName="CodeIgniter 3"
+                enabledByDefault="true"
+                level="WEAK_WARNING"
+                implementationClass="dev.woytkowiak.ci.helper.ci.inspection.Ci3OutputCacheWithoutViewInspection"/>
 
     </extensions>
 

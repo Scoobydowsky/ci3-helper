@@ -465,7 +465,8 @@ class CiModelCompletionContributor : CompletionContributor() {
                     "set_content_type",
                     "enable_profiler",
                     "set_cache",
-                    "cache"
+                    "cache",
+                    "delete_cache"
                 )
                 for (method in outputMethods) {
                     result.addElement(LookupElementBuilder.create(method))
