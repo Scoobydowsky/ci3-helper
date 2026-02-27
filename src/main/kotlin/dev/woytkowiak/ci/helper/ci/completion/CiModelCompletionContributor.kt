@@ -3,6 +3,7 @@ package dev.woytkowiak.ci.helper.ci.completion
 import com.intellij.codeInsight.completion.*
 import com.intellij.codeInsight.lookup.LookupElementBuilder
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.util.TextRange
 import com.intellij.openapi.vfs.LocalFileSystem
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiElement
@@ -121,6 +122,15 @@ class CiModelCompletionContributor : CompletionContributor() {
             val isOutputMethodCall = currentLine.contains("\$this->output->") && !afterOutputArrow.trimStart().startsWith("(")
             val isRoutesFile = position.containingFile.name == "routes.php"
             val isRouteValue = isRoutesFile && currentLine.contains("\$route[") && (currentLine.contains("='") || currentLine.contains("=\""))
+            val isRouteKey = isRoutesFile && currentLine.contains("\$route[") && run {
+                val doc = parameters.editor?.document ?: return@run false
+                val lineNum = doc.getLineNumber(offset)
+                val lineStart = doc.getLineStartOffset(lineNum)
+                val lineEnd = doc.getLineEndOffset(lineNum)
+                val line = doc.getText(TextRange(lineStart, lineEnd))
+                val eqIdx = line.indexOf('=')
+                eqIdx < 0 || (offset - lineStart) < eqIdx
+            }
             val isHooksFile = position.containingFile.name == "hooks.php"
             val isHookPointKey = isHooksFile && currentLine.contains("\$hook[")
             val isHookArrayKey = isHooksFile && currentLine.contains("=>")
@@ -134,7 +144,7 @@ class CiModelCompletionContributor : CompletionContributor() {
                 !isDbCall && !isDatabaseLoad && !isLibraryCall && !isHelperCall &&
                 !isConfigLoad && !isLanguageLoad && !isDriverLoad &&
                 !isConfigItemCall && !isConfigMethodCall && !isInputKeyCall && !isInputMethodCall && !isInputServerCall &&
-                !isInputHeaderCall && !isOutputMethodCall && !isRouteValue && !isLibraryMethodCall && !isDriverMethodCall && !isModelMethodCall && !isBenchmarkMethodCall && !isUriMethodCall && !isSecurityMethodCall && !isPaginationMethodCall && !isFormValidationMethodCall && !isMigrationMethodCall && !isTableMethodCall && !isLoadMethodCall &&
+                !isInputHeaderCall && !isOutputMethodCall && !isRouteValue && !isRouteKey && !isLibraryMethodCall && !isDriverMethodCall && !isModelMethodCall && !isBenchmarkMethodCall && !isUriMethodCall && !isSecurityMethodCall && !isPaginationMethodCall && !isFormValidationMethodCall && !isMigrationMethodCall && !isTableMethodCall && !isLoadMethodCall &&
                 !isHookPointKey && !isHookArrayKey
             ) {
                 return
@@ -473,12 +483,36 @@ class CiModelCompletionContributor : CompletionContributor() {
                 }
             }
 
-            /* ---------- routing: controller/method in routes.php ---------- */
+            /* ---------- routing: controller/method in routes.php (and HTTP verb form $route['path']['PUT'] = '...'); incl. dynamic (back-reference) ---------- */
             if (isRouteValue) {
                 val controllerMethods = findControllerMethodsForRoutes(project)
                 for (cm in controllerMethods) {
                     result.addElement(LookupElementBuilder.create(cm))
                 }
+                for (template in ROUTE_VALUE_DYNAMIC_TEMPLATES) {
+                    result.addElement(
+                        LookupElementBuilder.create(template)
+                            .withTailText(" (dynamic: back-reference \$1, \$2...)", true)
+                    )
+                }
+            }
+
+            /* ---------- routing: reserved route keys and wildcards (default_controller, (:num), (:any)) ---------- */
+            if (isRouteKey) {
+                for (key in RESERVED_ROUTE_KEYS) {
+                    result.addElement(
+                        LookupElementBuilder.create(key)
+                            .withTailText(" (reserved)", true)
+                    )
+                }
+                result.addElement(
+                    LookupElementBuilder.create("(:num)")
+                        .withTailText(" (wildcard: numbers only)", true)
+                )
+                result.addElement(
+                    LookupElementBuilder.create("(:any)")
+                        .withTailText(" (wildcard: any chars)", true)
+                )
             }
 
             /* ---------- hooks.php: hook point names ($hook['...']) ---------- */
@@ -498,6 +532,20 @@ class CiModelCompletionContributor : CompletionContributor() {
 
     }
 }
+
+/** CI3 route value templates for dynamic routes (back-references \$1, \$2 in value). */
+private val ROUTE_VALUE_DYNAMIC_TEMPLATES = listOf(
+    "controller/\$1",
+    "controller/method/\$1",
+    "controller/method/\$1/\$2"
+)
+
+/** CI3 reserved route keys (application/config/routes.php). See https://codeigniter.com/userguide3/general/routing.html */
+private val RESERVED_ROUTE_KEYS = listOf(
+    "default_controller",
+    "404_override",
+    "translate_uri_dashes"
+)
 
 /** CI3 hook points (application/config/hooks.php). */
 private val HOOK_POINT_NAMES = listOf(
