@@ -5,6 +5,7 @@ import com.intellij.codeInsight.lookup.LookupElementBuilder
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.LocalFileSystem
 import com.intellij.openapi.vfs.VirtualFile
+import com.intellij.psi.PsiElement
 import dev.woytkowiak.ci.helper.ci.guessProjectBaseDir
 import java.io.File
 import com.intellij.patterns.PlatformPatterns
@@ -515,64 +516,139 @@ private val HOOK_ARRAY_KEYS = listOf("class", "function", "filename", "filepath"
 
 fun findModels(project: Project): List<String> {
     val result = mutableListOf<String>()
-
     val baseDir = project.guessProjectBaseDir() ?: return emptyList()
     val modelsDir = baseDir.findChild("application")
         ?.findChild("models") ?: return emptyList()
-
-    collectModels(modelsDir, result)
-
+    collectModels(modelsDir, "", result)
     return result
 }
 
-fun collectModels(dir: VirtualFile, result: MutableList<String>) {
+/** pathPrefix: relative path from models dir, e.g. "blog/" for subdir. CI3 uses lowercase in load->model('blog/queries'). */
+private fun collectModels(dir: VirtualFile, pathPrefix: String, result: MutableList<String>) {
     for (file in dir.children) {
         if (file.isDirectory) {
-            collectModels(file, result)
+            collectModels(file, pathPrefix + file.name.lowercase() + "/", result)
         } else if (file.name.endsWith(".php")) {
-            result.add(file.nameWithoutExtension)
+            result.add(pathPrefix + file.nameWithoutExtension)
         }
     }
 }
 
-/** From file: load->model('X') or load->model('X', 'alias') → property name on $this -> model class name (file). */
+/** From file: load->model('X') or load->model('X', 'alias') → property name on $this -> model class/path for resolution.
+ * For subdir paths (e.g. 'blog/queries') CI3 uses last segment as property name ($this->queries); we keep path for resolveModelFile. */
 fun findLoadedModelClasses(fileText: String): Map<String, String> {
     val result = mutableMapOf<String, String>()
-    // Group 1: model name (class/file), group 2: optional alias (second parameter)
     val regex = Regex("load->model\\s*\\(\\s*['\"]([^'\"]+)['\"]\\s*(?:,\\s*['\"]([^'\"]+)['\"])?\\s*\\)")
     regex.findAll(fileText).forEach { m ->
         val modelClass = m.groupValues[1].trim()
         val alias = m.groupValues[2].trim()
-        val propertyName = if (alias.isNotEmpty()) alias else modelClass
+        val propertyName = when {
+            alias.isNotEmpty() -> alias
+            "/" in modelClass -> modelClass.substringAfterLast("/")
+            else -> modelClass
+        }
         result[propertyName] = modelClass
     }
     return result
 }
 
+/** Class name declared in the model file (for type provider when model path is e.g. blog/queries). */
+fun getModelClassNameFromFile(project: Project, modelPathOrClass: String): String? {
+    val file = resolveModelFile(project, modelPathOrClass) ?: return null
+    val text = String(file.contentsToByteArray())
+    val match = Regex("\\bclass\\s+(\\w+)\\s+extends").find(text) ?: return null
+    return match.groupValues[1]
+}
+
 /** Public (and protected) methods from the model file (by $this property name, e.g. Order_model or alias). */
 fun findModelMethods(project: Project, modelPropertyName: String, fileText: String): List<String> {
     val loadedModels = findLoadedModelClasses(fileText)
-    val modelClassName = loadedModels[modelPropertyName] ?: return emptyList()
-    val modelFile = resolveModelFile(project, modelClassName) ?: return emptyList()
+    val modelPathOrClass = loadedModels[modelPropertyName] ?: return emptyList()
+    val modelFile = resolveModelFile(project, modelPathOrClass) ?: return emptyList()
     val text = String(modelFile.contentsToByteArray())
     val regex = Regex("(?:public|protected)\\s+function\\s+(\\w+)\\s*\\(")
     return regex.findAll(text).map { it.groupValues[1] }.distinct().sorted().toList()
 }
 
-/** Model file in application/models/ (e.g. Order_model → application/models/Order_model.php). Also searches subdirectories. */
-fun resolveModelFile(project: Project, modelClassName: String): VirtualFile? {
+/** Models directory (application/models) or null. */
+fun getModelsDir(project: Project): VirtualFile? {
+    val baseDir = project.guessProjectBaseDir() ?: return null
+    return baseDir.findChild("application")?.findChild("models")
+}
+
+/** Model path for load->model() from a file under application/models (e.g. blog/Queries.php → "blog/queries"). */
+fun getModelNameForFile(project: Project, file: VirtualFile): String? {
+    val modelsDir = getModelsDir(project) ?: return null
+    val basePath = modelsDir.path
+    val path = file.path
+    if (!path.startsWith(basePath)) return null
+    val relative = path.removePrefix(basePath).trimStart('/').removeSuffix(".php")
+    if (relative.isEmpty()) return null
+    return relative.split("/").joinToString("/") { it.lowercase() }
+}
+
+/** All load->model('name') usages of the given model path in the project. */
+fun findModelUsages(project: Project, modelName: String): List<PsiElement> {
+    val baseDir = project.guessProjectBaseDir() ?: return emptyList()
+    val result = mutableListOf<PsiElement>()
+    fun scanDir(dir: VirtualFile) {
+        for (child in dir.children) {
+            if (child.isDirectory) {
+                scanDir(child)
+            } else if (child.name.endsWith(".php")) {
+                val psiFile = com.intellij.psi.PsiManager.getInstance(project).findFile(child) ?: return
+                psiFile.accept(object : com.jetbrains.php.lang.psi.visitors.PhpElementVisitor() {
+                    override fun visitPhpMethodReference(reference: com.jetbrains.php.lang.psi.elements.MethodReference) {
+                        val methodName = reference.name ?: return
+                        if (methodName != "model") return
+                        val classRef = reference.classReference as? com.jetbrains.php.lang.psi.elements.MethodReference ?: return
+                        if (classRef.name != "load") return
+                        val root = classRef.classReference as? com.jetbrains.php.lang.psi.elements.Variable ?: return
+                        if (root.name != "this") return
+                        val params = reference.parameterList as? com.jetbrains.php.lang.psi.elements.ParameterList ?: return
+                        val first = params.parameters.firstOrNull() as? com.jetbrains.php.lang.psi.elements.StringLiteralExpression ?: return
+                        val name = first.contents.trim().trim('\'', '"')
+                        if (name.equals(modelName, true)) result.add(first)
+                    }
+                })
+            }
+        }
+    }
+    scanDir(baseDir)
+    return result
+}
+
+/** Model file in application/models/ (e.g. Order_model or blog/queries). Supports subdirs; path is relative to models. */
+fun resolveModelFile(project: Project, modelPathOrClass: String): VirtualFile? {
     val baseDir = project.guessProjectBaseDir() ?: return null
     val modelsDir = baseDir.findChild("application")?.findChild("models") ?: return null
-    val fileName = "$modelClassName.php"
-    modelsDir.findFileByRelativePath(fileName)?.let { return it }
-    fun findRecursive(dir: VirtualFile): VirtualFile? {
-        dir.findChild(fileName)?.let { return it }
-        for (child in dir.children) {
-            if (child.isDirectory) findRecursive(child)?.let { return it }
+    val path = modelPathOrClass.trim()
+    if (path.isEmpty()) return null
+    val segments = path.split("/")
+    if (segments.size == 1) {
+        val fileName = "$path.php"
+        modelsDir.findFileByRelativePath(fileName)?.let { return it }
+        fun findRecursive(dir: VirtualFile): VirtualFile? {
+            dir.findChild(fileName)?.let { return it }
+            for (child in dir.children) {
+                if (child.isDirectory) findRecursive(child)?.let { return it }
+            }
+            return null
         }
-        return null
+        return findRecursive(modelsDir)
     }
-    return findRecursive(modelsDir)
+    var dir: VirtualFile = modelsDir
+    for (i in 0 until segments.size - 1) {
+        val segment = segments[i]
+        val next = dir.findChild(segment) ?: dir.children.find { it.isDirectory && it.name.equals(segment, true) }
+        if (next == null || !next.isDirectory) return null
+        dir = next
+    }
+    val lastSegment = segments.last()
+    val exact = dir.findChild("$lastSegment.php")
+    if (exact != null) return exact
+    dir.children.find { it.name.endsWith(".php") && it.nameWithoutExtension.equals(lastSegment, true) }?.let { return it }
+    return null
 }
 
 /* ---------------- DATABASE CONFIG ---------------- */

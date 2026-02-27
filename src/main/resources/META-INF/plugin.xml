@@ -55,6 +55,9 @@
         <lang.findUsagesProvider
                 language="PHP"
                 implementationClass="dev.woytkowiak.ci.helper.ci.navigation.CiHookFindUsagesProvider"/>
+        <lang.findUsagesProvider
+                language="PHP"
+                implementationClass="dev.woytkowiak.ci.helper.ci.navigation.CiModelFindUsagesProvider"/>
 
         <codeInsight.lineMarkerProvider
                 language="PHP"
@@ -62,6 +65,9 @@
         <codeInsight.lineMarkerProvider
                 language="PHP"
                 implementationClass="dev.woytkowiak.ci.helper.ci.navigation.CiHookLineMarkerProvider"/>
+        <codeInsight.lineMarkerProvider
+                language="PHP"
+                implementationClass="dev.woytkowiak.ci.helper.ci.navigation.CiModelLineMarkerProvider"/>
 
         <localInspection
                 id="Ci3DeprecatedCartUsage"
@@ -273,6 +279,15 @@
                 enabledByDefault="true"
                 level="WARNING"
                 implementationClass="dev.woytkowiak.ci.helper.ci.inspection.Ci3HookFileNotFoundInspection"/>
+        <localInspection
+                id="Ci3ModelNotFound"
+                shortName="Ci3ModelNotFound"
+                displayName="CodeIgniter 3 model not found for load->model()"
+                groupPath="PHP"
+                groupName="CodeIgniter 3"
+                enabledByDefault="true"
+                level="WARNING"
+                implementationClass="dev.woytkowiak.ci.helper.ci.inspection.Ci3ModelNotFoundInspection"/>
 
     </extensions>
 
