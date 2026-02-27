@@ -9,6 +9,7 @@ import com.jetbrains.php.lang.psi.elements.Variable
 import com.jetbrains.php.lang.psi.resolve.types.PhpType
 import com.jetbrains.php.lang.psi.resolve.types.PhpTypeProvider4
 import dev.woytkowiak.ci.helper.ci.Ci3PluginState
+import dev.woytkowiak.ci.helper.ci.completion.getModelClassNameFromFile
 import dev.woytkowiak.ci.helper.ci.completion.findLoadedModelClasses
 
 /**
@@ -28,9 +29,15 @@ class Ci3ModelTypeProvider : PhpTypeProvider4 {
         if (!isThisFieldReference(fieldRef)) return null
         val propName = fieldRef.name ?: return null
         val fileText = fieldRef.containingFile?.text ?: return null
+        val project = fieldRef.project
         val loadedModels = findLoadedModelClasses(fileText)
-        val modelClassName = loadedModels[propName] ?: return null
-        return PhpType.builder().add("\\$modelClassName").build()
+        val modelPathOrClass = loadedModels[propName] ?: return null
+        val className = if ("/" in modelPathOrClass) {
+            getModelClassNameFromFile(project, modelPathOrClass) ?: return null
+        } else {
+            modelPathOrClass
+        }
+        return PhpType.builder().add("\\$className").build()
     }
 
     override fun complete(expression: String, project: com.intellij.openapi.project.Project): PhpType =

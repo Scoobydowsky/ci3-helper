@@ -2,16 +2,18 @@
 
 # ci3-phpstorm-helper Changelog
 
-## [Unreleased]
-### Added
-- **CI3 Hooks** ([docs](https://codeigniter.com/userguide3/general/hooks.html)): completion in `hooks.php` for hook points and array keys; Go to Declaration from `filename`/`filepath` to hook file or dir; New → Hook action with template and optional `hooks.php` entry; inspections for invalid hook point and missing hook file; line marker and Find Usages for hook files.
-
 ## [0.0.12]
 ### Added
+- **CI3 Hooks** ([docs](https://codeigniter.com/userguide3/general/hooks.html)): completion in `hooks.php` for hook points and array keys; Go to Declaration from `filename`/`filepath` to hook file or dir; New → Hook action with template and optional `hooks.php` entry; inspections for invalid hook point and missing hook file; line marker and Find Usages for hook files.
 - **Views (from [CI3 Views](https://codeigniter.com/userguide3/general/views.html)):**
   - Inspection: missing view file for `load->view('path')` with quick-fix to create the view under `application/views`.
   - Inspection: warn when `load->view(..., TRUE)` return value is not used.
   - Gutter line markers: jump from `load->view('name')` to the view file, and from a view file to controllers that load it.
+- **Models (from [CI3 Models](https://codeigniter.com/userguide3/general/models.html)):**
+  - Completion in `load->model()` now includes models in subdirectories (e.g. `blog/queries` for `application/models/blog/Queries.php`); Go to Declaration and type resolution support subdir paths and alias (second parameter).
+  - Inspection: missing model file for `load->model('path')` with quick-fix to create the model under `application/models`.
+  - Gutter line markers: jump from `load->model('name')` to the model file, and from a model file to controllers that load it.
+  - Find Usages for model files (application/models/...) finds all `load->model('...')` call sites.
 - Relaxed PHP inspections in `application/views`: unused local variable, unused parameter, missing return type, and missing return statement are suppressed in view files (in addition to undefined variable from `$data`).
 
 ## [0.0.11]
