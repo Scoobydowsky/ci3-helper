@@ -2,6 +2,14 @@
 
 # ci3-phpstorm-helper Changelog
 
+## [0.0.12]
+### Added
+- **Views (from [CI3 Views](https://codeigniter.com/userguide3/general/views.html)):**
+  - Inspection: missing view file for `load->view('path')` with quick-fix to create the view under `application/views`.
+  - Inspection: warn when `load->view(..., TRUE)` return value is not used.
+  - Gutter line markers: jump from `load->view('name')` to the view file, and from a view file to controllers that load it.
+- Relaxed PHP inspections in `application/views`: unused local variable, unused parameter, missing return type, and missing return statement are suppressed in view files (in addition to undefined variable from `$data`).
+
 ## [0.0.11]
 ### Added
 - Now use of reserved Names shows error or warning in IDE problems section.
