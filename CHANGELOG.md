@@ -2,6 +2,12 @@
 
 # ci3-phpstorm-helper Changelog
 
+## [0.1.0]
+### Added
+- **CI3 Routes tool window** (right side): panel that scans `application/controllers` and parses `application/config/routes.php`; shows all routes in a **nested tree** (Controllers and Custom routes by path segments). Double-click opens the controller file at the method or `routes.php` at the route line; toolbar Refresh rescans.
+### Changed
+- First minor release. Plugin feature set from 0.0.x (routing, hooks, views, models, helpers, inspections, CLI) is now considered stable.
+
 ## [0.0.14]
 ### Added
 - **Routing** ([CI3 URI Routing](https://codeigniter.com/userguide3/general/routing.html)):
