@@ -38,6 +38,8 @@
                 implementation="dev.woytkowiak.ci.helper.ci.navigation.CiHelperReferenceContributor"/>
         <psi.referenceContributor
                 implementation="dev.woytkowiak.ci.helper.ci.navigation.CiConfigReferenceContributor"/>
+        <psi.referenceContributor
+                implementation="dev.woytkowiak.ci.helper.ci.navigation.CiHookReferenceContributor"/>
 
         <!-- Intention "Add CI3 Super Object @property" removed from XML: platform expected
              implementation class under an attribute that differs by IDE version.
@@ -50,6 +52,22 @@
         <lang.findUsagesProvider
                 language="PHP"
                 implementationClass="dev.woytkowiak.ci.helper.ci.navigation.CiViewFindUsagesProvider"/>
+        <lang.findUsagesProvider
+                language="PHP"
+                implementationClass="dev.woytkowiak.ci.helper.ci.navigation.CiHookFindUsagesProvider"/>
+        <lang.findUsagesProvider
+                language="PHP"
+                implementationClass="dev.woytkowiak.ci.helper.ci.navigation.CiModelFindUsagesProvider"/>
+
+        <codeInsight.lineMarkerProvider
+                language="PHP"
+                implementationClass="dev.woytkowiak.ci.helper.ci.navigation.CiViewLineMarkerProvider"/>
+        <codeInsight.lineMarkerProvider
+                language="PHP"
+                implementationClass="dev.woytkowiak.ci.helper.ci.navigation.CiHookLineMarkerProvider"/>
+        <codeInsight.lineMarkerProvider
+                language="PHP"
+                implementationClass="dev.woytkowiak.ci.helper.ci.navigation.CiModelLineMarkerProvider"/>
 
         <localInspection
                 id="Ci3DeprecatedCartUsage"
@@ -224,6 +242,53 @@
                 level="ERROR"
                 implementationClass="dev.woytkowiak.ci.helper.ci.inspection.Ci3ReservedConstantNameInspection"/>
 
+        <localInspection
+                id="Ci3ViewNotFound"
+                shortName="Ci3ViewNotFound"
+                displayName="CodeIgniter 3 view not found for load->view()"
+                groupPath="PHP"
+                groupName="CodeIgniter 3"
+                enabledByDefault="true"
+                level="WARNING"
+                implementationClass="dev.woytkowiak.ci.helper.ci.inspection.Ci3ViewNotFoundInspection"/>
+
+        <localInspection
+                id="Ci3ViewReturnIgnored"
+                shortName="Ci3ViewReturnIgnored"
+                displayName="CodeIgniter 3 load->view() return value ignored"
+                groupPath="PHP"
+                groupName="CodeIgniter 3"
+                enabledByDefault="true"
+                level="WEAK_WARNING"
+                implementationClass="dev.woytkowiak.ci.helper.ci.inspection.Ci3ViewReturnIgnoredInspection"/>
+        <localInspection
+                id="Ci3InvalidHookPoint"
+                shortName="Ci3InvalidHookPoint"
+                displayName="Invalid CodeIgniter 3 hook point in hooks.php"
+                groupPath="PHP"
+                groupName="CodeIgniter 3"
+                enabledByDefault="true"
+                level="WARNING"
+                implementationClass="dev.woytkowiak.ci.helper.ci.inspection.Ci3InvalidHookPointInspection"/>
+        <localInspection
+                id="Ci3HookFileNotFound"
+                shortName="Ci3HookFileNotFound"
+                displayName="CodeIgniter 3 hook file not found"
+                groupPath="PHP"
+                groupName="CodeIgniter 3"
+                enabledByDefault="true"
+                level="WARNING"
+                implementationClass="dev.woytkowiak.ci.helper.ci.inspection.Ci3HookFileNotFoundInspection"/>
+        <localInspection
+                id="Ci3ModelNotFound"
+                shortName="Ci3ModelNotFound"
+                displayName="CodeIgniter 3 model not found for load->model()"
+                groupPath="PHP"
+                groupName="CodeIgniter 3"
+                enabledByDefault="true"
+                level="WARNING"
+                implementationClass="dev.woytkowiak.ci.helper.ci.inspection.Ci3ModelNotFoundInspection"/>
+
     </extensions>
 
     <extensions defaultExtensionNs="com.jetbrains.php">
@@ -240,6 +305,7 @@
         <internalFileTemplate name="CI3 API Controller.php"/>
         <internalFileTemplate name="CI3 Library.php"/>
         <internalFileTemplate name="CI3 CLI Task Controller.php"/>
+        <internalFileTemplate name="CI3 Hook.php"/>
     </extensions>
 
     <actions>
@@ -269,6 +335,10 @@
                     class="dev.woytkowiak.ci.helper.ci.actions.CreateCi3LibraryAction"
                     text="%action.create.ci3.library.text"
                     description="%action.create.ci3.library.text"/>
+            <action id="Create.Ci3.Hook"
+                    class="dev.woytkowiak.ci.helper.ci.actions.CreateCi3HookAction"
+                    text="%action.create.ci3.hook.text"
+                    description="%action.create.ci3.hook.text"/>
         </group>
 
         <group id="Ci3CliContextGroup" text="%group.Ci3CliContextGroup.text" popup="true" icon="dev.woytkowiak.ci.helper.ci.Ci3Icons.Ci3">

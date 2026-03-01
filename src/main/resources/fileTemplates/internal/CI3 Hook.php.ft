@@ -1,0 +1,12 @@
+<?php
+defined('BASEPATH') OR exit('No direct script access allowed');
+
+/**
+ * CI3 Hook – ${HOOK_POINT}
+ */
+class ${NAME} {
+
+    public function run() {
+        // Hook logic (${HOOK_POINT})
+    }
+}

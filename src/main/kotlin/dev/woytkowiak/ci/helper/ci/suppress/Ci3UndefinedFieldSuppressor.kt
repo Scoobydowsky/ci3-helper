@@ -24,6 +24,17 @@ class Ci3UndefinedFieldSuppressor : InspectionSuppressor {
         "benchmark"
     )
 
+    /**
+     * Extra inspections to relax inside CI3 views (application/views),
+     * where PHP code is typically minimal and mixed with HTML.
+     */
+    private val relaxedViewInspections = setOf(
+        "PhpUnusedLocalVariableInspection",
+        "PhpUnusedParameterInspection",
+        "PhpMissingReturnTypeInspection",
+        "PhpMissingReturnStatementInspection"
+    )
+
     /** Native CI3 libraries loaded with load->library('name') — property names on $this. */
     private val nativeLibraryProperties = setOf(
         "zip", "email", "pagination", "upload", "image_lib",
@@ -34,6 +45,10 @@ class Ci3UndefinedFieldSuppressor : InspectionSuppressor {
     override fun isSuppressedFor(element: PsiElement, toolId: String): Boolean {
         if (!Ci3PluginState.getInstance().isEnabled) return false
         if (!element.containingFile?.name.orEmpty().endsWith(".php")) return false
+
+        if (toolId in relaxedViewInspections && isInCi3View(element)) {
+            return true
+        }
 
         if (toolId == "PhpUndefinedVariableInspection") {
             return isInCi3View(element)

@@ -48,9 +48,9 @@ class CiModelReferenceContributor : PsiReferenceContributor() {
                 return arrayOf(ModelReference(element, target, TextRange(0, element.textLength)))
             }
 
-            // 2) literal in load->model('Order_model') → model file
+            // 2) literal in load->model('Order_model') or load->model('blog/queries') → model file
             val text = element.text?.trim()?.trim('\'', '"') ?: return PsiReference.EMPTY_ARRAY
-            if (text.isNotEmpty() && !text.contains("/") && !text.contains(" ") && isInsideLoadModel(element, text)) {
+            if (text.isNotEmpty() && !text.contains(" ") && isInsideLoadModel(element, text)) {
                 val target = resolveModelFile(project, text) ?: return PsiReference.EMPTY_ARRAY
                 val start = if (element.text.startsWith("'") || element.text.startsWith("\"")) 1 else 0
                 val end = element.textLength - if (element.text.endsWith("'") || element.text.endsWith("\"")) 1 else 0
