@@ -297,6 +297,24 @@
                 enabledByDefault="true"
                 level="WEAK_WARNING"
                 implementationClass="dev.woytkowiak.ci.helper.ci.inspection.Ci3OutputCacheWithoutViewInspection"/>
+        <localInspection
+                id="Ci3DefaultControllerNoDirectory"
+                shortName="Ci3DefaultControllerNoDirectory"
+                displayName="CodeIgniter 3 default_controller must not contain directory"
+                groupPath="PHP"
+                groupName="CodeIgniter 3"
+                enabledByDefault="true"
+                level="WARNING"
+                implementationClass="dev.woytkowiak.ci.helper.ci.inspection.Ci3DefaultControllerNoDirectoryInspection"/>
+        <localInspection
+                id="Ci3RouteLeadingTrailingSlash"
+                shortName="Ci3RouteLeadingTrailingSlash"
+                displayName="CodeIgniter 3 route key leading/trailing slash"
+                groupPath="PHP"
+                groupName="CodeIgniter 3"
+                enabledByDefault="true"
+                level="WARNING"
+                implementationClass="dev.woytkowiak.ci.helper.ci.inspection.Ci3RouteLeadingTrailingSlashInspection"/>
 
     </extensions>
 

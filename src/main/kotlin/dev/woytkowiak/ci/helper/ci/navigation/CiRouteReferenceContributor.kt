@@ -11,6 +11,8 @@ import dev.woytkowiak.ci.helper.ci.Ci3PluginState
 /**
  * In routes.php enables "Go to Declaration" from route value (controller/method)
  * to the controller file in application/controllers/.
+ * Dynamic routes: values like 'catalog/product_lookup_by_id/$1' are supported —
+ * the controller part (before '/' or '$') is used for resolution.
  */
 class CiRouteReferenceContributor : PsiReferenceContributor() {
 

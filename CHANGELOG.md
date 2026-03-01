@@ -2,6 +2,14 @@
 
 # ci3-phpstorm-helper Changelog
 
+## [0.0.14]
+### Added
+- **Routing** ([CI3 URI Routing](https://codeigniter.com/userguide3/general/routing.html)):
+  - Completion in `routes.php` for reserved route keys: `default_controller`, `404_override`, `translate_uri_dashes` (with "(reserved)" tail), and wildcards `(:num)`, `(:any)` (with tail text).
+  - **Dynamic routes**: completion for route value includes templates `controller/$1`, `controller/method/$1`, `controller/method/$1/$2` (back-references); Go to Declaration already resolves the controller part for values like `'catalog/product_lookup_by_id/$1'`.
+  - Inspection: `default_controller` value must not contain a directory (slash) — CI3 does not allow it.
+  - Inspection: route key must not have leading or trailing slashes.
+
 ## [0.0.13]
 ### Added
 - **Output / page caching** ([CI3 Caching](https://codeigniter.com/userguide3/general/caching.html)): `delete_cache()` and `delete_cache($uri)` in CI_Output stub and completion; clarified `cache($n)` docblock (minutes, view requirement).
