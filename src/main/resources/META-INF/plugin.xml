@@ -21,6 +21,11 @@
                 id="CodeIgniter3Helper"
                 implementation="dev.woytkowiak.ci.helper.ci.statusbar.Ci3StatusBarWidgetFactory"/>
 
+        <toolWindow id="Ci3 Routes"
+                anchor="right"
+                factoryClass="dev.woytkowiak.ci.helper.ci.routes.Ci3RoutesToolWindowFactory"
+                icon="/icons/ci3.png"/>
+
         <completion.contributor
                 language="PHP"
                 implementationClass="dev.woytkowiak.ci.helper.ci.completion.CiModelCompletionContributor"/>
