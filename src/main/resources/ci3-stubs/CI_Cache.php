@@ -1,7 +1,8 @@
 <?php
 /**
- * Stub CI_Cache for PhpStorm – CodeIgniter 3 Cache Driver library.
- * Used so that $this->cache->method() gets parameter hints when load->driver('cache') is used.
+ * Stub CI_Cache for PhpStorm – CodeIgniter 3 Caching Driver library.
+ * Load with $this->load->driver('cache', array('adapter' => 'apc', 'backup' => 'file'));
+ * Optional key_prefix avoids collisions when running multiple apps on the same environment.
  *
  * @see https://codeigniter.com/userguide3/libraries/caching.html
  *
