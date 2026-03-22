@@ -106,13 +106,12 @@ class Ci3AddRouteDialog(
             suppressControllerChange = false
         }
 
-        val panel = FormBuilder.createFormBuilder()
+        return FormBuilder.createFormBuilder()
             .addLabeledComponent(JBLabel(MyBundle.message("ci3.routes.add.uri")), uriField, 1, false)
             .addLabeledComponent(JBLabel(MyBundle.message("ci3.routes.add.controller")), controllerCombo, 1, false)
             .addLabeledComponent(JBLabel(MyBundle.message("ci3.routes.add.method")), methodCombo, 1, false)
             .addComponentFillVertically(JPanel(), 0)
             .panel
-        return panel
     }
 
     private fun refillMethodsForSelectedController() {
