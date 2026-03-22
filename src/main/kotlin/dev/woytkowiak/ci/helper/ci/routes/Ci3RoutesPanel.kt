@@ -4,7 +4,6 @@ import com.intellij.openapi.fileEditor.OpenFileDescriptor
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.SimpleToolWindowPanel
 import com.intellij.ui.components.JBScrollPane
-import com.intellij.ui.content.ContentFactory
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import javax.swing.JTree
@@ -55,6 +54,22 @@ class Ci3RoutesPanel(private val project: Project) : SimpleToolWindowPanel(false
                 val line = (item.lineNumber - 1).coerceAtLeast(0)
                 OpenFileDescriptor(project, item.routesFile, line, 0).navigate(true)
             }
+        }
+    }
+
+    /**
+     * Pre-fills the "Add route" dialog from the current tree selection (controller path or custom route).
+     */
+    fun getSuggestionsForNewRoute(): Ci3AddRouteSuggestions? {
+        val path = tree.selectionPath ?: return null
+        val node = path.lastPathComponent as? DefaultMutableTreeNode ?: return null
+        val routeNode = node.userObject as? Ci3RouteNode ?: return null
+        return when (val item = routeNode.item) {
+            is Ci3RouteItem.FromController ->
+                Ci3AddRouteSuggestions(target = item.routePath)
+            is Ci3RouteItem.FromRoutesFile ->
+                Ci3AddRouteSuggestions(uriPattern = item.pattern, target = item.value)
+            null -> null
         }
     }
 

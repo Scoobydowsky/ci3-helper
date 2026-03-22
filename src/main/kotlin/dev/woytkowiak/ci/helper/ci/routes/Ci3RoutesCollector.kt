@@ -7,7 +7,60 @@ import dev.woytkowiak.ci.helper.ci.guessProjectBaseDir
 /**
  * Scans application/controllers and application/config/routes.php for CI3 routes.
  */
+/** One controller class under application/controllers (with CI3 route prefix). */
+data class Ci3ControllerOption(
+    val routePrefix: String,
+    val file: VirtualFile
+)
+
 object Ci3RoutesCollector {
+
+    /**
+     * Controllers for pickers (one entry per controller .php file), sorted by route prefix.
+     */
+    fun listControllerOptions(project: Project): List<Ci3ControllerOption> {
+        val result = mutableListOf<Ci3ControllerOption>()
+        val baseDir = project.guessProjectBaseDir() ?: return result
+        val controllersDir = baseDir.findChild("application")?.findChild("controllers") ?: return result
+        collectControllerOptions(controllersDir, "", result)
+        return result.sortedBy { it.routePrefix }
+    }
+
+    private fun collectControllerOptions(
+        dir: VirtualFile,
+        pathPrefix: String,
+        out: MutableList<Ci3ControllerOption>
+    ) {
+        for (file in dir.children) {
+            if (file.isDirectory) {
+                collectControllerOptions(file, "$pathPrefix${file.name}/", out)
+            } else if (file.name.endsWith(".php")) {
+                val segment = file.nameWithoutExtension.lowercase()
+                val routePrefix = if (pathPrefix.isEmpty()) segment else pathPrefix.lowercase() + segment
+                out.add(Ci3ControllerOption(routePrefix, file))
+            }
+        }
+    }
+
+    /**
+     * Public action method names for a controller file (excludes __construct, private/protected).
+     */
+    fun listActionMethodsForController(controllerFile: VirtualFile): List<String> {
+        val text = String(controllerFile.contentsToByteArray())
+        val lines = text.split('\n')
+        val names = linkedSetOf<String>()
+        val fnRegex = Regex("function\\s+(\\w+)\\s*\\(")
+        for (line in lines) {
+            val trimmed = line.trimStart()
+            if (trimmed.startsWith("private ") || trimmed.startsWith("protected ")) continue
+            if (trimmed.contains("private function") || trimmed.contains("protected function")) continue
+            val match = fnRegex.find(line) ?: continue
+            val name = match.groupValues[1]
+            if (name == "__construct") continue
+            names.add(name)
+        }
+        return names.sorted()
+    }
 
     /**
      * Collects route entries from application/controllers (recursive).
@@ -44,7 +97,7 @@ object Ci3RoutesCollector {
             } else if (file.name.endsWith(".php")) {
                 val segment = file.nameWithoutExtension.lowercase()
                 val routePrefix = if (pathPrefix.isEmpty()) segment else pathPrefix.lowercase() + segment
-                val methodsWithLines = findControllerMethodsWithLines(file)
+                val methodsWithLines = findControllerMethodsWithLinesInternal(file)
                 result.add(Ci3RouteItem.FromController(routePrefix, file, null, null))
                 for ((methodName, lineNumber) in methodsWithLines) {
                     if (methodName == "__construct") continue
@@ -54,7 +107,7 @@ object Ci3RoutesCollector {
         }
     }
 
-    private fun findControllerMethodsWithLines(controllerFile: VirtualFile): List<Pair<String, Int>> {
+    private fun findControllerMethodsWithLinesInternal(controllerFile: VirtualFile): List<Pair<String, Int>> {
         val text = String(controllerFile.contentsToByteArray())
         val regex = Regex("function\\s+(\\w+)\\s*\\(")
         val lines = text.split('\n')

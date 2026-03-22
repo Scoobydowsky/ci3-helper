@@ -4,7 +4,7 @@
 
 ## [0.1.0]
 ### Added
-- **CI3 Routes tool window** (right side): panel that scans `application/controllers` and parses `application/config/routes.php`; shows all routes in a **nested tree** (Controllers and Custom routes by path segments). Double-click opens the controller file at the method or `routes.php` at the route line; toolbar Refresh rescans.
+- **CI3 Routes tool window** (right side): panel that scans `application/controllers` and parses `application/config/routes.php`; shows all routes in a **nested tree** (Controllers and Custom routes by path segments). Double-click opens the controller file at the method or `routes.php` at the route line; toolbar **Add route…** opens a dialog with **URI pattern**, **Controller** and **Method** dropdowns (methods refresh from the selected controller file); appends `$route[...] = ...` at the **end** of `routes.php` (with undo; avoids inserting inside comments); tree selection pre-fills URI and target mapping. Toolbar **Refresh** rescans.
 ### Changed
 - First minor release. Plugin feature set from 0.0.x (routing, hooks, views, models, helpers, inspections, CLI) is now considered stable.
 

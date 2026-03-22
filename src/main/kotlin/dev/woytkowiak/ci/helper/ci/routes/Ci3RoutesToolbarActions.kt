@@ -7,12 +7,13 @@ import com.intellij.openapi.project.DumbAwareAction
 import com.intellij.openapi.project.Project
 
 /**
- * Toolbar for the CI3 Routes tool window: Refresh.
+ * Toolbar for the CI3 Routes tool window: Add route, Refresh.
  */
 class Ci3RoutesToolbarActions(project: Project, private val panel: Ci3RoutesPanel) :
     DefaultActionGroup() {
 
     init {
+        add(Ci3AddRouteAction(project, panel))
         add(RefreshRoutesAction(panel))
     }
 }
