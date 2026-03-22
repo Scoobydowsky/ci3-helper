@@ -3,6 +3,8 @@
 # ci3-phpstorm-helper Changelog
 
 ## [0.1.1]
+### Added
+- **Status bar**: next to the CI3 icon, an **ENV:** pill shows the default `ENVIRONMENT` literal read from project `index.php` (e.g. `development` → `ENV: dev`). Tooltip explains that `$_SERVER['CI_ENV']` can override at runtime. Updates when `index.php` changes.
 ### Changed
 - **CI3 Routes — Add route…**: target is chosen with **Controller** and **Method** dropdowns (from `application/controllers`); tree selection still pre-fills URI and target.
 ### Fixed

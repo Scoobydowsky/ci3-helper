@@ -5,7 +5,7 @@ import com.intellij.openapi.wm.StatusBarWidget
 import com.intellij.openapi.wm.StatusBarWidgetFactory
 
 /**
- * Registers the CI3 widget on the status bar (icon + version tooltip, click = support author).
+ * Registers the CI3 widget on the status bar (icon toggles plugin, ENV pill from index.php).
  */
 class Ci3StatusBarWidgetFactory : StatusBarWidgetFactory {
 
