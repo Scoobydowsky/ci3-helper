@@ -1,4 +1,5 @@
-<idea-plugin>
+<!-- require-restart=false: install/update without IDE restart (dynamic plugin). See https://plugins.jetbrains.com/docs/intellij/dynamic-plugins.html -->
+<idea-plugin require-restart="false">
     <id>scoobydowsky.ci.helper</id>
     <name>CodeIgniter 3 Helper</name>
     <vendor>Tomek "Scoobydowsky" Woytkowiak</vendor>
