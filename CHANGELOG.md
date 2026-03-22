@@ -2,9 +2,15 @@
 
 # ci3-phpstorm-helper Changelog
 
+## [0.1.1]
+### Changed
+- **CI3 Routes — Add route…**: target is chosen with **Controller** and **Method** dropdowns (from `application/controllers`); tree selection still pre-fills URI and target.
+### Fixed
+- **Add route**: new `$route[...]` lines are appended at the **end** of `application/config/routes.php` (avoids inserting inside multi-line comments).
+
 ## [0.1.0]
 ### Added
-- **CI3 Routes tool window** (right side): panel that scans `application/controllers` and parses `application/config/routes.php`; shows all routes in a **nested tree** (Controllers and Custom routes by path segments). Double-click opens the controller file at the method or `routes.php` at the route line; toolbar **Add route…** opens a dialog with **URI pattern**, **Controller** and **Method** dropdowns (methods refresh from the selected controller file); appends `$route[...] = ...` at the **end** of `routes.php` (with undo; avoids inserting inside comments); tree selection pre-fills URI and target mapping. Toolbar **Refresh** rescans.
+- **CI3 Routes tool window** (right side): panel that scans `application/controllers` and parses `application/config/routes.php`; shows all routes in a **nested tree** (Controllers and Custom routes by path segments). Double-click opens the controller file at the method or `routes.php` at the route line; toolbar **Add route…** and **Refresh**; appends custom routes to `routes.php` (with undo). Tree selection pre-fills the add-route dialog.
 ### Changed
 - First minor release. Plugin feature set from 0.0.x (routing, hooks, views, models, helpers, inspections, CLI) is now considered stable.
 
