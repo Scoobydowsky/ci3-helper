@@ -41,7 +41,10 @@ class Ci3ReservedControllerNameInspection : LocalInspectionTool() {
                 }
 
                 // 2) In any class, methods must not use reserved CI3 names (show_404, show_error, etc.)
+                // Only own methods: phpClass.methods includes inherited stubs (e.g. get_instance from CI_Controller);
+                // registering on those breaks ProblemDescriptor (PSI from another file than holder).
                 for (method in phpClass.methods) {
+                    if (method.containingClass != phpClass) continue
                     val methodName = method.name ?: continue
                     if (methodName in RESERVED_METHOD_NAMES) {
                         holder.registerProblem(
@@ -57,6 +60,7 @@ class Ci3ReservedControllerNameInspection : LocalInspectionTool() {
                 if (extendsCiOrMyController(phpClass)) {
                     val className = phpClass.name ?: return@visitPhpClass
                     for (method in phpClass.methods) {
+                        if (method.containingClass != phpClass) continue
                         val methodName = method.name ?: continue
                         if (methodName.equals(className, ignoreCase = true)) {
                             holder.registerProblem(

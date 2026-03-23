@@ -1,4 +1,5 @@
-<idea-plugin>
+<!-- require-restart=false: install/update without IDE restart (dynamic plugin). See https://plugins.jetbrains.com/docs/intellij/dynamic-plugins.html -->
+<idea-plugin require-restart="false">
     <id>scoobydowsky.ci.helper</id>
     <name>CodeIgniter 3 Helper</name>
     <vendor>Tomek "Scoobydowsky" Woytkowiak</vendor>
@@ -264,7 +265,7 @@
                 groupPath="PHP"
                 groupName="CodeIgniter 3"
                 enabledByDefault="true"
-                level="WEAK_WARNING"
+                level="WARNING"
                 implementationClass="dev.woytkowiak.ci.helper.ci.inspection.Ci3ViewReturnIgnoredInspection"/>
         <localInspection
                 id="Ci3InvalidHookPoint"
@@ -300,7 +301,7 @@
                 groupPath="PHP"
                 groupName="CodeIgniter 3"
                 enabledByDefault="true"
-                level="WEAK_WARNING"
+                level="WARNING"
                 implementationClass="dev.woytkowiak.ci.helper.ci.inspection.Ci3OutputCacheWithoutViewInspection"/>
         <localInspection
                 id="Ci3DefaultControllerNoDirectory"
@@ -371,7 +372,32 @@
                     class="dev.woytkowiak.ci.helper.ci.actions.CreateCi3HookAction"
                     text="%action.create.ci3.hook.text"
                     description="%action.create.ci3.hook.text"/>
+            <action id="Create.Ci3.Migration"
+                    class="dev.woytkowiak.ci.helper.ci.actions.GenerateCi3MigrationAction"
+                    text="%action.create.ci3.migration.text"
+                    description="%action.create.ci3.migration.description"/>
         </group>
+
+        <action id="Ci3.Generate.DatabaseConnection"
+                class="dev.woytkowiak.ci.helper.ci.actions.GenerateCi3DatabaseConnectionAction"
+                text="%action.ci3.generate.db.connection.text"
+                description="%action.ci3.generate.db.connection.description">
+            <add-to-group group-id="GenerateGroup" anchor="last"/>
+        </action>
+
+        <action id="Ci3.Generate.ProfilerSections"
+                class="dev.woytkowiak.ci.helper.ci.actions.GenerateCi3ProfilerSectionsAction"
+                text="%action.ci3.generate.profiler.text"
+                description="%action.ci3.generate.profiler.description">
+            <add-to-group group-id="GenerateGroup" anchor="last"/>
+        </action>
+
+        <action id="Ci3.Generate.Migration"
+                class="dev.woytkowiak.ci.helper.ci.actions.GenerateCi3MigrationAction"
+                text="%action.ci3.generate.migration.text"
+                description="%action.ci3.generate.migration.description">
+            <add-to-group group-id="GenerateGroup" anchor="last"/>
+        </action>
 
         <group id="Ci3CliContextGroup" text="%group.Ci3CliContextGroup.text" popup="true" icon="dev.woytkowiak.ci.helper.ci.Ci3Icons.Ci3">
             <add-to-group group-id="EditorPopupMenu" anchor="last"/>

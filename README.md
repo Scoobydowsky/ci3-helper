@@ -13,6 +13,8 @@ Adds CodeIgniter 3 support to PhpStorm: completion, navigation, and scaffolding 
 - Quick fix — one-click fix “Property not found” on CI_Controller and stubs
 - Stubs — CI types recognized so the IDE does not flag valid code
 - New → CodeIgniter 3 — create Controllers, Models, Views, and API Controllers from the context menu
+- Generate (⌘N) — in `application/config/database.php`, add a **CodeIgniter 3 database connection** (`$db['key'] = array(…)`)
+- Generate (⌘N) — in a **controller method**, **Profiling sections…** builds `$sections` + `set_profiler_sections()` for the CI3 profiler
 
 
 <!-- Plugin description end -->
