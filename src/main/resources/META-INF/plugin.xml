@@ -372,6 +372,10 @@
                     class="dev.woytkowiak.ci.helper.ci.actions.CreateCi3HookAction"
                     text="%action.create.ci3.hook.text"
                     description="%action.create.ci3.hook.text"/>
+            <action id="Create.Ci3.Migration"
+                    class="dev.woytkowiak.ci.helper.ci.actions.GenerateCi3MigrationAction"
+                    text="%action.create.ci3.migration.text"
+                    description="%action.create.ci3.migration.description"/>
         </group>
 
         <action id="Ci3.Generate.DatabaseConnection"
@@ -385,6 +389,13 @@
                 class="dev.woytkowiak.ci.helper.ci.actions.GenerateCi3ProfilerSectionsAction"
                 text="%action.ci3.generate.profiler.text"
                 description="%action.ci3.generate.profiler.description">
+            <add-to-group group-id="GenerateGroup" anchor="last"/>
+        </action>
+
+        <action id="Ci3.Generate.Migration"
+                class="dev.woytkowiak.ci.helper.ci.actions.GenerateCi3MigrationAction"
+                text="%action.ci3.generate.migration.text"
+                description="%action.ci3.generate.migration.description">
             <add-to-group group-id="GenerateGroup" anchor="last"/>
         </action>
 
