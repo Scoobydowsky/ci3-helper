@@ -374,6 +374,20 @@
                     description="%action.create.ci3.hook.text"/>
         </group>
 
+        <action id="Ci3.Generate.DatabaseConnection"
+                class="dev.woytkowiak.ci.helper.ci.actions.GenerateCi3DatabaseConnectionAction"
+                text="%action.ci3.generate.db.connection.text"
+                description="%action.ci3.generate.db.connection.description">
+            <add-to-group group-id="GenerateGroup" anchor="last"/>
+        </action>
+
+        <action id="Ci3.Generate.ProfilerSections"
+                class="dev.woytkowiak.ci.helper.ci.actions.GenerateCi3ProfilerSectionsAction"
+                text="%action.ci3.generate.profiler.text"
+                description="%action.ci3.generate.profiler.description">
+            <add-to-group group-id="GenerateGroup" anchor="last"/>
+        </action>
+
         <group id="Ci3CliContextGroup" text="%group.Ci3CliContextGroup.text" popup="true" icon="dev.woytkowiak.ci.helper.ci.Ci3Icons.Ci3">
             <add-to-group group-id="EditorPopupMenu" anchor="last"/>
             <action id="Ci3.Cli.RunController"

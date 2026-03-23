@@ -4,6 +4,8 @@
 
 ## [0.1.1]
 ### Added
+- **Code → Generate** (⌘N / Alt+Insert): **CodeIgniter 3 database connection…** when the open file is `application/config/database.php` — inserts a `$db['key'] = array(…)` block with CI3/mysqli defaults; prompts for the connection name; warns if that key already exists.
+- **Code → Generate**: **Profiling sections…** when the caret is inside a **controller method** (`application/controllers/…`) — dialog with checkboxes for all CI3 profiler sections ([docs](https://codeigniter.com/userguide3/general/profiling.html)), numeric **query toggle count**, then inserts `$sections = array(…);` and `$this->output->set_profiler_sections($sections);`.
 - **Plugin descriptor**: `require-restart="false"` so install/update can complete **without IDE restart** when the platform treats the plugin as dynamic (see [Dynamic Plugins](https://plugins.jetbrains.com/docs/intellij/dynamic-plugins.html)).
 - **Status bar**: next to the CI3 icon, an **ENV:** pill shows the default `ENVIRONMENT` literal read from project `index.php` (e.g. `development` → `ENV: dev`). Tooltip explains that `$_SERVER['CI_ENV']` can override at runtime. Updates when `index.php` changes.
 ### Changed
