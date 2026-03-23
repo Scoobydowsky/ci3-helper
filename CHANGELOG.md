@@ -12,6 +12,8 @@
 - **CI3 Routes — Add route…**: target is chosen with **Controller** and **Method** dropdowns (from `application/controllers`); tree selection still pre-fills URI and target.
 ### Fixed
 - **Add route**: new `$route[...]` lines are appended at the **end** of `application/config/routes.php` (avoids inserting inside multi-line comments).
+- **Inspections**: default level `WEAK_WARNING` in `plugin.xml` is not supported on current platform — `Ci3ViewReturnIgnored` and `Ci3OutputCacheWithoutView` now use `WARNING` (fixes `PluginException: Can't find highlight display level: WEAK_WARNING`).
+- **Ci3ReservedControllerName**: only report on methods **declared** in the controller class (skips inherited stubs like `get_instance`), fixing invalid `ProblemDescriptor` when the class extends `CI_Controller`.
 
 ## [0.1.0]
 ### Added

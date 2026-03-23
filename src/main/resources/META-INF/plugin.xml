@@ -265,7 +265,7 @@
                 groupPath="PHP"
                 groupName="CodeIgniter 3"
                 enabledByDefault="true"
-                level="WEAK_WARNING"
+                level="WARNING"
                 implementationClass="dev.woytkowiak.ci.helper.ci.inspection.Ci3ViewReturnIgnoredInspection"/>
         <localInspection
                 id="Ci3InvalidHookPoint"
@@ -301,7 +301,7 @@
                 groupPath="PHP"
                 groupName="CodeIgniter 3"
                 enabledByDefault="true"
-                level="WEAK_WARNING"
+                level="WARNING"
                 implementationClass="dev.woytkowiak.ci.helper.ci.inspection.Ci3OutputCacheWithoutViewInspection"/>
         <localInspection
                 id="Ci3DefaultControllerNoDirectory"
